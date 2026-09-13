@@ -1,0 +1,17 @@
+node_modules/
+.next/
+dist/
+.env
+.env.local
+.env.*.local
+.data/
+*.log
+.DS_Store
+coverage/
+
+# Scratch scripts written while debugging; not part of the deliverable.
+scripts/dev/
+
+# Source archives. They contain credentials and are large binaries; the
+# material extracted from them lives in seed/prompts/ and supabase/migrations/.
+*.zip

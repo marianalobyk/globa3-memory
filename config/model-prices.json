@@ -1,0 +1,7 @@
+{
+  "_note": "Prices are intentionally empty. Fill them in from the current official OpenAI pricing page before relying on the cost figures; until then the app shows token counts and labels spend as 'price not configured' rather than inventing a number. Values are US dollars per 1M tokens.",
+  "_example": {
+    "some-model-id": { "inputPerMTok": 0, "outputPerMTok": 0, "cachedInputPerMTok": 0, "webSearchPerCall": 0 }
+  },
+  "prices": {}
+}

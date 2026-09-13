@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * Restrained, high-contrast working palette. Light by default, dark via .dark.
+ * Semantic colours are reserved for state that changes what a person does:
+ * needs review, blocked, applied, mock.
+ */
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222 22% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 22% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 22% 12%;
+    --primary: 222 47% 20%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 222 22% 20%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+    --accent: 220 14% 94%;
+    --accent-foreground: 222 22% 18%;
+    --destructive: 0 72% 45%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 152 56% 32%;
+    --success-foreground: 0 0% 100%;
+    --warning: 32 85% 40%;
+    --warning-foreground: 0 0% 100%;
+    --border: 220 13% 89%;
+    --input: 220 13% 85%;
+    --ring: 222 47% 30%;
+    --radius: 0.5rem;
+    --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  }
+
+  .dark {
+    --background: 222 24% 9%;
+    --foreground: 210 20% 94%;
+    --card: 222 22% 12%;
+    --card-foreground: 210 20% 94%;
+    --popover: 222 22% 12%;
+    --popover-foreground: 210 20% 94%;
+    --primary: 210 30% 92%;
+    --primary-foreground: 222 30% 14%;
+    --secondary: 220 14% 18%;
+    --secondary-foreground: 210 20% 92%;
+    --muted: 220 14% 17%;
+    --muted-foreground: 220 10% 62%;
+    --accent: 220 14% 20%;
+    --accent-foreground: 210 20% 94%;
+    --destructive: 0 62% 52%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 152 45% 45%;
+    --success-foreground: 0 0% 6%;
+    --warning: 32 80% 55%;
+    --warning-foreground: 0 0% 6%;
+    --border: 220 13% 22%;
+    --input: 220 13% 26%;
+    --ring: 210 30% 70%;
+  }
+
+  * { @apply border-border; }
+  body {
+    @apply bg-background text-foreground;
+    /* A single long token (a URL, a uuid, an ISO timestamp) must wrap rather
+       than set a minimum width for the whole page. Wide content that genuinely
+       needs to stay on one line scrolls inside its own container instead. */
+    overflow-wrap: break-word;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer utilities {
+  /* Wide content scrolls inside its own container; the page never does. */
+  .scroll-x { @apply overflow-x-auto; }
+}
+
+/* Markdown rendering for briefs and reports. */
+.prose-brief {
+  @apply text-[0.9375rem] leading-relaxed;
+}
+.prose-brief h1 { @apply mt-0 mb-4 text-2xl font-semibold tracking-tight; }
+.prose-brief h2 { @apply mt-8 mb-3 border-b border-border pb-2 text-lg font-semibold tracking-tight; }
+.prose-brief h3 { @apply mt-6 mb-2 text-base font-semibold; }
+.prose-brief h4 { @apply mt-4 mb-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground; }
+.prose-brief p { @apply my-3; }
+.prose-brief ul { @apply my-3 list-disc space-y-1.5 pl-5; }
+.prose-brief ol { @apply my-3 list-decimal space-y-1.5 pl-5; }
+.prose-brief a { @apply font-medium text-primary underline decoration-primary/30 underline-offset-2 hover:decoration-primary; }
+.prose-brief blockquote { @apply my-4 border-l-2 border-warning/60 bg-warning/5 py-2 pl-4 text-muted-foreground; }
+.prose-brief code { @apply rounded bg-muted px-1.5 py-0.5 font-mono text-[0.8125rem]; }
+.prose-brief pre { @apply my-4 overflow-x-auto rounded-lg bg-muted p-4; }
+.prose-brief hr { @apply my-8 border-border; }
+.prose-brief table { @apply my-4 w-full border-collapse text-sm; }
+.prose-brief th { @apply border border-border bg-muted px-3 py-2 text-left font-semibold; }
+.prose-brief td { @apply border border-border px-3 py-2 align-top; }
+.prose-brief strong { @apply font-semibold; }

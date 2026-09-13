@@ -1,0 +1,42 @@
+{
+  "name": "globa3-intelligence-platform",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": ">=20.9"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "db:local": "node scripts/local-db.mjs",
+    "db:migrate": "node scripts/migrate.mjs",
+    "db:status": "node scripts/migrate.mjs --status",
+    "db:seed": "npm run --workspace @g3/core seed",
+    "db:reset": "node scripts/reset-db.mjs",
+    "dev": "npm run --workspace @g3/web dev",
+    "worker": "npm run --workspace @g3/worker start",
+    "build": "npm run --workspace @g3/web build",
+    "start": "npm run --workspace @g3/web start",
+    "typecheck": "npm run --workspaces --if-present typecheck",
+    "verify": "npm run --workspace @g3/core verify"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.2",
+    "@types/pg": "^8.23.1",
+    "tsx": "^4.23.13",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "^0.5.8",
+    "@electric-sql/pglite-socket": "^0.2.11",
+    "pg": "^8.23.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "overrides": {
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  }
+}
