@@ -1,0 +1,23 @@
+{
+  "_note": "Reviewed in-place revisions of migrations that were already applied somewhere other than production. Listing a file here does NOT make migrate.mjs accept it automatically; it only permits an operator to run --reconcile with the checksum recorded in their database and a reason. Once a migration has been applied to a shared test project, it is frozen: further changes go into a new migration and are never added here.",
+  "0000_compat_bootstrap.sql": {
+    "revisedOn": "2026-09-14",
+    "why": "the original migration attempted to grant privileges on Supabase-owned auth, which a project database role cannot do. The revision creates local auth objects only when the schema is absent.",
+    "priorRevisions": [
+      "unconditional auth schema grant and local auth.users create"
+    ],
+    "reapplyCurrentFile": true,
+    "assertSql": "revisions/0000_assert.sql"
+  },
+  "0011_apply_integrity_and_legacy_compat.sql": {
+    "revisedOn": "2026-09-14",
+    "why": "edited after it had been applied to local test databases: default_workspace_id() used min(uuid), which does not exist; and two 'compatibility views' that never worked were removed. Never applied to production.",
+    "priorRevisions": [
+      "default_workspace_id() calling min(id) on a uuid column",
+      "entities_default_workspace and business_units_default_workspace views"
+    ],
+    "reapplyCurrentFile": true,
+    "reconcileSql": "revisions/0011_reconcile.sql",
+    "assertSql": "revisions/0011_assert.sql"
+  }
+}

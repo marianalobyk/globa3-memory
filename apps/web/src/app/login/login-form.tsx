@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input, Label } from '@/components/ui/input';
 import { api, RequestFailed } from '@/lib/client';
 
-export function LoginForm({ supabaseAuthConfigured }: { supabaseAuthConfigured: boolean }) {
+export function LoginForm({ mode }: { mode: 'supabase' | 'dev' | 'none' }) {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,7 +21,7 @@ export function LoginForm({ supabaseAuthConfigured }: { supabaseAuthConfigured: 
     setError(null);
     try {
       await api('/api/auth/login', { method: 'POST', json: { email, password } });
-      router.replace('/briefs');
+      router.replace('/');
       router.refresh();
     } catch (failure) {
       setError(
@@ -43,14 +43,28 @@ export function LoginForm({ supabaseAuthConfigured }: { supabaseAuthConfigured: 
           <CardDescription>Sign in to continue.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {!supabaseAuthConfigured ? (
+          {mode === 'dev' ? (
             <div className="flex items-start gap-2.5 rounded-md border border-warning/40 bg-warning/10 p-3 text-xs">
               <ShieldAlert className="mt-0.5 size-4 shrink-0 text-warning" />
               <p>
                 <span className="font-medium">Local development sign-in.</span> Supabase Auth is not
-                configured, so this form authenticates against the local database. Set{' '}
+                configured and <code className="font-mono">DEV_AUTH_ENABLED</code> is on, so this form
+                authenticates against the local database. Set{' '}
                 <code className="font-mono">SUPABASE_URL</code> and{' '}
                 <code className="font-mono">SUPABASE_ANON_KEY</code> to use Supabase Auth.
+              </p>
+            </div>
+          ) : null}
+
+          {mode === 'none' ? (
+            <div className="flex items-start gap-2.5 rounded-md border border-destructive/40 bg-destructive/10 p-3 text-xs">
+              <ShieldAlert className="mt-0.5 size-4 shrink-0 text-destructive" />
+              <p>
+                <span className="font-medium">No authentication provider is configured.</span> Set{' '}
+                <code className="font-mono">SUPABASE_URL</code> and{' '}
+                <code className="font-mono">SUPABASE_ANON_KEY</code>, or set{' '}
+                <code className="font-mono">DEV_AUTH_ENABLED=true</code> for local development.
+                Sign-in is disabled until one of those is done.
               </p>
             </div>
           ) : null}
@@ -84,9 +98,15 @@ export function LoginForm({ supabaseAuthConfigured }: { supabaseAuthConfigured: 
                 {error}
               </p>
             ) : null}
-            <Button type="submit" className="w-full" loading={busy}>
+            <Button type="submit" className="w-full" loading={busy} disabled={mode === 'none'}>
               Sign in
             </Button>
+            {mode === 'supabase' ? (
+              <p className="text-center text-xs text-muted-foreground">
+                Authenticated by Supabase. Your session is stored in httpOnly cookies and refreshed
+                automatically.
+              </p>
+            ) : null}
           </form>
         </CardContent>
       </Card>

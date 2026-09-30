@@ -39,6 +39,9 @@ import {
   releaseJob,
   requeueRun,
   runBriefPipeline,
+  runCapturePipeline,
+  runContactIdentifyPipeline,
+  runContactResearchPipeline,
   runIngestPipeline,
   runResearchPipeline,
   withService,
@@ -143,6 +146,15 @@ async function handleRun(queue: string, message: QueueMessage<JobPayload>): Prom
         break;
       case 'ingest':
         summary = await runIngestPipeline(ctx);
+        break;
+      case 'capture':
+        summary = await runCapturePipeline(ctx);
+        break;
+      case 'contact_identify':
+        summary = await runContactIdentifyPipeline(ctx);
+        break;
+      case 'contact_research':
+        summary = await runContactResearchPipeline(ctx);
         break;
       default:
         throw new Error(`Worker does not handle run kind "${run.kind}"`);

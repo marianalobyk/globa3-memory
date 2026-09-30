@@ -2,7 +2,8 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { FlaskConical, LogOut, Wallet } from 'lucide-react';
+import Link from 'next/link';
+import { FlaskConical, LogOut, Settings, Wallet } from 'lucide-react';
 import type { CostSummary, Session } from '@g3/shared';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -122,6 +123,14 @@ export function WorkspaceBar({
         ) : null}
 
         <span className="hidden text-xs text-muted-foreground sm:inline">{session.user.email}</span>
+        {session.activeWorkspace.role === 'admin' ? (
+          <Button asChild variant="ghost" size="icon" title="Settings (admin)" className="lg:hidden">
+            <Link href="/settings">
+              <Settings />
+              <span className="sr-only">Settings</span>
+            </Link>
+          </Button>
+        ) : null}
         <Button variant="ghost" size="icon" onClick={signOut} title="Sign out">
           <LogOut />
           <span className="sr-only">Sign out</span>

@@ -1,0 +1,6 @@
+{
+  "_note": "Project refs that tooling in this repository must never write to. scripts/lib/target.mjs and packages/core/src/target-guard.ts refuse to connect to any database or Supabase URL carrying one of these refs. Add a ref here BEFORE anyone puts its credentials in an env file.",
+  "production": {
+    "projectRefs": ["dlwircxhmaffntlxmyje"]
+  }
+}

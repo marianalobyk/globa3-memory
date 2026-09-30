@@ -12,7 +12,8 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "seed": "tsx src/cli/seed.ts",
-    "verify": "tsx src/cli/verify.ts"
+    "verify": "tsx src/cli/verify.ts",
+    "verify:review": "tsx src/cli/verify-review.ts"
   },
   "dependencies": {
     "@g3/shared": "*",

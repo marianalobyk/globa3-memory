@@ -7,7 +7,6 @@ import {
   hasOpenAi,
   researchIdempotencyKey,
   withService,
-  withUser,
 } from '@g3/core';
 import { handler, ok, readJson } from '@/lib/api';
 import { activeWorkspaceId, requireApiSession } from '@/lib/session';
@@ -68,8 +67,9 @@ export const POST = handler(async (request: Request) => {
   }
 
   // Mark the chosen topics as selected, which is also what the Research screen
-  // reads back, then queue the run.
-  await withUser(session.user.id, (db) =>
+  // reads back, then queue the run. Written by the server role, scoped to the
+  // session's verified workspace: client roles hold no write privilege (0018).
+  await withService((db) =>
     db.query(
       `update public.research_topics
           set selected = true, status = 'selected', updated_at = now()

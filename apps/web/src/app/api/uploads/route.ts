@@ -14,6 +14,17 @@ import {
 import { handler, ok } from '@/lib/api';
 import { activeWorkspaceId, requireApiSession } from '@/lib/session';
 
+function isUploadedFile(value: FormDataEntryValue): value is File {
+  const file = value as Partial<File>;
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    typeof file.name === 'string' &&
+    typeof file.size === 'number' &&
+    typeof file.arrayBuffer === 'function'
+  );
+}
+
 /**
  * Accepts Markdown, PDF and ZIP uploads.
  *
@@ -31,7 +42,7 @@ export const POST = handler(async (request: Request) => {
   const form = await request.formData().catch(() => null);
   if (!form) throw badRequest('Expected a multipart form upload');
 
-  const files = form.getAll('files').filter((f): f is File => f instanceof File);
+  const files = form.getAll('files').filter(isUploadedFile);
   if (files.length === 0) throw badRequest('No files were included in the upload');
   if (files.length > 25) throw badRequest('Upload at most 25 files at a time');
 

@@ -49,6 +49,19 @@ export const STAGE_PLANS: Record<RunKind, StageDefinition[]> = {
     { stage: 'collect', label: 'Collect the day\'s applied changes' },
     { stage: 'render', label: 'Render the Markdown report' },
   ],
+  capture: [
+    { stage: 'load', label: 'Read the captured note, link or file' },
+    { stage: 'classify', label: 'Work out what kind of material this is' },
+    { stage: 'extract', label: 'Draft what the source actually says' },
+    { stage: 'resolve', label: 'Match names against memory' },
+    { stage: 'contextualize', label: 'Compare the draft with what memory already holds' },
+    { stage: 'propose', label: 'Build the changes for review' },
+  ],
+  contact_identify: [{ stage: 'identify', label: 'Look for who this contact could be' }],
+  contact_research: [
+    { stage: 'research', label: 'Research the confirmed person' },
+    { stage: 'merge', label: 'Add the results to the capture proposal' },
+  ],
 };
 
 export interface RunRecord {
@@ -321,8 +334,19 @@ export async function startStage(
       returning *`,
     [workspaceId, runId, stage],
   );
-  if (!row) throw notFound(`Stage "${stage}" does not exist on this run`);
-  return row;
+  if (row) return row;
+  // A stage added to a plan after this run was created (a run resumed across a
+  // deploy): create it rather than fail the run.
+  const plan = await db.one<{ kind: string }>(`select kind from public.runs where workspace_id = $1 and id = $2`, [workspaceId, runId]);
+  const definition = plan ? STAGE_PLANS[plan.kind as RunKind]?.find((s) => s.stage === stage) : undefined;
+  if (!definition) throw notFound(`Stage "${stage}" does not exist on this run`);
+  const inserted = await db.oneOrFail<StageRecord>(
+    `insert into public.run_stages (workspace_id, run_id, seq, stage, label, status, started_at, attempt)
+     values ($1, $2, (select coalesce(max(seq), 0) + 1 from public.run_stages where run_id = $2), $3, $4, 'running', now(), 1)
+     returning *`,
+    [workspaceId, runId, stage, definition.label],
+  );
+  return inserted;
 }
 
 export async function finishStage(

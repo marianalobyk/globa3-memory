@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, CheckCircle2, CircleSlash, ExternalLink, HelpCircle, XCircle } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckCircle2, CircleSlash, ExternalLink, HelpCircle, Telescope, XCircle } from 'lucide-react';
 import { withUser } from '@g3/core';
 import { requirePageSession } from '@/lib/session';
 import { Badge } from '@/components/ui/badge';
@@ -13,6 +13,7 @@ import { MockBanner } from '@/components/states';
 import { QaStatusBadge } from '@/components/status';
 import { TopicSelector } from '@/components/topic-selector';
 import { formatDateTime, titleCase } from '@/lib/utils';
+import { formatWindow, proposalStatusLabel } from '@/lib/labels';
 
 export const dynamic = 'force-dynamic';
 
@@ -118,6 +119,11 @@ export default async function BriefPage({ params }: { params: Promise<{ id: stri
   const { brief, sources, topics, proposals } = data;
 
   const failedChecks = brief.qa_checks.filter((c) => !c.passed);
+  // Targets still waiting for a person to choose them. When there are any, that
+  // choice is the next step, so it leads the page and its tab opens first.
+  const waitingTargets = topics.filter((t) => t.status === 'proposed' && t.priority !== 'skip');
+  const openProposals = proposals.filter((p) => p.status === 'pending_review' || p.status === 'partially_applied');
+  const coverage = formatWindow(brief.coverage_start, brief.coverage_end, session.activeWorkspace.timezone);
   const candidates = (brief.structured.candidates as { headline: string; tier: string; classification: string; freshness_label: string; confidence: string; recommended_action: string }[] | undefined) ?? [];
   const laneOutcomes = (brief.structured.lane_outcomes as { lane: string; searched: boolean; found_count: number; note: string }[] | undefined) ?? [];
   const limitations = (brief.structured.limitations as string[] | undefined) ?? [];
@@ -128,7 +134,7 @@ export default async function BriefPage({ params }: { params: Promise<{ id: stri
         <Button asChild variant="ghost" size="sm" className="-ml-2">
           <Link href="/briefs">
             <ArrowLeft />
-            All briefs
+            Sources
           </Link>
         </Button>
         <div className="flex flex-wrap items-start justify-between gap-3">
@@ -136,14 +142,10 @@ export default async function BriefPage({ params }: { params: Promise<{ id: stri
             <h1 className="text-xl font-semibold tracking-tight">{brief.title}</h1>
             <p className="mt-1 text-sm text-muted-foreground">
               {brief.format_name}
-              {brief.run_date ? ` · ${brief.run_date}` : ''}
-              {brief.prompt_version ? ` · prompt v${brief.prompt_version}` : ''} ·{' '}
-              {formatDateTime(brief.created_at)}
+              {brief.run_date ? ` · ${brief.run_date}` : ''} · {formatDateTime(brief.created_at)}
             </p>
-            {brief.coverage_start && brief.coverage_end ? (
-              <p className="mt-0.5 font-mono text-xs text-muted-foreground">
-                Coverage {brief.coverage_start} → {brief.coverage_end}
-              </p>
+            {coverage ? (
+              <p className="mt-0.5 text-xs text-muted-foreground">Covers {coverage}</p>
             ) : null}
           </div>
           <div className="flex flex-wrap items-center gap-1.5">
@@ -157,38 +159,72 @@ export default async function BriefPage({ params }: { params: Promise<{ id: stri
 
       {brief.is_mock ? <MockBanner scope="this brief" /> : null}
 
+      {waitingTargets.length > 0 ? (
+        <div className="flex flex-wrap items-center gap-3 rounded-lg border border-primary/30 bg-accent/40 px-4 py-3">
+          <Telescope className="size-4 shrink-0 text-primary" aria-hidden />
+          <p className="min-w-0 flex-1 text-sm">
+            <span className="font-medium">
+              {waitingTargets.length} research target{waitingTargets.length === 1 ? '' : 's'} ready
+            </span>
+            <span className="text-muted-foreground">
+              {' '}— {waitingTargets.slice(0, 3).map((t) => t.label).join(', ')}
+              {waitingTargets.length > 3 ? '…' : ''}
+            </span>
+          </p>
+          <Button asChild size="sm">
+            <a href="#choose-targets">
+              Choose what to research
+              <ArrowRight />
+            </a>
+          </Button>
+        </div>
+      ) : openProposals.length > 0 ? (
+        <div className="flex flex-wrap items-center gap-3 rounded-lg border border-primary/30 bg-accent/40 px-4 py-3">
+          <p className="min-w-0 flex-1 text-sm font-medium">
+            Research from this brief produced changes awaiting your review.
+          </p>
+          <Button asChild size="sm">
+            <Link href={`/review/${openProposals[0]!.id}`}>
+              Review proposed changes
+              <ArrowRight />
+            </Link>
+          </Button>
+        </div>
+      ) : null}
+
       {brief.qa_status && brief.qa_status !== 'pass_internal_only' && brief.qa_status !== 'not_run' ? (
-        <Card className="border-warning/40 bg-warning/5 shadow-none">
-          <CardHeader>
-            <CardTitle className="text-sm">QA gate: {titleCase(brief.qa_status)}</CardTitle>
-            <CardDescription>
-              {brief.qa_notes ?? 'The format’s release gate did not return a clean pass.'} This is the
-              format’s own gate, not your approval of any record.
-            </CardDescription>
-          </CardHeader>
-        </Card>
+        <p className="rounded-md border border-warning/40 bg-warning/5 px-3 py-2 text-sm">
+          <span className="font-medium">Quality check flagged this brief.</span>{' '}
+          <span className="text-muted-foreground">
+            {failedChecks.length} of {brief.qa_checks.length} checks need a look before sharing it — see the
+            Quality tab. This is about the brief, not an approval of any record.
+          </span>
+        </p>
       ) : null}
 
       {proposals.length > 0 ? (
-        <div className="flex flex-wrap items-center gap-2 rounded-lg border bg-muted/40 p-3 text-sm">
-          <span className="font-medium">Proposed changes from this brief:</span>
+        <div className="flex flex-wrap items-center gap-2 text-sm">
+          <span className="text-muted-foreground">Proposed changes from this brief:</span>
           {proposals.map((proposal) => (
             <Button key={proposal.id} asChild size="sm" variant="outline">
-              <Link href={`/review/${proposal.id}`}>
-                {titleCase(proposal.status)} · v{proposal.version}
-              </Link>
+              <Link href={`/review/${proposal.id}`}>{proposalStatusLabel(proposal.status)}</Link>
             </Button>
           ))}
         </div>
       ) : null}
 
-      <Tabs defaultValue="brief">
+      <Tabs defaultValue={waitingTargets.length > 0 ? 'research' : 'brief'} id="choose-targets" className="scroll-mt-4">
         <TabsList className="flex-wrap">
+          {waitingTargets.length > 0 ? (
+            <TabsTrigger value="research">Research targets ({waitingTargets.length} ready)</TabsTrigger>
+          ) : null}
           <TabsTrigger value="brief">Brief</TabsTrigger>
+          {waitingTargets.length === 0 ? (
+            <TabsTrigger value="research">Research targets ({topics.length})</TabsTrigger>
+          ) : null}
           <TabsTrigger value="sources">Sources ({sources.length})</TabsTrigger>
           <TabsTrigger value="gaps">Gaps ({brief.gaps.length})</TabsTrigger>
-          <TabsTrigger value="research">Research ({topics.length})</TabsTrigger>
-          <TabsTrigger value="qa">QA ({failedChecks.length > 0 ? `${failedChecks.length} failed` : 'clean'})</TabsTrigger>
+          <TabsTrigger value="qa">Quality ({failedChecks.length > 0 ? `${failedChecks.length} flagged` : 'clean'})</TabsTrigger>
         </TabsList>
 
         <TabsContent value="brief">

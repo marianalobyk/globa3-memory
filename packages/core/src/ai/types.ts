@@ -26,6 +26,11 @@ export interface GenerateOptions {
   tools?: ToolName[];
   maxOutputTokens?: number;
   reasoningEffort?: 'low' | 'medium' | 'high';
+  /**
+   * Transport ceiling for a synchronous model call. Long-running research uses
+   * the separate background API and is not governed by this value.
+   */
+  timeoutMs?: number;
   /** Correlation id, logged by the provider adapter. */
   label: string;
 }

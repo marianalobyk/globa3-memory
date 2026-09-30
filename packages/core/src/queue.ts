@@ -39,7 +39,9 @@ export async function sendJob(
   delaySeconds = 0,
 ): Promise<string> {
   const row = await db.oneOrFail<{ msg_id: string }>(
-    `select pgmq.send($1, $2::jsonb, $3) as msg_id`,
+    // Every argument is typed: Supabase's pgmq has several overloads of send,
+    // read, set_vt and archive, and an untyped parameter makes the call ambiguous.
+    `select pgmq.send($1::text, $2::jsonb, $3::integer) as msg_id`,
     [queue, JSON.stringify(payload), delaySeconds],
   );
   return row.msg_id;
@@ -57,7 +59,7 @@ export async function readJobs<T = JobPayload>(
       enqueued_at: Date;
       vt: Date;
       message: T;
-    }>(`select * from pgmq.read($1, $2, $3)`, [queue, visibilityTimeoutSeconds, quantity]);
+    }>(`select * from pgmq.read($1::text, $2::integer, $3::integer)`, [queue, visibilityTimeoutSeconds, quantity]);
     return rows.map((r) => ({
       msgId: r.msg_id,
       readCount: r.read_ct,
@@ -74,20 +76,20 @@ export async function extendLease(
   msgId: string,
   seconds = env().WORKER_VISIBILITY_TIMEOUT_S,
 ): Promise<void> {
-  await withService((db) => db.query(`select pgmq.set_vt($1, $2, $3)`, [queue, msgId, seconds]));
+  await withService((db) => db.query(`select pgmq.set_vt($1::text, $2::bigint, $3::integer)`, [queue, msgId, seconds]));
 }
 
 /** Makes a message immediately visible again, for an intentional retry. */
 export async function releaseJob(queue: string, msgId: string, delaySeconds = 0): Promise<void> {
-  await withService((db) => db.query(`select pgmq.set_vt($1, $2, $3)`, [queue, msgId, delaySeconds]));
+  await withService((db) => db.query(`select pgmq.set_vt($1::text, $2::bigint, $3::integer)`, [queue, msgId, delaySeconds]));
 }
 
 export async function archiveJob(queue: string, msgId: string): Promise<void> {
-  await withService((db) => db.query(`select pgmq.archive($1, $2)`, [queue, msgId]));
+  await withService((db) => db.query(`select pgmq.archive($1::text, $2::bigint)`, [queue, msgId]));
 }
 
 export async function deleteJob(queue: string, msgId: string): Promise<void> {
-  await withService((db) => db.query(`select pgmq.delete($1, $2)`, [queue, msgId]));
+  await withService((db) => db.query(`select pgmq.delete($1::text, $2::bigint)`, [queue, msgId]));
 }
 
 export async function queueDepth(queue: string): Promise<{ pending: number; inFlight: number }> {
@@ -104,7 +106,7 @@ export async function queueDepth(queue: string): Promise<{ pending: number; inFl
     // Real pgmq stores messages in per-queue tables; use its metrics view.
     withService(async (db) => {
       const row = await db.one<{ queue_length: number }>(
-        `select queue_length from pgmq.metrics($1)`,
+        `select queue_length from pgmq.metrics($1::text)`,
         [queue],
       );
       return { pending: row?.queue_length ?? 0, inFlight: 0 };

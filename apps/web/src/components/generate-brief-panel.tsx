@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input, Label } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { api, RequestFailed } from '@/lib/client';
+import { formatWindow } from '@/lib/labels';
 
 export interface FormatOption {
   id: string;
@@ -97,8 +98,8 @@ export function GenerateBriefPanel({
           Generate a brief
         </CardTitle>
         <CardDescription>
-          Each format keeps its own search lanes, sources, scoring and QA gate. Dates and coverage
-          windows are computed here, never by the model.
+          Pick a format and a date. The brief runs in the background and proposes research targets;
+          it never saves anything to knowledge.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -136,14 +137,17 @@ export function GenerateBriefPanel({
           <div className="rounded-md border bg-muted/40 p-3 text-xs">
             <p className="flex items-center gap-1.5 font-medium">
               <CalendarClock className="size-3.5" />
-              Coverage window for {runDate}
+              What the brief for {runDate} covers
             </p>
-            <p className="mt-1 break-words font-mono text-[0.6875rem] leading-relaxed text-muted-foreground">
-              {selected.previewCoverage}
+            <p className="mt-1 text-muted-foreground">
+              {formatWindow(
+                selected.previewCoverage.split(' → ')[0] ?? null,
+                selected.previewCoverage.split(' → ')[1] ?? null,
+                selected.timeZone,
+              ) ?? selected.previewCoverage}
             </p>
-            <p className="mt-1.5 text-muted-foreground">
-              {selected.coverageHours}h window · {selected.laneCount} mandatory research lanes ·{' '}
-              {selected.timeZone}
+            <p className="mt-1 text-muted-foreground">
+              Looks back {selected.coverageHours} hours across {selected.laneCount} research areas.
             </p>
           </div>
         ) : null}

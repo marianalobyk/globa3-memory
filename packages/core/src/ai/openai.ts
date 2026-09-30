@@ -43,6 +43,7 @@ type AnyResponse = Record<string, unknown> & {
 };
 
 const SOURCE_INCLUDE = ['web_search_call.action.sources'] as const;
+const SYNC_REQUEST_TIMEOUT_MS = 90_000;
 
 function mapStatus(status: string | undefined): BackgroundStatus {
   switch (status) {
@@ -165,7 +166,7 @@ export class OpenAiProvider implements AiProvider {
       ...(options.maxOutputTokens ? { max_output_tokens: options.maxOutputTokens } : {}),
       ...(options.reasoningEffort ? { reasoning: { effort: options.reasoningEffort } } : {}),
       text: { format: zodTextFormat(options.schema as never, options.schemaName) },
-    })) as unknown as AnyResponse & { output_parsed?: T };
+    }, { timeout: options.timeoutMs ?? SYNC_REQUEST_TIMEOUT_MS })) as unknown as AnyResponse & { output_parsed?: T };
 
     if (response.status && mapStatus(response.status) === 'failed') {
       throw new AppError(
@@ -201,7 +202,7 @@ export class OpenAiProvider implements AiProvider {
       ...(tools.length > 0 ? { tools: tools as never, include: [...SOURCE_INCLUDE] as never } : {}),
       ...(options.maxOutputTokens ? { max_output_tokens: options.maxOutputTokens } : {}),
       ...(options.reasoningEffort ? { reasoning: { effort: options.reasoningEffort } } : {}),
-    })) as unknown as AnyResponse;
+    }, { timeout: options.timeoutMs ?? SYNC_REQUEST_TIMEOUT_MS })) as unknown as AnyResponse;
 
     const { sources, webSearches } = collect(response);
     return {

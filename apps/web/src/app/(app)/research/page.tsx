@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Telescope } from 'lucide-react';
-import { withUser } from '@g3/core';
 import { requirePageSession } from '@/lib/session';
+import { loadResearchData } from '@/lib/page-data';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,65 +16,7 @@ export default async function ResearchPage() {
   const session = await requirePageSession();
   const workspaceId = session.activeWorkspace.workspaceId;
 
-  const { runs, awaiting, researched } = await withUser(session.user.id, async (db) => ({
-    runs: await db.rows<{
-      id: string;
-      status: string;
-      progress: number;
-      current_stage: string | null;
-      created_at: string;
-      is_mock: boolean;
-      error: string | null;
-      topic_count: number;
-      proposal_id: string | null;
-      brief_title: string | null;
-    }>(
-      `select r.id, r.status, r.progress, r.current_stage, r.created_at, r.is_mock, r.error,
-              coalesce(jsonb_array_length(r.input -> 'topicIds'), 0) as topic_count,
-              (select p.id from public.proposals p where p.run_id = r.id limit 1) as proposal_id,
-              (select b.title from public.brief_documents b
-                where b.id = (r.input ->> 'briefDocumentId')::uuid) as brief_title
-         from public.runs r
-        where r.workspace_id = $1 and r.kind = 'research'
-        order by r.created_at desc limit 25`,
-      [workspaceId],
-    ),
-    awaiting: await db.rows<{
-      id: string;
-      label: string;
-      target_type: string;
-      priority: string;
-      resolution_status: string;
-      research_question: string | null;
-      brief_document_id: string | null;
-      brief_title: string | null;
-      brief_run_date: string | null;
-    }>(
-      `select t.id, t.label, t.target_type, t.priority, t.resolution_status, t.research_question,
-              t.brief_document_id, b.title as brief_title, b.run_date as brief_run_date
-         from public.research_topics t
-         left join public.brief_documents b on b.id = t.brief_document_id
-        where t.workspace_id = $1 and t.status = 'proposed' and t.priority <> 'skip'
-        order by case t.priority when 'high' then 0 when 'medium' then 1 else 2 end,
-                 b.run_date desc nulls last, t.label
-        limit 60`,
-      [workspaceId],
-    ),
-    researched: await db.rows<{
-      id: string;
-      label: string;
-      target_type: string;
-      status: string;
-      updated_at: string;
-      brief_document_id: string | null;
-    }>(
-      `select id, label, target_type, status, updated_at, brief_document_id
-         from public.research_topics
-        where workspace_id = $1 and status in ('researched', 'captured')
-        order by updated_at desc limit 25`,
-      [workspaceId],
-    ),
-  }));
+  const { runs, awaiting, researched } = await loadResearchData(session);
 
   // Group the awaiting topics by the brief they came from, since research is
   // started from a brief.
@@ -91,8 +33,8 @@ export default async function ResearchPage() {
       <div>
         <h1 className="text-xl font-semibold tracking-tight">Research</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Deep research on the targets you choose. It runs in the background, uses the material
-          already collected, and ends in proposed changes for you to review — never a direct write.
+          Research runs and the targets waiting for a choice. Research always starts from a brief, runs
+          in the background and ends in proposed changes awaiting your review — it never saves directly.
         </p>
       </div>
 
@@ -147,7 +89,7 @@ export default async function ResearchPage() {
             description="Research targets are proposed by a brief. Generate or open a brief, then choose which people, companies and projects deserve deep research."
             action={
               <Button asChild variant="outline" size="sm">
-                <Link href="/briefs">Go to Briefs</Link>
+                <Link href="/briefs">Go to Sources</Link>
               </Button>
             }
           />

@@ -128,8 +128,8 @@ export function MockBanner({
       <FlaskConical className="mt-0.5 size-4 shrink-0 text-warning" />
       <p>
         <span className="font-medium">Mock output.</span> No <code className="font-mono text-xs">OPENAI_API_KEY</code>{' '}
-        is configured, so {scope} was produced without any live model call or web search. The content is
-        synthetic and must not be used for a decision.
+        is configured: {scope} came from the mock provider, without any live model call or web search. The
+        content is synthetic and must not be used for a decision.
       </p>
     </div>
   );

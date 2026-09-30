@@ -161,32 +161,36 @@ export interface BudgetState {
 
 export async function budgetStates(db: Queryable, workspaceId: string): Promise<BudgetState[]> {
   assertScope(workspaceId, 'budgetStates');
-  const budgets = await db.rows<{ period: 'day' | 'month'; limit_usd: string; hard_stop: boolean }>(
-    `select period, limit_usd, hard_stop from public.budgets where workspace_id = $1`,
+  const budgets = await db.rows<{
+    period: 'day' | 'month';
+    limit_usd: string;
+    hard_stop: boolean;
+    total: string;
+    estimated: boolean;
+  }>(
+    `select b.period, b.limit_usd, b.hard_stop,
+            coalesce(sum(u.cost_usd), 0)::text as total,
+            coalesce(bool_or(u.is_estimate), false) as estimated
+       from public.budgets b
+       left join public.usage_events u
+         on u.workspace_id = b.workspace_id
+        and u.created_at >= date_trunc(b.period, now())
+      where b.workspace_id = $1
+      group by b.period, b.limit_usd, b.hard_stop`,
     [workspaceId],
   );
-  const out: BudgetState[] = [];
-  for (const budget of budgets) {
-    const spent = await db.oneOrFail<{ total: string; estimated: boolean }>(
-      `select coalesce(sum(cost_usd), 0)::text as total,
-              coalesce(bool_or(is_estimate), false) as estimated
-         from public.usage_events
-        where workspace_id = $1
-          and created_at >= date_trunc($2, now())`,
-      [workspaceId, budget.period],
-    );
-    const spentUsd = Number(spent.total);
+  return budgets.map((budget) => {
+    const spentUsd = Number(budget.total);
     const limitUsd = Number(budget.limit_usd);
-    out.push({
+    return {
       period: budget.period,
       limitUsd,
       spentUsd: Number(spentUsd.toFixed(6)),
       hardStop: budget.hard_stop,
       exceeded: spentUsd >= limitUsd,
-      spendIsEstimate: spent.estimated,
-    });
-  }
-  return out;
+      spendIsEstimate: budget.estimated,
+    };
+  });
 }
 
 /**

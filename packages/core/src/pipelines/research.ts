@@ -13,17 +13,18 @@
  * base already holds about the target. It ends in a proposal, never a write.
  */
 import {
-  CaptureProposal,
   DeepResearchResult,
   type FormatConfig,
   type ProposedChange,
+  parseResearchRunInput,
 } from '@g3/shared';
 import { withService } from '../db.js';
+import { ResearchProposalOutput, researchProposalFromOutput } from '../research-proposal.js';
+import { buildCaptureResearchContext, renderCaptureResearchContext, type CaptureResearchContext } from '../capture-research-context.js';
 import { badRequest } from '../errors.js';
 import { getFormat } from '../formats-repo.js';
 import { baseSystemPrompt } from '../prompt.js';
 import { buildProposal } from '../proposals.js';
-import { resolveEntity, type ResolvableType } from '../resolve.js';
 import { recordStageProviderResponse, STAGE_PLANS } from '../runs.js';
 import { accountUsage, addUsage, event, stage, type PipelineContext } from './context.js';
 
@@ -44,24 +45,6 @@ export interface ResearchTopicInput {
   priority: string;
 }
 
-function toResolvable(value: string): ResolvableType {
-  switch (value) {
-    case 'person':
-      return 'person';
-    case 'company':
-    case 'organization':
-      return 'organization';
-    case 'project':
-      return 'project';
-    case 'institution':
-      return 'institution';
-    case 'event':
-      return 'event';
-    default:
-      return 'other';
-  }
-}
-
 export interface ResearchPipelineResult {
   proposalId: string;
   topicCount: number;
@@ -72,10 +55,16 @@ export interface ResearchPipelineResult {
 
 export async function runResearchPipeline(ctx: PipelineContext): Promise<ResearchPipelineResult> {
   const { run, workspaceId } = ctx;
-  const input = run.input as {
-    briefDocumentId?: string;
-    topicIds?: string[];
+  // Two origins, one pipeline. The union is parsed once here so nothing further
+  // down has to guess which shape it is holding; runs queued before the schema
+  // existed are read as briefs.
+  const parsed = parseResearchRunInput(run.input);
+  const input = {
+    topicIds: parsed.topicIds,
+    briefDocumentId: parsed.kind === 'brief' ? parsed.briefDocumentId : undefined,
   };
+  /** The capture review that asked these questions, for a capture-originated run. */
+  const parentProposalId = parsed.kind === 'capture_proposal' ? parsed.proposalId : null;
   if (!input.topicIds || input.topicIds.length === 0) {
     throw badRequest('A research run requires at least one selected topic');
   }
@@ -152,6 +141,22 @@ export async function runResearchPipeline(ctx: PipelineContext): Promise<Researc
         brief: brief
           ? { id: brief.id, title: brief.title, runDate: brief.run_date, bodyMd: brief.body_md, formatId: brief.format_id }
           : null,
+        // For a capture-originated run, the bounded context of the capture that
+        // asked. Read from that proposal's own items only: no other part of the
+        // workspace's memory is reachable from here.
+        captureContext: parentProposalId
+          ? await buildCaptureResearchContext(
+              db,
+              workspaceId,
+              parentProposalId,
+              topics.map((t) => ({
+                id: t.id,
+                question: t.research_question ?? t.label,
+                whyItMatters: t.why_useful,
+                subject: t.label,
+              })),
+            )
+          : null,
         known,
       };
     });
@@ -159,6 +164,7 @@ export async function runResearchPipeline(ctx: PipelineContext): Promise<Researc
 
   const topics = plan.value.topics as ResearchTopicInput[];
   const brief = plan.value.brief;
+  const captureContext = (plan.value.captureContext ?? null) as CaptureResearchContext | null;
   const known = plan.value.known as { label: string; existing: string[] }[];
 
   const format = brief
@@ -209,7 +215,9 @@ export async function runResearchPipeline(ctx: PipelineContext): Promise<Researc
         '',
         brief
           ? `### Originating brief: ${brief.title} (${brief.runDate})\n\n${brief.bodyMd}`
-          : '_No originating brief; this topic was raised directly._',
+          : captureContext
+            ? `### Where this question came from\n\n${renderCaptureResearchContext(captureContext)}`
+            : '_No originating brief; this topic was raised directly._',
         '',
         '### What the knowledge base already holds about this target',
         priorKnowledge.length > 0
@@ -359,76 +367,36 @@ export async function runResearchPipeline(ctx: PipelineContext): Promise<Researc
   const proposal = await stage(ctx, 'propose', 4, STAGE_COUNT, async (handle) => {
     await ctx.keepAlive();
 
-    // Give the model the resolution status of every named entity, so it can
-    // propose a staged mention rather than a new record where the match is
-    // uncertain.
-    const resolutionNotes: string[] = [];
-    await withService(async (db) => {
-      const seen = new Set<string>();
-      for (const result of synthesis.value.structured) {
-        for (const entity of result.entities) {
-          const type = toResolvable(entity.entity_type);
-          if (type === 'other') continue;
-          const key = `${type}:${entity.name.toLowerCase()}`;
-          if (seen.has(key)) continue;
-          seen.add(key);
-          const resolution = await resolveEntity(db, workspaceId, { name: entity.name, entityType: type });
-          resolutionNotes.push(
-            `- "${entity.name}" (${type}): ${resolution.status.toUpperCase()}. ${resolution.rationale}`,
-          );
-        }
-      }
-    });
-
-    const captureResult = await ctx.provider.generateStructured({
+    const semanticResult = await ctx.provider.generateStructured({
       model: run.model ?? 'gpt-5.5',
-      schema: CaptureProposal,
-      schemaName: 'capture_proposal',
+      schema: ResearchProposalOutput,
+      schemaName: 'research_proposal_output',
       label: `research.propose:${run.id}`,
       reasoningEffort: 'medium',
       system: baseSystemPrompt(
         [
           '',
-          'Propose database changes from the research. You are proposing only; a person',
-          'reviews and approves each item before anything is written.',
+          'Turn the structured research into semantic output for a person to review.',
+          'Do not propose database records, IDs, labels, evidence rows, citation rows,',
+          'citation roles, or dependencies. The server creates those deterministically.',
           '',
-          'Storage rules:',
-          '- evidence for each underlying source;',
-          '- entities for people, organisations, projects, institutions and events that are',
-          '  relevant, with research_status research_only and relationship_status none when',
-          '  no relationship exists;',
-          '- entity_affiliations for a source-backed person-to-organisation role;',
-          '- research_findings for facts, inferences, recommendations, risks and gaps, with',
-          '  finding_type set correctly;',
-          '- signals for why something entered the system, with why_it_matters and a',
-          '  decision_question;',
-          '- signal_entities to link a signal to every relevant entity;',
-          '- interactions ONLY for something that actually happened;',
-          '- actions ONLY for a real intended next step;',
-          '- opportunities only when there is a genuine commercial opening beyond a watch.',
-          '',
-          'Hard rules:',
-          '- Where the resolution status below says AMBIGUOUS, propose an entity_mentions',
-          '  row, not a new entity and not a merge. A similar name is not evidence of the',
-          '  same record.',
-          '- Never propose a contact or relationship record just because a person appeared',
-          '  in research. A person may be stored before any contact exists.',
-          '- Reference other records you propose by their exact label in depends_on_labels',
-          '  and in the *_label fields. Never invent an id.',
-          '- Use *_label fields for references: related_entity_label, person_entity_label,',
-          '  organization_entity_label, evidence_label, signal_label, business_unit_label.',
+          'For each fact, list only URLs that appear in sources. Set origin_url only when',
+          'the research explicitly identifies one source as the origin of that exact fact.',
+          'If origin is unclear, set it to null. Interpretations, recommendations, gaps,',
+          'and risks must not cite URLs. Do not invent source content or attribution.',
         ].join('\n'),
       ),
       input: [
-        '## Entity resolution already performed by the server',
-        resolutionNotes.length > 0 ? resolutionNotes.join('\n') : '_No named entities found._',
-        '',
         '## Structured research findings',
         '```json',
         JSON.stringify(synthesis.value.structured, null, 2),
         '```',
         '',
-        brief ? `## Originating brief\n\n${brief.title} (${brief.runDate})` : '',
+        brief
+          ? `## Originating brief\n\n${brief.title} (${brief.runDate})`
+          : captureContext
+            ? `## Where this question came from\n\n${renderCaptureResearchContext(captureContext)}`
+            : '',
       ].join('\n'),
     });
 
@@ -436,10 +404,16 @@ export async function runResearchPipeline(ctx: PipelineContext): Promise<Researc
       ctx,
       handle.record.id,
       'propose',
-      'capture_proposal',
-      captureResult.usage,
+      'research_proposal_output',
+      semanticResult.usage,
     );
-    addUsage(handle, captureResult.usage, cost);
+    addUsage(handle, semanticResult.usage, cost);
+
+    const mapped = researchProposalFromOutput(semanticResult.value, {
+      title: semanticResult.value.title || `Research: ${topics.map((topic) => topic.label).join(', ')}`,
+      summary: semanticResult.value.summary || 'Research findings awaiting your review.',
+      subjectLabel: topics.length === 1 ? topics[0]!.label : null,
+    });
 
     const built = await withService((db) =>
       buildProposal(db, {
@@ -447,15 +421,29 @@ export async function runResearchPipeline(ctx: PipelineContext): Promise<Researc
         runId: run.id,
         sourceKind: 'research',
         briefDocumentId: brief?.id ?? null,
-        proposal: captureResult.value as (typeof CaptureProposal)['_output'],
+        // A research result points back at the capture that asked. The database
+        // refuses a parent in another workspace, so this cannot cross tenants.
+        parentProposalId,
+        proposal: mapped.proposal,
         createdBy: run.created_by ?? '',
         isMock: ctx.provider.isMock,
         provenance: {
           run_id: run.id,
           brief_document_id: brief?.id ?? null,
+          parent_proposal_id: parentProposalId,
+          origin: parsed.kind,
+          capture_context: captureContext
+            ? {
+                title: captureContext.title,
+                questions: captureContext.questions.map((q) => q.question),
+                subjects: captureContext.subjects.map((s) => s.name),
+                omitted: captureContext.omitted,
+              }
+            : null,
           brief_run_date: brief?.runDate ?? null,
           topics: topics.map((t) => ({ id: t.id, label: t.label })),
           depth_standard_met: synthesis.value.structured.every((s) => s.depth_standard_met),
+          mapping_notes: mapped.notes,
         },
       }),
     );

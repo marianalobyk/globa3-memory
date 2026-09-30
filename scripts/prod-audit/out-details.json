@@ -1,0 +1,1119 @@
+{
+  "affiliation_org_not_org": [
+    {
+      "id": "d78e667f-e5e3-4227-8ece-1cbad49d09d4",
+      "person": "Tola Odunsi",
+      "org": "19",
+      "org_type": "project",
+      "role_title": "Director / writer",
+      "context": "19 project role"
+    },
+    {
+      "id": "f83589db-6bde-4e38-b43a-97890aa4c6e0",
+      "person": "Bola Atta",
+      "org": "19",
+      "org_type": "project",
+      "role_title": "Co-executive producer / producer",
+      "context": "19 project role"
+    },
+    {
+      "id": "5993c42a-009c-44d7-8b4b-38fc5289fef0",
+      "person": "Gold Gerry",
+      "org": "Adanne",
+      "org_type": "project",
+      "role_title": "Writer / producer",
+      "context": "Gold Gerry wrote and produced Adanne."
+    },
+    {
+      "id": "8bae0466-8cb5-46eb-9e7a-4434ae279753",
+      "person": "Lotanna Nwose",
+      "org": "Adanne",
+      "org_type": "project",
+      "role_title": "Producer",
+      "context": "Lotanna Nwose is credited as producer on Adanne."
+    },
+    {
+      "id": "9b5a03d5-a32d-4b40-afcc-93dfc47c9d96",
+      "person": "Orobosa Ikponmwen",
+      "org": "Adanne",
+      "org_type": "project",
+      "role_title": "Director",
+      "context": "Orobosa Ikponmwen directed Adanne."
+    },
+    {
+      "id": "84f9f09b-1b94-4b95-8dbd-aad5bca9f458",
+      "person": "Lina Soualem",
+      "org": "Imane Khelif: Still Fighting",
+      "org_type": "project",
+      "role_title": "Director",
+      "context": "Documentary project role"
+    },
+    {
+      "id": "5e2b0608-3448-4006-ae86-79ce60e4bcd5",
+      "person": "Mohamed Al-Daradji",
+      "org": "Irkalla: Gilgamesh's Dream",
+      "org_type": "project",
+      "role_title": "Director / producer",
+      "context": "Irkalla project role"
+    },
+    {
+      "id": "a063063f-dbe6-4f2f-b160-561df5fdca90",
+      "person": "John Giwa-Amu",
+      "org": "Lady",
+      "org_type": "project",
+      "role_title": "Producer",
+      "context": "Lady project role"
+    },
+    {
+      "id": "0e653ac9-aaac-4512-b048-b39aa192a7c4",
+      "person": "Stella Nwimo",
+      "org": "Lady",
+      "org_type": "project",
+      "role_title": "Producer",
+      "context": "Lady project role"
+    },
+    {
+      "id": "438e91cd-fc19-4325-a9d4-1c23d652d7b3",
+      "person": "Alex Polunin",
+      "org": "Lady",
+      "org_type": "project",
+      "role_title": "Producer",
+      "context": "Lady project role"
+    },
+    {
+      "id": "d2677ca4-d25f-4e34-b3e4-3c1499a6f05d",
+      "person": "Olive Nwosu",
+      "org": "Lady",
+      "org_type": "project",
+      "role_title": "Director / screenwriter",
+      "context": "Lady project role"
+    },
+    {
+      "id": "0ceda659-9944-4160-b072-a6fb97cebb77",
+      "person": "Parshad Esmaeili",
+      "org": "Neo Match Up",
+      "org_type": "project",
+      "role_title": "Host / challenger",
+      "context": "Neo Match Up format role"
+    },
+    {
+      "id": "d32e17bb-ff7d-4994-ab53-6df455bee656",
+      "person": "Sarah Karei",
+      "org": "One Woman One Bra",
+      "org_type": "project",
+      "role_title": "Lead actor",
+      "context": "Feature film project role"
+    },
+    {
+      "id": "0138b623-c290-4dff-acd4-6cba423783f0",
+      "person": "Josh Olaoluwa",
+      "org": "One Woman One Bra",
+      "org_type": "project",
+      "role_title": "Producer",
+      "context": "Feature film project role"
+    },
+    {
+      "id": "856cf8c1-bc80-4725-b95f-82b7f05f4654",
+      "person": "Vincho Nchogu",
+      "org": "One Woman One Bra",
+      "org_type": "project",
+      "role_title": "Writer/director",
+      "context": "Feature film project role"
+    },
+    {
+      "id": "51a4bf25-d83c-444e-81ea-b1e43240361f",
+      "person": "Niyitegeka Gratien",
+      "org": "What a Day",
+      "org_type": "project",
+      "role_title": "Director / actor",
+      "context": "What a Day film project; SVAFF lists him as director, Rwanda coverage describes him as starring in the film."
+    }
+  ],
+  "orphan_evidence": [
+    {
+      "id": "c927b3fb-4502-4e5d-98e3-268cd8c064b5",
+      "source_type": "url",
+      "title": "AHUPA Radio - What a Day to represent Rwanda at SVAFF",
+      "source_date": "2026-09-02T21:00:00.000Z",
+      "created_at": "2026-09-03T21:00:00.000Z"
+    },
+    {
+      "id": "2ba66ae6-15e2-43bd-8e55-254255c5bf66",
+      "source_type": "url",
+      "title": "Unrivaled on Tour with Ally - Season 3 tour page",
+      "source_date": "2026-09-02T21:00:00.000Z",
+      "created_at": "2026-09-03T21:00:00.000Z"
+    },
+    {
+      "id": "ecd01a04-6c2f-4247-9b4f-a5421718d4a0",
+      "source_type": "url",
+      "title": "Unrivaled 2024 launch model announcement",
+      "source_date": "2024-05-29T21:00:00.000Z",
+      "created_at": "2026-09-03T21:00:00.000Z"
+    },
+    {
+      "id": "42e621a3-c7c2-449f-b7bb-26499d0f1d58",
+      "source_type": "url",
+      "title": "Sports Illustrated - Unrivaled business model context",
+      "source_date": null,
+      "created_at": "2026-09-03T21:00:00.000Z"
+    },
+    {
+      "id": "add493d5-996e-4125-884c-9ee8be091410",
+      "source_type": "url",
+      "title": "AP - NBA penalties in Clippers Kawhi Leonard case",
+      "source_date": "2026-09-02T21:00:00.000Z",
+      "created_at": "2026-09-03T21:00:00.000Z"
+    },
+    {
+      "id": "bf38bb69-0a71-4b2e-922d-dadbec7977df",
+      "source_type": "url",
+      "title": "Sinema Focus - NBO Film Festival 2026 expansion",
+      "source_date": "2026-09-01T21:00:00.000Z",
+      "created_at": "2026-09-03T21:00:00.000Z"
+    },
+    {
+      "id": "b456e77b-f5f2-459c-80c7-4aff5f1d5a34",
+      "source_type": "url",
+      "title": "OYA - Pushing 30 trailer and Africa Magic premiere",
+      "source_date": "2026-09-02T21:00:00.000Z",
+      "created_at": "2026-09-03T21:00:00.000Z"
+    },
+    {
+      "id": "f3e4865c-9c66-4093-aeeb-8cf7d302c12f",
+      "source_type": "url",
+      "title": "BellaNaija - Adanne production process interview",
+      "source_date": "2026-02-28T22:00:00.000Z",
+      "created_at": "2026-09-03T21:00:00.000Z"
+    },
+    {
+      "id": "59765ea3-e006-42c6-84bd-c52d1b9020cc",
+      "source_type": "url",
+      "title": "Al Jazeera/AP - Good Good executives leave amid advertisement controve",
+      "source_date": "2026-09-02T21:00:00.000Z",
+      "created_at": "2026-09-03T21:00:00.000Z"
+    },
+    {
+      "id": "56b2a604-d549-4383-a1e6-18443c615bcd",
+      "source_type": "url",
+      "title": "Arab Media Summit official contact / FAQ",
+      "source_date": "2026-09-08T21:00:00.000Z",
+      "created_at": "2026-09-14T21:00:00.000Z"
+    }
+  ],
+  "business_unit_entities": [
+    {
+      "id": "f870d94d-da75-456c-a8ce-d8b5deef7ee5",
+      "display_name": "AFC",
+      "slug": "afc-venture",
+      "bu_name": "AFC",
+      "bu_slug": "afc-venture"
+    },
+    {
+      "id": "d268d692-51be-45f0-91db-49d8bd461489",
+      "display_name": "AMV",
+      "slug": "amv",
+      "bu_name": "AMV",
+      "bu_slug": "amv"
+    },
+    {
+      "id": "dc6afefc-4603-4ca8-beb0-a5dd7a1e665c",
+      "display_name": "Globa 3 Properties",
+      "slug": "globa3-properties",
+      "bu_name": "Globa 3 Properties",
+      "bu_slug": "globa3-properties"
+    },
+    {
+      "id": "eedf05eb-9c58-4cbf-b639-ea8da0bfaebe",
+      "display_name": "GLOBA3",
+      "slug": "globa3",
+      "bu_name": "GLOBA3",
+      "bu_slug": "globa3"
+    },
+    {
+      "id": "d61a4da0-bfd5-4592-86c9-875196cca450",
+      "display_name": "Globa3 Advisory",
+      "slug": "globa3-advisory",
+      "bu_name": "Globa3 Advisory",
+      "bu_slug": "globa3-advisory"
+    },
+    {
+      "id": "da887ede-4368-4aa1-b66e-87ba499f0c46",
+      "display_name": "Globa3 Studios",
+      "slug": "globa3-studios",
+      "bu_name": "Globa3 Studios",
+      "bu_slug": "globa3-studios"
+    },
+    {
+      "id": "96725602-e607-4a5a-81fb-0ee7b9c77b0d",
+      "display_name": "Globa3 Ventures",
+      "slug": "globa3-ventures",
+      "bu_name": "Globa3 Ventures",
+      "bu_slug": "globa3-ventures"
+    },
+    {
+      "id": "02bb2fdf-3c5d-4d51-a4d2-3564231377f0",
+      "display_name": "Nigeria x Arcana",
+      "slug": "nigeria-arcana",
+      "bu_name": "Nigeria x Arcana",
+      "bu_slug": "nigeria-arcana"
+    },
+    {
+      "id": "4e8e55be-f6cf-4793-abba-9624ad5df2ee",
+      "display_name": "Parenthood Nigeria",
+      "slug": "parenthood-nigeria",
+      "bu_name": "Parenthood Nigeria",
+      "bu_slug": "parenthood-nigeria"
+    },
+    {
+      "id": "52a14b13-0957-4909-b020-643b5e903267",
+      "display_name": "Unseen Arabia",
+      "slug": "unseen-arabia",
+      "bu_name": "Unseen Arabia",
+      "bu_slug": "unseen-arabia"
+    }
+  ],
+  "legacy_contact_to_entity_map": [
+    {
+      "legacy_id": "87113e6d-337b-4504-add5-e1b0edf31104",
+      "full_name": "Adeniyi Omirin",
+      "entity_id": "cb49972d-5de3-46c6-b1dc-504d06e15922",
+      "display_name": "Adeniyi Omirin",
+      "slug": "adeniyi-omirin"
+    },
+    {
+      "legacy_id": "26ea9399-72ac-4dd7-9edd-aab8af7dd31c",
+      "full_name": "Ahmad Mahmood",
+      "entity_id": "7a84d33a-bd89-4231-912d-f2d09d2e6e36",
+      "display_name": "Ahmad Mahmood",
+      "slug": "ahmad-mahmood"
+    },
+    {
+      "legacy_id": "a47ef32b-bf55-4f4c-b2e4-ba85c968fc08",
+      "full_name": "Alexandra Eala",
+      "entity_id": "2d22ee2d-c5f3-42ef-a7a1-28c2e491b242",
+      "display_name": "Alexandra Eala",
+      "slug": "alexandra-eala"
+    },
+    {
+      "legacy_id": "88ca2379-e94c-49dc-a1fd-9b092b1e9537",
+      "full_name": "Allison Abner",
+      "entity_id": "bfc93d18-31d6-4848-8a91-fe95fea36f98",
+      "display_name": "Allison Abner",
+      "slug": "allison-abner"
+    },
+    {
+      "legacy_id": "f418e0d5-0edd-4139-99c0-1f5e630becfb",
+      "full_name": "Amit Jain",
+      "entity_id": "bcd88a60-75c1-4b3d-bdd5-2552d7b30a25",
+      "display_name": "Amit Jain",
+      "slug": "amit-jain"
+    },
+    {
+      "legacy_id": "3d4f67c6-7b80-4665-a16e-e7f4452bc2d1",
+      "full_name": "Anton Konkov",
+      "entity_id": "336ccc9b-ed93-4eba-b67e-2c128f660956",
+      "display_name": "Anton Konkov",
+      "slug": "anton-konkov"
+    },
+    {
+      "legacy_id": "93662452-d0f1-48e9-8252-bde370c10412",
+      "full_name": "Arice Siapi",
+      "entity_id": "b69bb36e-9436-465d-b042-e9264968eea3",
+      "display_name": "Arice Siapi",
+      "slug": "arice-siapi"
+    },
+    {
+      "legacy_id": "633f92a4-55d9-47d4-b60e-a74ab859c2be",
+      "full_name": "Aude Hesbert",
+      "entity_id": "eaf460cb-1cc2-4033-9bdc-b53134be3008",
+      "display_name": "Aude Hesbert",
+      "slug": "aude-hesbert"
+    },
+    {
+      "legacy_id": "ab5247b4-39c5-41f5-b18c-5747b5c6b4a4",
+      "full_name": "Billy Huang",
+      "entity_id": "78953f6d-0cb4-45aa-96ce-0ca7e2c902b7",
+      "display_name": "Billy Huang",
+      "slug": "billy-huang"
+    },
+    {
+      "legacy_id": "49370cd6-7fc0-4e0f-81b6-3e13c99e988b",
+      "full_name": "Chris Kelly",
+      "entity_id": "9aa0f780-7ce7-4e83-8249-1ea6509e0100",
+      "display_name": "Chris Kelly",
+      "slug": "chris-kelly"
+    },
+    {
+      "legacy_id": "63bf9656-09d6-464b-b8df-c04523eabd7e",
+      "full_name": "Cyrielle Raingou",
+      "entity_id": "6fe5ec7a-67f7-48cb-a0f4-bce5aa723aee",
+      "display_name": "Cyrielle Raingou",
+      "slug": "cyrielle-raingou"
+    },
+    {
+      "legacy_id": "dd5912b7-2b2d-4776-82f8-4470d3a1907c",
+      "full_name": "Damilola Orimogunje",
+      "entity_id": "cf3b1837-c127-4e9e-abb9-20c2dc93ce23",
+      "display_name": "Damilola Orimogunje",
+      "slug": "damilola-orimogunje"
+    },
+    {
+      "legacy_id": "118d65a8-33c4-4de8-af51-df1b4ed61244",
+      "full_name": "Editi Effiong",
+      "entity_id": "294a1c08-6d4a-4d57-96bc-a0f7fb32d8ba",
+      "display_name": "Editi Effiong",
+      "slug": "editi-effiong"
+    },
+    {
+      "legacy_id": "03c15cfd-d707-4f99-acdf-d5f2b974f455",
+      "full_name": "Faiz Abu Rmeleh",
+      "entity_id": "000188dc-dd78-4333-8906-56b460b6aca9",
+      "display_name": "Faiz Abu Rmeleh",
+      "slug": "faiz-abu-rmeleh"
+    },
+    {
+      "legacy_id": "af2e7d86-07ea-4677-8a49-d926d1187d2e",
+      "full_name": "Gavin Fitzgerald",
+      "entity_id": "7c345a90-b364-4e2d-84df-06c9047d155b",
+      "display_name": "Gavin Fitzgerald",
+      "slug": "gavin-fitzgerald"
+    },
+    {
+      "legacy_id": "e92e5add-bcc6-4bac-9498-87d834f235a7",
+      "full_name": "Grant Hill",
+      "entity_id": "81cd22b8-58a9-4d6e-8847-69c01513a20e",
+      "display_name": "Grant Hill",
+      "slug": "grant-hill"
+    },
+    {
+      "legacy_id": "b3a7f10a-a16b-4ffd-a329-b6f879855747",
+      "full_name": "H.E. Dr Ali Bin Tamim",
+      "entity_id": "3d86568b-9759-436a-a136-cc26d432329a",
+      "display_name": "H.E. Dr Ali Bin Tamim",
+      "slug": "h-e-dr-ali-bin-tamim"
+    },
+    {
+      "legacy_id": "881625af-075a-4695-b7a2-557290e581e6",
+      "full_name": "H.E. Mohamed Khalifa Al Mubarak",
+      "entity_id": "cd120f74-5abb-4a35-bc1c-4d85c02d8dfc",
+      "display_name": "H.E. Mohamed Khalifa Al Mubarak",
+      "slug": "h-e-mohamed-khalifa-al-mubarak"
+    },
+    {
+      "legacy_id": "8e78ac48-7235-47cf-932f-9d18c56adfb0",
+      "full_name": "Jack Cameron",
+      "entity_id": "fe13ec81-c7d1-405e-8cf4-631b3b82e461",
+      "display_name": "Jack Cameron",
+      "slug": "jack-cameron"
+    },
+    {
+      "legacy_id": "21e72a54-d9d7-4f11-a86c-109997dc18b7",
+      "full_name": "Jamie Leibert",
+      "entity_id": "b6eae94f-edb9-4362-8d54-7bfd641aa5b3",
+      "display_name": "Jamie Leibert",
+      "slug": "jamie-leibert"
+    },
+    {
+      "legacy_id": "0ea89b4a-ca35-4765-a3a8-b5be55432696",
+      "full_name": "Jason Day",
+      "entity_id": "9bf32651-7ac5-425e-b880-844fd6e05b1c",
+      "display_name": "Jason Day",
+      "slug": "jason-day"
+    },
+    {
+      "legacy_id": "0860fcb0-48c7-49d7-906a-bca9abb6b9cd",
+      "full_name": "Kely Nascimento",
+      "entity_id": "28a4ac2b-e22d-49a1-81b8-ebe2e8410530",
+      "display_name": "Kely Nascimento",
+      "slug": "kely-nascimento"
+    },
+    {
+      "legacy_id": "895d2034-7deb-4d4c-b287-ef9381ddb660",
+      "full_name": "Keren Manor",
+      "entity_id": "6adf2a78-01e4-4c26-95c6-29ba4ae3f306",
+      "display_name": "Keren Manor",
+      "slug": "keren-manor"
+    },
+    {
+      "legacy_id": "90e723b4-f2f1-4d2c-8aad-448f66db39fa",
+      "full_name": "Kinda Ibrahim",
+      "entity_id": "e77a4d9c-3853-4c99-88b8-4646d70067a0",
+      "display_name": "Kinda Ibrahim",
+      "slug": "kinda-ibrahim"
+    },
+    {
+      "legacy_id": "30e822fe-291a-4583-9bd3-e0610ff37f6d",
+      "full_name": "Lekan Fadolapo",
+      "entity_id": "6382473c-5875-423a-aa3d-5f6a3a7eeeea",
+      "display_name": "Lekan Fadolapo",
+      "slug": "lekan-fadolapo"
+    },
+    {
+      "legacy_id": "a53a9429-6ca1-4662-b23b-110aac2ed754",
+      "full_name": "Loris Bouillant",
+      "entity_id": "7d173e1d-2d63-46de-9ff4-9a2825d3463a",
+      "display_name": "Loris Bouillant",
+      "slug": "loris-bouillant"
+    },
+    {
+      "legacy_id": "b2edcaae-eb42-49ed-81a7-7858e9667e04",
+      "full_name": "Mary Mazzio",
+      "entity_id": "1667d7db-8d70-4eab-a937-92bb6624897d",
+      "display_name": "Mary Mazzio",
+      "slug": "mary-mazzio"
+    },
+    {
+      "legacy_id": "1fa3ec70-6e79-4e79-8971-b4c50aa9087f",
+      "full_name": "Mbithi Masya",
+      "entity_id": "1c589d65-5d80-4285-b8ea-d369f8a3daef",
+      "display_name": "Mbithi Masya",
+      "slug": "mbithi-masya"
+    },
+    {
+      "legacy_id": "18737bd1-450e-4f45-9013-b58206a829cd",
+      "full_name": "Michael Spanos II",
+      "entity_id": "d04eb9bc-9487-457c-b787-eb91bd03825e",
+      "display_name": "Michael Spanos II",
+      "slug": "michael-spanos-ii"
+    },
+    {
+      "legacy_id": "37725e5c-0df7-4b74-98cd-83dd2cbcffd1",
+      "full_name": "Michael Strahan",
+      "entity_id": "3cd6e633-ff0e-4ed5-bfcd-3cd122095d68",
+      "display_name": "Michael Strahan",
+      "slug": "michael-strahan"
+    },
+    {
+      "legacy_id": "aafa7321-2ec1-473e-ab19-6599c61ae6e7",
+      "full_name": "Mohamed Hefzy",
+      "entity_id": "d2c7eb52-54b3-4abf-a0b4-1643208f7865",
+      "display_name": "Mohamed Hefzy",
+      "slug": "mohamed-hefzy"
+    },
+    {
+      "legacy_id": "3af1b8a6-bab8-478e-9154-a36f3546686a",
+      "full_name": "Mohammed Bulama",
+      "entity_id": "63f912e5-1d6a-4118-90ff-dc0fcdb5523c",
+      "display_name": "Mohammed Bulama",
+      "slug": "mohammed-bulama"
+    },
+    {
+      "legacy_id": "abc56ad3-c844-455e-955a-4c8563bb8e7b",
+      "full_name": "Natasha Hemingway",
+      "entity_id": "519bcc16-0331-4017-98b7-d33ca68b83e4",
+      "display_name": "Natasha Hemingway",
+      "slug": "natasha-hemingway"
+    },
+    {
+      "legacy_id": "b757b9bd-88e5-4ff0-8f4e-d1c9db064abe",
+      "full_name": "Nosarieme Garrick",
+      "entity_id": "d50e5cd2-f556-4c07-ad18-899ca2d07ef9",
+      "display_name": "Nosarieme Garrick",
+      "slug": "nosarieme-garrick"
+    },
+    {
+      "legacy_id": "0484b356-c0b9-4b70-ba4f-897f9dd9b5cb",
+      "full_name": "Osahon Akpata",
+      "entity_id": "4a45a0df-586e-454a-829c-624b9d8b32f0",
+      "display_name": "Osahon Akpata",
+      "slug": "osahon-akpata"
+    },
+    {
+      "legacy_id": "03b4afa3-0696-45c2-a01f-ee97b2a81c12",
+      "full_name": "Parshad Esmaeili",
+      "entity_id": "6d251df0-8d19-4867-9120-be027d346f3f",
+      "display_name": "Parshad Esmaeili",
+      "slug": "parshad-esmaeili"
+    },
+    {
+      "legacy_id": "bdc40792-7777-4246-924e-18b793bd40f6",
+      "full_name": "Patrice Caillet",
+      "entity_id": "e2eddfa7-e373-4665-a5d6-2e0b17b42191",
+      "display_name": "Patrice Caillet",
+      "slug": "patrice-caillet"
+    },
+    {
+      "legacy_id": "dd2365be-f6ba-4c54-840e-53599ba029d0",
+      "full_name": "Paul Misir",
+      "entity_id": "b718fe7a-9d93-450d-a76f-5a7165744697",
+      "display_name": "Paul Misir",
+      "slug": "paul-misir"
+    },
+    {
+      "legacy_id": "001d581e-26e9-4fa9-8fa4-a63f5cdf2739",
+      "full_name": "Rachael Gunn",
+      "entity_id": "be16badb-ddbb-4239-9075-30fc0bb7053e",
+      "display_name": "Rachael Gunn",
+      "slug": "rachael-gunn"
+    },
+    {
+      "legacy_id": "df68050c-d125-4bd4-b6c7-e5f02cb88131",
+      "full_name": "Ralf Rueckauer",
+      "entity_id": "bae0dc06-b9a9-4900-97ab-88ff93fa1f25",
+      "display_name": "Ralf Rueckauer",
+      "slug": "ralf-rueckauer"
+    },
+    {
+      "legacy_id": "abb3438a-7000-48a5-be18-e23aac8670da",
+      "full_name": "Reabetswe Moeti-Vogt",
+      "entity_id": "66eee85e-6e79-481c-b79b-0eaadb842bac",
+      "display_name": "Reabetswe Moeti-Vogt",
+      "slug": "reabetswe-moeti-vogt"
+    },
+    {
+      "legacy_id": "fec60053-fb98-4052-ac89-9a1a1f128dc3",
+      "full_name": "Rehad Desai",
+      "entity_id": "308c67f5-5be5-4219-bc38-f89dd72d6f20",
+      "display_name": "Rehad Desai",
+      "slug": "rehad-desai"
+    },
+    {
+      "legacy_id": "4baec32b-b0c0-4d83-9c4e-1d31dac50b42",
+      "full_name": "Reince Priebus",
+      "entity_id": "85ceb84d-8a99-4570-86e1-a292c47af43a",
+      "display_name": "Reince Priebus",
+      "slug": "reince-priebus"
+    },
+    {
+      "legacy_id": "17068dbe-78ee-446b-b4a1-99a98d6c50d2",
+      "full_name": "Sheba Hirst",
+      "entity_id": "ca61e7b6-3958-4c82-929e-98cdb1be4cea",
+      "display_name": "Sheba Hirst",
+      "slug": "sheba-hirst"
+    },
+    {
+      "legacy_id": "e9990b2a-778a-4d1e-9603-e5e8ee7157df",
+      "full_name": "Sheikha Bodour Al Qasimi",
+      "entity_id": "ef0b2aae-7308-45a4-bbe0-ab8facc5ec42",
+      "display_name": "Sheikha Bodour Al Qasimi",
+      "slug": "sheikha-bodour-al-qasimi"
+    },
+    {
+      "legacy_id": "835421ce-e799-488f-9e28-8c894839eee4",
+      "full_name": "Stephen Curry",
+      "entity_id": "cd1757b8-9282-4a1a-aa49-d69d603855a4",
+      "display_name": "Stephen Curry",
+      "slug": "stephen-curry"
+    },
+    {
+      "legacy_id": "e94ce99d-2b22-40a0-bee7-7ccda1f77b2d",
+      "full_name": "Struan Douglas",
+      "entity_id": "64d7900d-c8da-4e16-8c41-d00c4d5dced5",
+      "display_name": "Struan Douglas",
+      "slug": "struan-douglas"
+    },
+    {
+      "legacy_id": "942abd03-6a01-4001-b357-bd78e3ab630f",
+      "full_name": "Tareq Amin",
+      "entity_id": "f312cec1-6e50-40c6-861e-f44bb89053ca",
+      "display_name": "Tareq Amin",
+      "slug": "tareq-amin"
+    },
+    {
+      "legacy_id": "9d71da2f-d6df-4f8e-9f16-685289fef6f1",
+      "full_name": "Tom Martienssen",
+      "entity_id": "289d609a-40a0-4157-adad-514bf085fe9d",
+      "display_name": "Tom Martienssen",
+      "slug": "tom-martienssen"
+    },
+    {
+      "legacy_id": "248d448b-8de6-4d70-8a71-2b33e72c1f73",
+      "full_name": "Vea Mafile'o",
+      "entity_id": "1d494594-0816-438f-854b-55347690366a",
+      "display_name": "Vea Mafile'o",
+      "slug": "vea-mafileo"
+    },
+    {
+      "legacy_id": "c8f34314-9cdc-4d75-986b-ad9b50a3ca35",
+      "full_name": "Victor Schoucair",
+      "entity_id": "a71a5b9d-b67a-45a3-b17f-4ed20d12100f",
+      "display_name": "Victor Schoucair",
+      "slug": "victor-schoucair"
+    },
+    {
+      "legacy_id": "a1647616-d330-4f5e-892b-68a7d1c5c26f",
+      "full_name": "Vusi Mchunu",
+      "entity_id": "ea4eb4cd-24ce-48ad-a385-a4cd4c47b390",
+      "display_name": "Vusi Mchunu",
+      "slug": "vusi-mchunu"
+    }
+  ],
+  "meetings_row": [
+    {
+      "id": "a3ded276-7423-4621-a0da-44eee6682ce0",
+      "title": "Call#1 - Globa3 Memory System",
+      "date": "2026-04-13T21:00:00.000Z",
+      "source": "zoom transcript",
+      "transcript_len": 66007,
+      "summary_len": 122
+    }
+  ],
+  "interaction_without_subject_entity": [
+    {
+      "id": "8eaf967a-11e3-44cf-9845-54e99adcdc62",
+      "subject": "Call#1 - Globa3 Memory System",
+      "interaction_type": "meeting_note",
+      "occurred_at": "2026-04-13T21:00:00.000Z",
+      "ev": true
+    }
+  ],
+  "triggers": [
+    {
+      "tbl": "actions",
+      "tgname": "set_actions_updated_at"
+    },
+    {
+      "tbl": "entities",
+      "tgname": "set_entities_updated_at"
+    },
+    {
+      "tbl": "entity_affiliations",
+      "tgname": "set_entity_affiliations_updated_at"
+    },
+    {
+      "tbl": "entity_mentions",
+      "tgname": "set_entity_mentions_updated_at"
+    },
+    {
+      "tbl": "evidence",
+      "tgname": "set_evidence_updated_at"
+    },
+    {
+      "tbl": "interactions",
+      "tgname": "set_interactions_updated_at"
+    },
+    {
+      "tbl": "opportunities",
+      "tgname": "set_opportunities_updated_at"
+    },
+    {
+      "tbl": "outcomes",
+      "tgname": "set_outcomes_updated_at"
+    },
+    {
+      "tbl": "research_artifacts",
+      "tgname": "set_research_artifacts_updated_at"
+    },
+    {
+      "tbl": "research_findings",
+      "tgname": "set_research_findings_updated_at"
+    },
+    {
+      "tbl": "signals",
+      "tgname": "set_signals_updated_at"
+    }
+  ],
+  "functions": [
+    {
+      "proname": "set_updated_at",
+      "args": ""
+    }
+  ],
+  "knowledge_sample": [
+    {
+      "title": "AFC commercial model",
+      "type": "commercial_model",
+      "slug": "afc-commercial-model",
+      "source": "globa3-afc-page-2026-08-31",
+      "len": 265
+    },
+    {
+      "title": "Advisory mandate categories",
+      "type": "context",
+      "slug": "advisory-mandate-categories",
+      "source": "globa3-advisory-website-brief",
+      "len": 271
+    },
+    {
+      "title": "Advisory Studios connection",
+      "type": "context",
+      "slug": "advisory-studios-connection",
+      "source": "globa3-advisory-website-brief",
+      "len": 254
+    },
+    {
+      "title": "AFC as a venture under Globa 3 Ventures",
+      "type": "context",
+      "slug": "afc-as-a-venture-under-globa3-ventures",
+      "source": "zoom transcript",
+      "len": 95
+    },
+    {
+      "title": "Digital cultural media platform",
+      "type": "context",
+      "slug": "digital-cultural-platform",
+      "source": "Unseen - Business Model.pdf",
+      "len": 181
+    },
+    {
+      "title": "Geographic operating footprint",
+      "type": "context",
+      "slug": "global-operating-footprint",
+      "source": "provided document",
+      "len": 165
+    },
+    {
+      "title": "Globa 3 as parent entity",
+      "type": "context",
+      "slug": "globa3-as-parent-entity",
+      "source": "zoom transcript",
+      "len": 161
+    },
+    {
+      "title": "Globa 3 company positioning",
+      "type": "context",
+      "slug": "strategic-media-company",
+      "source": "provided document",
+      "len": 182
+    },
+    {
+      "title": "Globa 3 platform structure",
+      "type": "context",
+      "slug": "globa3-platform-structure",
+      "source": "natan-homepage-brief-2026-05-20",
+      "len": 108
+    },
+    {
+      "title": "Impact and sustainability pillar",
+      "type": "context",
+      "slug": "impact-and-sustainability",
+      "source": "globa3-website-2026-05-06",
+      "len": 232
+    },
+    {
+      "title": "Insights, communications, and influence",
+      "type": "context",
+      "slug": "insights-communications-influence",
+      "source": "globa3-website-2026-05-06",
+      "len": 215
+    },
+    {
+      "title": "Natan CAA background",
+      "type": "context",
+      "slug": "natan-caa-background",
+      "source": "natan-homepage-brief-2026-05-20",
+      "len": 194
+    },
+    {
+      "title": "Natan operating focus",
+      "type": "context",
+      "slug": "natan-operating-focus",
+      "source": "natan-homepage-brief-2026-05-20",
+      "len": 211
+    },
+    {
+      "title": "Parenthood Nigeria as sub-project",
+      "type": "context",
+      "slug": "parenthood-nigeria-as-sub-project",
+      "source": "zoom transcript",
+      "len": 96
+    },
+    {
+      "title": "Platform ownership model",
+      "type": "context",
+      "slug": "platform-ownership-model",
+      "source": "Unseen - Business Model.pdf",
+      "len": 174
+    },
+    {
+      "title": "Sports and entertainment field of operation",
+      "type": "context",
+      "slug": "sports-entertainment-field",
+      "source": "globa3-website-2026-05-06",
+      "len": 284
+    },
+    {
+      "title": "Stephen and Film AlUla infrastructure context",
+      "type": "context",
+      "slug": "stephen-film-alula-infrastructure-context",
+      "source": "stephen-site-brief-2026-05-11",
+      "len": 513
+    },
+    {
+      "title": "Stephen EK 782 context",
+      "type": "context",
+      "slug": "stephen-ek782-context",
+      "source": "stephen-strachan-website-brief",
+      "len": 222
+    },
+    {
+      "title": "Stephen Film AlUla context",
+      "type": "context",
+      "slug": "stephen-film-alula-context",
+      "source": "stephen-strachan-website-brief",
+      "len": 308
+    },
+    {
+      "title": "Stephen production infrastructure expertise",
+      "type": "context",
+      "slug": "stephen-infrastructure-expertise",
+      "source": "stephen-strachan-website-brief",
+      "len": 212
+    },
+    {
+      "title": "Stephen selected work context",
+      "type": "context",
+      "slug": "stephen-selected-work",
+      "source": "stephen-strachan-website-brief",
+      "len": 270
+    },
+    {
+      "title": "Studios production mandate",
+      "type": "context",
+      "slug": "studios-production-mandate",
+      "source": "provided document",
+      "len": 125
+    },
+    {
+      "title": "Target buyers",
+      "type": "context",
+      "slug": "target-buyers",
+      "source": "Unseen - Business Model.pdf",
+      "len": 221
+    },
+    {
+      "title": "Unseen Arabia as cultural media platform",
+      "type": "context",
+      "slug": "unseen-arabia-platform",
+      "source": "zoom transcript",
+      "len": 323
+    },
+    {
+      "title": "Ventures as a structural layer",
+      "type": "context",
+      "slug": "ventures-as-a-structural-layer",
+      "source": "zoom transcript",
+      "len": 113
+    }
+  ],
+  "rules_sample": [
+    {
+      "title": "AMV athlete compensation and sponsor architecture requires c",
+      "type": "compliance_rule",
+      "slug": "amv-athlete-compensation-sponsor-architecture-clean-separation",
+      "len": 296
+    },
+    {
+      "title": "AMV brand-partner content requires approval and harm review ",
+      "type": "governance_rule",
+      "slug": "amv-brand-partner-content-approval-harm-review-before-publication",
+      "len": 247
+    },
+    {
+      "title": "Advisory engagement model",
+      "type": "process",
+      "slug": "advisory-engagement-model",
+      "len": 306
+    },
+    {
+      "title": "AFC facts inference recommendations boundary",
+      "type": "process",
+      "slug": "afc-facts-inference-recommendations-boundary",
+      "len": 197
+    },
+    {
+      "title": "Editorial control rule",
+      "type": "process",
+      "slug": "editorial-control-rule",
+      "len": 162
+    },
+    {
+      "title": "Interviewee selection rule",
+      "type": "process",
+      "slug": "interviewee-selection-rule",
+      "len": 181
+    },
+    {
+      "title": "KPI evaluation rule",
+      "type": "process",
+      "slug": "kpi-evaluation-rule",
+      "len": 172
+    },
+    {
+      "title": "Licensing definition rule",
+      "type": "process",
+      "slug": "licensing-definition-rule",
+      "len": 166
+    },
+    {
+      "title": "Proof-based sales rule",
+      "type": "process",
+      "slug": "proof-based-sales",
+      "len": 155
+    },
+    {
+      "title": "Stephen claims architecture",
+      "type": "process",
+      "slug": "stephen-claims-architecture",
+      "len": 430
+    },
+    {
+      "title": "Stephen red-line behaviours",
+      "type": "process",
+      "slug": "stephen-site-redlines",
+      "len": 409
+    },
+    {
+      "title": "Ventures investor materials guardrail",
+      "type": "process",
+      "slug": "ventures-investor-materials-guardrail",
+      "len": 482
+    },
+    {
+      "title": "Do not imply relationships from external research",
+      "type": "relationship_language_rule",
+      "slug": "do-not-imply-relationships-from-external-research-v3",
+      "len": 253
+    },
+    {
+      "title": "Story IP cannot move to opportunity without rights and acces",
+      "type": "rights_access_rule",
+      "slug": "story-ip-cannot-move-to-opportunity-without-rights-access-v3",
+      "len": 243
+    },
+    {
+      "title": "Format adaptation dignity and stereotype safeguard",
+      "type": "safeguard_rule",
+      "slug": "format-adaptation-dignity-stereotype-safeguard-v3",
+      "len": 254
+    },
+    {
+      "title": "Parenthood Nigeria expert review boundary",
+      "type": "safety",
+      "slug": "parenthood-nigeria-expert-review-boundary",
+      "len": 255
+    },
+    {
+      "title": "About page structure",
+      "type": "structure",
+      "slug": "advisory-about-structure",
+      "len": 367
+    },
+    {
+      "title": "Advisory homepage structure",
+      "type": "structure",
+      "slug": "advisory-homepage-structure",
+      "len": 311
+    },
+    {
+      "title": "Advisory mandate presentation rule",
+      "type": "structure",
+      "slug": "advisory-mandate-rule",
+      "len": 248
+    },
+    {
+      "title": "Advisory site navigation structure",
+      "type": "structure",
+      "slug": "advisory-nav-structure",
+      "len": 209
+    }
+  ],
+  "automatization_rows": [
+    {
+      "title": "    Parent-child hierarchy as core structure",
+      "type": "system_logic",
+      "source": "    zoom transcript",
+      "order_index": 1,
+      "len": 250
+    },
+    {
+      "title": "    Context inheritance via hierarchy",
+      "type": "system_logic",
+      "source": "    zoom transcript",
+      "order_index": 2,
+      "len": 184
+    },
+    {
+      "title": "    Scoped retrieval must be explicitly controlled",
+      "type": "system_logic",
+      "source": "    zoom transcript",
+      "order_index": 3,
+      "len": 145
+    },
+    {
+      "title": "    Knowledge linked by business_unit_id",
+      "type": "system_logic",
+      "source": "    zoom transcript",
+      "order_index": 4,
+      "len": 140
+    },
+    {
+      "title": "    Rules linked by business_unit_id",
+      "type": "system_logic",
+      "source": "    zoom transcript",
+      "order_index": 5,
+      "len": 150
+    },
+    {
+      "title": "    Use stable identifiers (slug) for reference",
+      "type": "system_logic",
+      "source": "    zoom transcript",
+      "order_index": 6,
+      "len": 190
+    },
+    {
+      "title": "    Do not store raw transcripts",
+      "type": "workflow",
+      "source": "    zoom transcript",
+      "order_index": 7,
+      "len": 158
+    },
+    {
+      "title": "    Extract → filter → store pipeline",
+      "type": "workflow",
+      "source": "    zoom transcript",
+      "order_index": 8,
+      "len": 183
+    },
+    {
+      "title": "    Agents require explicit triggering",
+      "type": "system_logic",
+      "source": "    zoom transcript",
+      "order_index": 9,
+      "len": 142
+    },
+    {
+      "title": "    Fully autonomous AI behavior is not reliable yet",
+      "type": "system_logic",
+      "source": "    zoom transcript",
+      "order_index": 10,
+      "len": 153
+    },
+    {
+      "title": "    Progressive feeding strategy",
+      "type": "workflow",
+      "source": "    zoom transcript",
+      "order_index": 11,
+      "len": 178
+    },
+    {
+      "title": "    Hierarchy defines system behavior",
+      "type": "system_logic",
+      "source": "    zoom transcript",
+      "order_index": 12,
+      "len": 139
+    },
+    {
+      "title": "    Manual validation remains required",
+      "type": "workflow",
+      "source": "    zoom transcript",
+      "order_index": 13,
+      "len": 117
+    },
+    {
+      "title": "    System designed for AI-assisted workflows",
+      "type": "direction",
+      "source": "    zoom transcript",
+      "order_index": 14,
+      "len": 142
+    },
+    {
+      "title": "    Use case: content generation and contextual assista",
+      "type": "direction",
+      "source": "    zoom transcript",
+      "order_index": 15,
+      "len": 145
+    }
+  ]
+}

@@ -29,17 +29,22 @@ begin
   end if;
 end $$;
 
-create schema if not exists auth;
-grant usage on schema auth to anon, authenticated, service_role;
-
--- Local stand-in for Supabase Auth's user table. On Supabase this table exists
--- and `create table if not exists` is a no-op, so the real one is never touched.
-create table if not exists auth.users (
-  id uuid primary key default gen_random_uuid(),
-  email text unique,
-  encrypted_password text,
-  created_at timestamptz not null default now()
-);
+-- Supabase owns the existing `auth` schema, and project database roles cannot
+-- grant privileges on it. Create the local stand-in only when the schema is
+-- absent; a real Supabase project therefore performs no DDL in `auth`.
+do $$
+begin
+  if not exists (select 1 from pg_namespace where nspname = 'auth') then
+    create schema auth;
+    grant usage on schema auth to anon, authenticated, service_role;
+    create table auth.users (
+      id uuid primary key default gen_random_uuid(),
+      email text unique,
+      encrypted_password text,
+      created_at timestamptz not null default now()
+    );
+  end if;
+end $$;
 
 -- auth.uid() / auth.role(): Supabase reads the verified JWT claims that PostgREST
 -- puts into the `request.jwt.claims` GUC. The application does exactly the same:

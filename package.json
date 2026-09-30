@@ -15,12 +15,42 @@
     "db:status": "node scripts/migrate.mjs --status",
     "db:seed": "npm run --workspace @g3/core seed",
     "db:reset": "node scripts/reset-db.mjs",
+    "db:bootstrap:imported": "tsx packages/core/src/cli/bootstrap-imported.ts",
     "dev": "npm run --workspace @g3/web dev",
     "worker": "npm run --workspace @g3/worker start",
     "build": "npm run --workspace @g3/web build",
     "start": "npm run --workspace @g3/web start",
     "typecheck": "npm run --workspaces --if-present typecheck",
-    "verify": "npm run --workspace @g3/core verify"
+    "verify": "npm run --workspace @g3/core verify",
+    "verify:review": "npm run --workspace @g3/core verify:review",
+    "verify:all": "npm run verify:migrations && npm run verify:capture && npm run verify:perf && npm run verify && npm run verify:review && npm run verify:mobile-api && npm run verify:readback-fallback && npm run verify:note-budget && npm run verify:research-citations && npm run verify:research-mapping && npm run verify:grants",
+    "verify:migrations": "node scripts/test-migration-integrity.mjs",
+    "verify:perf": "node scripts/perf/verify-perf.mjs",
+    "verify:capture": "node scripts/test-capture.mjs",
+    "supabase:test:preflight": "node scripts/supabase-test/run.mjs node scripts/supabase-test/preflight.mjs",
+    "supabase:test:migrate:status": "node scripts/supabase-test/run.mjs node scripts/migrate.mjs --status",
+    "supabase:test:migrate:dry": "node scripts/supabase-test/run.mjs node scripts/migrate.mjs --dry-run",
+    "supabase:test:migrate": "node scripts/supabase-test/run.mjs node scripts/migrate.mjs",
+    "supabase:test:seed": "node scripts/supabase-test/run.mjs npm run db:seed",
+    "supabase:test:bootstrap": "node scripts/supabase-test/run.mjs npx tsx packages/core/src/cli/bootstrap-imported.ts",
+    "supabase:test:verify": "node scripts/supabase-test/run.mjs npm run verify && node scripts/supabase-test/run.mjs npm run verify:review",
+    "supabase:test:dev": "node scripts/supabase-test/run.mjs npm run dev",
+    "supabase:test:worker": "node scripts/supabase-test/run.mjs npm run worker",
+    "supabase:test:demo": "node scripts/supabase-test/demo.mjs",
+    "supabase:test:perf": "node scripts/supabase-test/run.mjs node_modules/.bin/tsx scripts/perf/nav-profile.mts",
+    "verify:mobile-api": "node scripts/test-mobile-api.mjs",
+    "verify:readback-fallback": "node scripts/test-readback-fallback.mjs",
+    "verify:note-budget": "node scripts/test-note-budget.mjs",
+    "verify:research-citations": "node_modules/.bin/tsx packages/core/src/cli/verify-research-citations.ts",
+    "verify:research-mapping": "node_modules/.bin/tsx packages/core/src/cli/verify-research-mapping.ts",
+    "verify:capture-research": "node_modules/.bin/tsx packages/core/src/cli/verify-capture-research.ts",
+    "verify:client-secrets": "node scripts/test-client-secrets.mjs",
+    "mobile": "npm run --workspace @g3/mobile start",
+    "mobile:export:ios": "npm run --workspace @g3/mobile export:ios",
+    "verify:grants": "node scripts/test-client-grants.mjs",
+    "supabase:test:grants": "node scripts/supabase-test/run.mjs node scripts/supabase-test/verify-client-grants.mjs",
+    "supabase:test:storage:create": "node scripts/supabase-test/run.mjs node scripts/supabase-test/create-storage-bucket.mjs",
+    "supabase:test:storage:verify": "node scripts/supabase-test/run.mjs node scripts/supabase-test/verify-storage-bucket.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.20.2",
@@ -31,12 +61,13 @@
   "dependencies": {
     "@electric-sql/pglite": "^0.5.8",
     "@electric-sql/pglite-socket": "^0.2.11",
+    "dotenv": "^17.4.2",
     "pg": "^8.23.0",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0"
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
   },
   "overrides": {
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0"
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
   }
 }

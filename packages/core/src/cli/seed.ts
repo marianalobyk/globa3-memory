@@ -1,27 +1,48 @@
 #!/usr/bin/env node
 /**
- * Seeds the local/test database.
+ * Seeds a CLEAN local demo database.
  *
  *   npm run db:seed
+ *
+ * Not for a database with imported Globa 3 data: use db:bootstrap:imported.
  *
  * Credentials come from the environment so they are never committed:
  *   SEED_ADMIN_EMAIL / SEED_ADMIN_PASSWORD
  *   SEED_CLIENT_EMAIL / SEED_CLIENT_PASSWORD
  */
 import { closePool } from '../db.js';
+import { isAppError } from '../errors.js';
 import { seedWorkspace } from '../seed.js';
+import { guardTarget } from './guard.js';
 
-const adminEmail = process.env.SEED_ADMIN_EMAIL ?? 'mariana@erizos.tv';
-const clientEmail = process.env.SEED_CLIENT_EMAIL ?? 'client@example.com';
-const adminPassword = process.env.SEED_ADMIN_PASSWORD ?? 'local-dev-admin';
-const clientPassword = process.env.SEED_CLIENT_PASSWORD ?? 'local-dev-client';
+const target = await guardTarget('seed');
 
-const result = await seedWorkspace({
-  adminEmail,
-  adminPassword,
-  clientEmail,
-  clientPassword,
-});
+// The demo seed overwrites the type and summary of business units. On a
+// database holding imported Globa 3 data that would replace real records, so
+// seedWorkspace refuses there and points at the import-safe bootstrap. Locally,
+// a deliberate reset of a demo database can set SEED_OVERWRITE_BUSINESS_UNITS=1.
+const allowImportedData = target.kind === 'local' && process.env.SEED_OVERWRITE_BUSINESS_UNITS === '1';
+
+const adminEmail = process.env.SEED_ADMIN_EMAIL ?? 'admin@example.invalid';
+const clientEmail = process.env.SEED_CLIENT_EMAIL ?? 'client@example.invalid';
+const adminPassword = process.env.SEED_ADMIN_PASSWORD ?? 'ChangeMeBeforeUse';
+const clientPassword = process.env.SEED_CLIENT_PASSWORD ?? 'ChangeMeBeforeUse';
+
+let result;
+try {
+  result = await seedWorkspace({
+    adminEmail,
+    adminPassword,
+    clientEmail,
+    clientPassword,
+    allowImportedData,
+  });
+} catch (error) {
+  if (!isAppError(error) || error.code !== 'imported_data_present') throw error;
+  console.error(`[seed] ${error.message}`);
+  await closePool();
+  process.exit(1);
+}
 
 console.log('Seeded workspace', result.workspaceId);
 console.log('  admin :', adminEmail);

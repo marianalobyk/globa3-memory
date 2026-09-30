@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { BookOpen, HelpCircle } from 'lucide-react';
-import { withUser } from '@g3/core';
 import { requirePageSession } from '@/lib/session';
+import { loadKnowledgeData } from '@/lib/page-data';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -22,136 +22,16 @@ export default async function KnowledgePage({
   const workspaceId = session.activeWorkspace.workspaceId;
   const { q } = await searchParams;
   const search = (q ?? '').trim();
-  const pattern = search.length > 0 ? `%${search}%` : null;
 
-  const data = await withUser(session.user.id, async (db) => ({
-    counts: await db.oneOrFail<{
-      entities: number;
-      findings: number;
-      signals: number;
-      interactions: number;
-      actions: number;
-      evidence: number;
-      mentions: number;
-      affiliations: number;
-      business_units: number;
-    }>(
-      `select
-         (select count(*)::int from public.entities) as entities,
-         (select count(*)::int from public.research_findings) as findings,
-         (select count(*)::int from public.signals) as signals,
-         (select count(*)::int from public.interactions) as interactions,
-         (select count(*)::int from public.actions) as actions,
-         (select count(*)::int from public.evidence) as evidence,
-         (select count(*)::int from public.entity_mentions where resolution_status = 'pending') as mentions,
-         (select count(*)::int from public.entity_affiliations) as affiliations,
-         (select count(*)::int from public.business_units) as business_units`,
-    ),
-    entities: await db.rows<{
-      id: string;
-      display_name: string;
-      entity_type: string;
-      description: string | null;
-      research_status: string | null;
-      relationship_status: string | null;
-      updated_at: string;
-      affiliation_count: number;
-      finding_count: number;
-    }>(
-      `select e.id, e.display_name, e.entity_type, e.description, e.research_status,
-              e.relationship_status, e.updated_at,
-              (select count(*)::int from public.entity_affiliations a
-                where a.person_entity_id = e.id or a.organization_entity_id = e.id) as affiliation_count,
-              (select count(*)::int from public.research_findings f where f.related_entity_id = e.id) as finding_count
-         from public.entities e
-        where ($1::text is null or e.display_name ilike $1 or coalesce(e.description,'') ilike $1)
-        order by e.updated_at desc limit 60`,
-      [pattern],
-    ),
-    findings: await db.rows<{
-      id: string;
-      title: string;
-      content: string;
-      finding_type: string;
-      confidence: string | null;
-      created_at: string;
-      entity_name: string | null;
-      url: string | null;
-      business_unit: string | null;
-    }>(
-      `select f.id, f.title, f.content, f.finding_type, f.confidence, f.created_at,
-              e.display_name as entity_name, ev.url, bu.name as business_unit
-         from public.research_findings f
-         left join public.entities e on e.id = f.related_entity_id
-         left join public.evidence ev on ev.id = f.evidence_id
-         left join public.business_units bu on bu.id = f.business_unit_id
-        where ($1::text is null or f.title ilike $1 or f.content ilike $1
-               or coalesce(e.display_name,'') ilike $1)
-        order by f.created_at desc limit 60`,
-      [pattern],
-    ),
-    signals: await db.rows<{
-      id: string;
-      title: string;
-      why_it_matters: string | null;
-      decision_question: string | null;
-      status: string;
-      signal_date: string | null;
-      entity_name: string | null;
-      business_unit: string | null;
-    }>(
-      `select s.id, s.title, s.why_it_matters, s.decision_question, s.status, s.signal_date,
-              e.display_name as entity_name, bu.name as business_unit
-         from public.signals s
-         left join public.entities e on e.id = s.related_entity_id
-         left join public.business_units bu on bu.id = s.business_unit_id
-        where ($1::text is null or s.title ilike $1 or coalesce(s.why_it_matters,'') ilike $1)
-        order by s.created_at desc limit 40`,
-      [pattern],
-    ),
-    mentions: await db.rows<{
-      id: string;
-      mention_text: string;
-      proposed_entity_type: string | null;
-      resolution_status: string;
-      rationale: string | null;
-      created_from: string | null;
-      candidate_name: string | null;
-    }>(
-      `select m.id, m.mention_text, m.proposed_entity_type, m.resolution_status, m.rationale,
-              m.created_from, e.display_name as candidate_name
-         from public.entity_mentions m
-         left join public.entities e on e.id = m.candidate_entity_id
-        where m.resolution_status = 'pending'
-          and ($1::text is null or m.mention_text ilike $1)
-        order by m.created_at desc limit 60`,
-      [pattern],
-    ),
-    units: await db.rows<{
-      id: string;
-      name: string;
-      type: string | null;
-      summary: string | null;
-      finding_count: number;
-      signal_count: number;
-    }>(
-      `select b.id, b.name, b.type, b.summary,
-              (select count(*)::int from public.research_findings f where f.business_unit_id = b.id) as finding_count,
-              (select count(*)::int from public.signals s where s.business_unit_id = b.id) as signal_count
-         from public.business_units b
-        order by b.name`,
-    ),
-  }));
-
-  const { counts, entities, findings, signals, mentions, units } = data;
+  const { counts, entities, findings, signals, mentions, units } = await loadKnowledgeData(session, search);
 
   return (
     <div className="mx-auto max-w-5xl space-y-6">
       <div>
         <h1 className="text-xl font-semibold tracking-tight">Knowledge</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Everything approved into this workspace. Ask Knowledge answers only from these records and
-          cites them; Research &amp; Update is where new information comes from.
+          Everything saved in this workspace, including the imported Globa 3 records. Ask answers only
+          from saved records. New information comes from what you capture, after your approval.
         </p>
       </div>
 
@@ -206,7 +86,7 @@ export default async function KnowledgePage({
             <EmptyState
               icon={<BookOpen className="size-5" />}
               title="No entities yet"
-              description="People, companies, projects and events appear here once you approve them from a proposal. A person can be stored long before any contact exists."
+              description="People, companies, projects and events appear here once they are approved and saved from a proposal. A person can be stored long before any contact exists."
             />
           ) : (
             <Card>
@@ -358,7 +238,7 @@ export default async function KnowledgePage({
               <CardHeader>
                 <CardTitle className="text-sm">Names awaiting a human decision</CardTitle>
                 <CardDescription>
-                  Each of these appeared in a brief or in research without resolving to a stored
+                  Each of these appeared in a capture or in research without resolving to a stored
                   record. They are kept visible rather than dropped, and nothing was merged.
                 </CardDescription>
               </CardHeader>
@@ -440,10 +320,10 @@ export default async function KnowledgePage({
 
       <p className="text-xs text-muted-foreground">
         Looking for something that is not here?{' '}
-        <Link href="/briefs" className="underline underline-offset-2">
-          Research &amp; Update
-        </Link>{' '}
-        searches for new information and prepares changes for approval.
+        <Link href="/capture" className="underline underline-offset-2">
+          Capture it
+        </Link>
+        : write what you know, then approve the proposed changes.
       </p>
     </div>
   );

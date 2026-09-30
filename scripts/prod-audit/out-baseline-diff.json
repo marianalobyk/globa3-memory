@@ -1,0 +1,252 @@
+{
+  "onlyApp": [
+    "activity_log",
+    "app_users",
+    "applied_changes",
+    "ask_messages",
+    "ask_threads",
+    "brief_documents",
+    "brief_formats",
+    "brief_sources",
+    "budgets",
+    "captures",
+    "contact_research",
+    "context_items",
+    "daily_reports",
+    "prompt_versions",
+    "proposal_approvals",
+    "proposal_items",
+    "proposals",
+    "research_topics",
+    "run_events",
+    "run_stages",
+    "runs",
+    "schema_migrations",
+    "upload_documents",
+    "uploads",
+    "usage_events",
+    "workspace_members",
+    "workspaces"
+  ],
+  "onlyProd": [],
+  "colDiff": [
+    {
+      "table": "Globa 3 Automatization & Memory",
+      "missingInProd": [
+        "workspace_id"
+      ],
+      "extraInProd": [],
+      "typeChanged": [
+        "created_at: app=timestamp with time zone prod=timestamp without time zone"
+      ]
+    },
+    {
+      "table": "actions",
+      "missingInProd": [
+        "workspace_id"
+      ],
+      "extraInProd": [],
+      "typeChanged": []
+    },
+    {
+      "table": "business_units",
+      "missingInProd": [
+        "workspace_id"
+      ],
+      "extraInProd": [],
+      "typeChanged": [
+        "created_at: app=timestamp with time zone prod=timestamp without time zone",
+        "updated_at: app=timestamp with time zone prod=timestamp without time zone"
+      ]
+    },
+    {
+      "table": "entities",
+      "missingInProd": [
+        "workspace_id"
+      ],
+      "extraInProd": [],
+      "typeChanged": []
+    },
+    {
+      "table": "entity_affiliations",
+      "missingInProd": [
+        "workspace_id"
+      ],
+      "extraInProd": [],
+      "typeChanged": []
+    },
+    {
+      "table": "entity_aliases",
+      "missingInProd": [
+        "workspace_id"
+      ],
+      "extraInProd": [],
+      "typeChanged": []
+    },
+    {
+      "table": "entity_mentions",
+      "missingInProd": [
+        "workspace_id"
+      ],
+      "extraInProd": [],
+      "typeChanged": []
+    },
+    {
+      "table": "evidence",
+      "missingInProd": [
+        "workspace_id"
+      ],
+      "extraInProd": [],
+      "typeChanged": []
+    },
+    {
+      "table": "external_companies",
+      "missingInProd": [
+        "workspace_id"
+      ],
+      "extraInProd": [],
+      "typeChanged": []
+    },
+    {
+      "table": "external_contacts",
+      "missingInProd": [
+        "workspace_id"
+      ],
+      "extraInProd": [],
+      "typeChanged": []
+    },
+    {
+      "table": "interactions",
+      "missingInProd": [
+        "workspace_id"
+      ],
+      "extraInProd": [],
+      "typeChanged": []
+    },
+    {
+      "table": "knowledge",
+      "missingInProd": [
+        "workspace_id"
+      ],
+      "extraInProd": [],
+      "typeChanged": [
+        "created_at: app=timestamp with time zone prod=timestamp without time zone",
+        "updated_at: app=timestamp with time zone prod=timestamp without time zone"
+      ]
+    },
+    {
+      "table": "meetings",
+      "missingInProd": [
+        "business_unit_id",
+        "meeting_date",
+        "slug",
+        "status",
+        "updated_at",
+        "workspace_id"
+      ],
+      "extraInProd": [],
+      "typeChanged": [
+        "created_at: app=timestamp with time zone prod=timestamp without time zone"
+      ]
+    },
+    {
+      "table": "member_business_units",
+      "missingInProd": [
+        "role",
+        "workspace_id"
+      ],
+      "extraInProd": [],
+      "typeChanged": [
+        "created_at: app=timestamp with time zone prod=timestamp without time zone"
+      ]
+    },
+    {
+      "table": "members",
+      "missingInProd": [
+        "notes",
+        "role_title",
+        "workspace_id"
+      ],
+      "extraInProd": [],
+      "typeChanged": [
+        "created_at: app=timestamp with time zone prod=timestamp without time zone",
+        "updated_at: app=timestamp with time zone prod=timestamp without time zone"
+      ]
+    },
+    {
+      "table": "opportunities",
+      "missingInProd": [
+        "workspace_id"
+      ],
+      "extraInProd": [],
+      "typeChanged": []
+    },
+    {
+      "table": "outcomes",
+      "missingInProd": [
+        "workspace_id"
+      ],
+      "extraInProd": [],
+      "typeChanged": []
+    },
+    {
+      "table": "relationship_interactions",
+      "missingInProd": [
+        "business_unit_id",
+        "company_id",
+        "contact_id",
+        "interest_level",
+        "next_step",
+        "source",
+        "workspace_id"
+      ],
+      "extraInProd": [],
+      "typeChanged": []
+    },
+    {
+      "table": "research_artifacts",
+      "missingInProd": [
+        "workspace_id"
+      ],
+      "extraInProd": [],
+      "typeChanged": []
+    },
+    {
+      "table": "research_findings",
+      "missingInProd": [
+        "workspace_id"
+      ],
+      "extraInProd": [],
+      "typeChanged": []
+    },
+    {
+      "table": "rules",
+      "missingInProd": [
+        "source",
+        "workspace_id"
+      ],
+      "extraInProd": [],
+      "typeChanged": [
+        "created_at: app=timestamp with time zone prod=timestamp without time zone",
+        "updated_at: app=timestamp with time zone prod=timestamp without time zone"
+      ]
+    },
+    {
+      "table": "signal_entities",
+      "missingInProd": [
+        "workspace_id"
+      ],
+      "extraInProd": [],
+      "typeChanged": []
+    },
+    {
+      "table": "signals",
+      "missingInProd": [
+        "workspace_id"
+      ],
+      "extraInProd": [],
+      "typeChanged": []
+    }
+  ],
+  "identical": []
+}

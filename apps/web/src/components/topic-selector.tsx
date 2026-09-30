@@ -74,6 +74,7 @@ export function TopicSelector({
         },
       );
       router.push(`/activity/runs/${result.runId}`);
+      router.refresh();
     } catch (failure) {
       setError(
         failure instanceof RequestFailed ? failure.payload.error : 'Could not start the research run.',

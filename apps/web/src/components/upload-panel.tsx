@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { UploadStatusBadge } from '@/components/status';
 import { api, RequestFailed } from '@/lib/client';
+import { UPLOAD_REFERENCE_NOTE } from '@/lib/labels';
 import { cn } from '@/lib/utils';
 
 interface UploadRow {
@@ -98,8 +99,7 @@ export function UploadPanel() {
           Upload briefs and dossiers
         </CardTitle>
         <CardDescription>
-          Markdown, PDF or ZIP. One file may hold several briefs or dossiers, and each is listed
-          separately with its own status.
+          Markdown, PDF or ZIP, each file with its own status. {UPLOAD_REFERENCE_NOTE}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
@@ -176,7 +176,9 @@ export function UploadPanel() {
                     </span>
                   ) : null}
                   <UploadStatusBadge status={upload.status} />
-                  {upload.status_detail ? (
+                  {upload.status === 'parsed' ? (
+                    <p className="w-full text-xs text-muted-foreground">{UPLOAD_REFERENCE_NOTE}</p>
+                  ) : upload.status_detail ? (
                     <p className="w-full text-xs text-muted-foreground">{upload.status_detail}</p>
                   ) : null}
                 </li>

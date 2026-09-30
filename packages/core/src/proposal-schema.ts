@@ -9,7 +9,11 @@
  */
 
 /** Model-supplied label fields, mapped to the real foreign key column. */
-export const LABEL_REFERENCES: Record<string, { column: string; kind: 'entity' | 'evidence' | 'artifact' | 'signal' | 'interaction' | 'opportunity' | 'action' | 'business_unit' }> = {
+export const LABEL_REFERENCES: Record<string, { column: string; kind: 'entity' | 'evidence' | 'artifact' | 'signal' | 'interaction' | 'opportunity' | 'action' | 'business_unit' | 'finding' }> = {
+  // A citation names the finding it belongs to. Resolved by label like every
+  // other non-entity reference: it becomes a dependency on the finding item, so
+  // a citation can never be written before the finding it cites.
+  finding_label: { column: 'finding_id', kind: 'finding' },
   related_entity_label: { column: 'related_entity_id', kind: 'entity' },
   entity_label: { column: 'entity_id', kind: 'entity' },
   person_entity_label: { column: 'person_entity_id', kind: 'entity' },
@@ -26,6 +30,7 @@ export const LABEL_REFERENCES: Record<string, { column: string; kind: 'entity' |
   opportunity_label: { column: 'related_opportunity_id', kind: 'opportunity' },
   action_label: { column: 'related_action_id', kind: 'action' },
   business_unit_label: { column: 'business_unit_id', kind: 'business_unit' },
+  matched_entity_label: { column: 'matched_entity_id', kind: 'entity' },
   internal_business_unit_label: { column: 'internal_business_unit_id', kind: 'business_unit' },
 };
 
@@ -93,7 +98,11 @@ export const TABLE_SPECS: Record<string, TableSpec> = {
     required: ['source_type', 'title'],
     labelColumn: 'title',
     slugColumn: null,
-    naturalKey: ['url'],
+    // A web source is identified by its URL; a captured note has no URL and is
+    // identified by `file_reference` = capture:<content hash>, so capturing the
+    // same note twice proposes the stored source instead of a duplicate. Only
+    // the non-null key columns are compared.
+    naturalKey: ['url', 'file_reference'],
   },
   research_artifacts: {
     writable: [
@@ -185,19 +194,29 @@ export const TABLE_SPECS: Record<string, TableSpec> = {
     slugColumn: null,
     naturalKey: ['title', 'related_entity_id'],
   },
-  knowledge: {
-    writable: ['title', 'type', 'content', 'business_unit_id', 'source', 'status'],
-    required: ['title', 'content'],
-    labelColumn: 'title',
-    slugColumn: 'slug',
-    naturalKey: ['slug'],
+  // One source supporting one finding. Both sides are references, so this row
+  // depends on the finding AND the source item; neither can be written without
+  // the other being approved too.
+  research_finding_evidence: {
+    writable: ['finding_label', 'evidence_label', 'role', 'locator'],
+    required: [],
+    labelColumn: null,
+    slugColumn: null,
+    naturalKey: ['finding_id', 'evidence_id'],
   },
-  rules: {
-    writable: ['title', 'type', 'content', 'business_unit_id', 'source', 'status'],
-    required: ['title', 'content'],
-    labelColumn: 'title',
-    slugColumn: 'slug',
-    naturalKey: ['slug'],
+  // A research question the review offers. Selecting one creates this row and
+  // nothing else: it is a request, not memory, and it starts no search. The
+  // run happens only after the separate confirmation in topic-research.ts.
+  research_topics: {
+    writable: [
+      'label', 'target_type', 'research_question', 'why_useful', 'priority',
+      'matched_entity_id', 'business_unit_id', 'resolution_status', 'candidate_matches',
+      'selected', 'status',
+    ],
+    required: ['label', 'research_question'],
+    labelColumn: 'label',
+    slugColumn: null,
+    naturalKey: ['label', 'research_question'],
   },
 };
 

@@ -3,6 +3,11 @@
  *
  * Idempotent: every insert is an upsert, so running it twice changes nothing.
  *
+ * For a CLEAN local demo database only. It upserts business units, overwriting
+ * their type and summary, so it must never run against a database holding
+ * imported Globa 3 data: use bootstrapImportedWorkspace (bootstrap-imported.ts)
+ * there. The CLI refuses when it detects that case.
+ *
  * What it creates:
  *   - the first workspace, with both users and their approval capability;
  *   - the three formats, with their structured rules and a prompt version built
@@ -19,10 +24,11 @@ import { readFileSync } from 'node:fs';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { FORMAT_KEYS, FORMAT_PROMPT_SOURCES, slugify, type FormatKey } from '@g3/shared';
-import { grantMembership, upsertDevUser } from './auth.js';
+import { ensureUser, grantMembership } from './auth.js';
 import { withService, type Queryable } from './db.js';
 import { createPromptVersion, upsertFormat } from './formats-repo.js';
 import { logActivity } from './activity.js';
+import { AppError } from './errors.js';
 
 export interface SeedOptions {
   workspaceSlug?: string;
@@ -32,6 +38,11 @@ export interface SeedOptions {
   clientEmail: string;
   clientPassword: string;
   promptRoot?: string;
+  /**
+   * Seed even though the workspace looks like imported data. Only the local CLI
+   * sets this, and only on explicit request (SEED_OVERWRITE_BUSINESS_UNITS=1).
+   */
+  allowImportedData?: boolean;
 }
 
 export interface SeedResult {
@@ -44,7 +55,7 @@ export interface SeedResult {
   entities: number;
 }
 
-function findPromptRoot(explicit?: string): string {
+export function findPromptRoot(explicit?: string): string {
   const candidates = [
     explicit,
     resolve(process.cwd(), 'seed/prompts'),
@@ -59,7 +70,30 @@ function findPromptRoot(explicit?: string): string {
   );
 }
 
-const BUSINESS_UNITS: { name: string; type: string; summary: string }[] = [
+/** The run prompt and desk files for a format, exactly as shipped in seed/prompts. */
+export function readFormatPrompt(
+  promptRoot: string,
+  key: FormatKey,
+): {
+  body: string;
+  attachments: { path: string; title: string; body: string }[];
+  structured: Record<string, unknown>;
+  note: string;
+} {
+  const source = FORMAT_PROMPT_SOURCES[key];
+  return {
+    body: readFileSync(resolve(promptRoot, 'run_prompts', source.runPrompt), 'utf8'),
+    attachments: source.deskFiles.map((path) => ({
+      path,
+      title: path.split('/').pop() ?? path,
+      body: readFileSync(resolve(promptRoot, path), 'utf8'),
+    })),
+    structured: { source: source.runPrompt, deskFiles: source.deskFiles },
+    note: `Seeded verbatim from ${source.runPrompt} in main_briefs_renaming_patch_PURE_SAFE_2026-06-25.`,
+  };
+}
+
+export const BUSINESS_UNITS: { name: string; type: string; summary: string }[] = [
   {
     name: 'AMV',
     type: 'venture',
@@ -109,7 +143,7 @@ const BUSINESS_UNITS: { name: string; type: string; summary: string }[] = [
  * editable rows rather than left inside the prompt text, because the prompts
  * themselves warn against treating stale example values as live watch items.
  */
-const CONTEXT_ITEMS: { kind: string; label: string; detail: string | null; formatKey?: FormatKey }[] = [
+export const CONTEXT_ITEMS: { kind: string; label: string; detail: string | null; formatKey?: FormatKey }[] = [
   { kind: 'priority', label: 'Athlete-owned media platforms', detail: null },
   { kind: 'priority', label: 'Sponsor-funded IP franchises', detail: null },
   { kind: 'priority', label: 'Gulf market expansion', detail: null },
@@ -177,10 +211,25 @@ export async function seedWorkspace(options: SeedOptions): Promise<SeedResult> {
   const slug = options.workspaceSlug ?? 'globa3';
   const name = options.workspaceName ?? 'Globa 3';
 
-  // Users are created through the auth module so the dev password hashing and
-  // the app_users mirror stay in one place.
-  const adminUserId = await upsertDevUser(options.adminEmail, options.adminPassword, 'Mariana');
-  const clientUserId = await upsertDevUser(options.clientEmail, options.clientPassword, 'Client');
+  // Refuse before creating anything. The verify suites call this too, so they
+  // refuse on an imported database as well instead of writing demo data into it.
+  if (!options.allowImportedData) {
+    const signals = await importedDataSignals(slug);
+    if (signals.length > 0) {
+      throw new AppError(
+        `Refusing to run the demo seed: workspace "${slug}" holds imported data (${signals.join('; ')}). ` +
+          'It would overwrite business units and add demo records. Use the import-safe bootstrap: npm run db:bootstrap:imported -- --workspace ' +
+          slug,
+        409,
+        'imported_data_present',
+      );
+    }
+  }
+
+  // Users are created through the auth module: via the Supabase Admin API when
+  // Supabase Auth is configured, otherwise in the local development table.
+  const adminUserId = await ensureUser(options.adminEmail, options.adminPassword, 'Mariana');
+  const clientUserId = await ensureUser(options.clientEmail, options.clientPassword, 'Client');
 
   return withService(async (db: Queryable) => {
     const workspace = await db.oneOrFail<{ id: string }>(
@@ -211,21 +260,12 @@ export async function seedWorkspace(options: SeedOptions): Promise<SeedResult> {
     const formats: SeedResult['formats'] = [];
     for (const key of FORMAT_KEYS) {
       const format = await upsertFormat(db, workspaceId, key);
-      const source = FORMAT_PROMPT_SOURCES[key];
-      const body = readFileSync(resolve(promptRoot, 'run_prompts', source.runPrompt), 'utf8');
-      const attachments = source.deskFiles.map((path) => ({
-        path,
-        title: path.split('/').pop() ?? path,
-        body: readFileSync(resolve(promptRoot, path), 'utf8'),
-      }));
+      const prompt = readFormatPrompt(promptRoot, key);
 
       const version = await createPromptVersion(db, {
         workspaceId,
         formatId: format.id,
-        body,
-        attachments,
-        structured: { source: source.runPrompt, deskFiles: source.deskFiles },
-        note: `Seeded verbatim from ${source.runPrompt} in main_briefs_renaming_patch_PURE_SAFE_2026-06-25.`,
+        ...prompt,
         createdBy: adminUserId,
         makeActive: true,
       });
@@ -233,7 +273,7 @@ export async function seedWorkspace(options: SeedOptions): Promise<SeedResult> {
         key,
         id: format.id,
         promptVersion: version.version,
-        attachments: attachments.length,
+        attachments: prompt.attachments.length,
       });
     }
 
@@ -326,7 +366,7 @@ export async function seedAdditionalWorkspace(
   ownerEmail: string,
   ownerPassword: string,
 ): Promise<{ workspaceId: string; userId: string }> {
-  const userId = await upsertDevUser(ownerEmail, ownerPassword, name);
+  const userId = await ensureUser(ownerEmail, ownerPassword, name);
   return withService(async (db) => {
     const workspace = await db.oneOrFail<{ id: string }>(
       `insert into public.workspaces (slug, name, timezone)
@@ -339,4 +379,66 @@ export async function seedAdditionalWorkspace(
     for (const key of FORMAT_KEYS) await upsertFormat(db, workspace.id, key);
     return { workspaceId: workspace.id, userId };
   });
+}
+
+/**
+ * The business units that seedWorkspace would overwrite in an existing database:
+ * rows with a seeded slug whose type or summary differ from the seed values.
+ *
+ * An empty list means seeding cannot change any existing business unit. A
+ * non-empty list is what imported data looks like, and the seed CLI refuses.
+ */
+export async function businessUnitsSeedWouldOverwrite(
+  workspaceSlug = 'globa3',
+): Promise<{ slug: string; fields: string[] }[]> {
+  return withService(async (db) => {
+    const workspace = await db.one<{ id: string }>(`select id from public.workspaces where slug = $1`, [
+      workspaceSlug,
+    ]);
+    if (!workspace) return [];
+    const existing = await db.rows<{ slug: string; type: string | null; summary: string | null }>(
+      `select slug, type, summary from public.business_units
+        where workspace_id = $1 and slug = any($2::text[])`,
+      [workspace.id, BUSINESS_UNITS.map((unit) => slugify(unit.name))],
+    );
+    const changes: { slug: string; fields: string[] }[] = [];
+    for (const row of existing) {
+      const unit = BUSINESS_UNITS.find((u) => slugify(u.name) === row.slug);
+      if (!unit) continue;
+      const fields = [
+        ...(row.type !== unit.type ? ['type'] : []),
+        ...(row.summary !== unit.summary ? ['summary'] : []),
+      ];
+      if (fields.length > 0) changes.push({ slug: row.slug, fields });
+    }
+    return changes;
+  });
+}
+
+/**
+ * Signs that a workspace holds imported Globa 3 data rather than a demo seed.
+ *
+ *   - the seed would overwrite an existing business unit's type or summary;
+ *   - `members` or "Globa 3 Automatization & Memory" hold rows: no application
+ *     code, seed or test writes to either, only the import does.
+ */
+export async function importedDataSignals(workspaceSlug = 'globa3'): Promise<string[]> {
+  const signals: string[] = [];
+  const overwrites = await businessUnitsSeedWouldOverwrite(workspaceSlug);
+  if (overwrites.length > 0) {
+    signals.push(
+      `would overwrite business unit(s) ${overwrites.map((o) => `${o.slug} (${o.fields.join(', ')})`).join(', ')}`,
+    );
+  }
+  const counts = await withService((db) =>
+    db.one<{ members: number; entities: number }>(
+      `select (select count(*)::int from public.members m where m.workspace_id = w.id) as members,
+              (select count(*)::int from public.entities e where e.workspace_id = w.id) as entities
+         from public.workspaces w where w.slug = $1`,
+      [workspaceSlug],
+    ),
+  );
+  if (counts?.members) signals.push(`${counts.members} member row(s)`);
+  if (counts?.entities) signals.push(`${counts.entities} entity row(s)`);
+  return signals;
 }

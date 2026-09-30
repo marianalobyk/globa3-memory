@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import animate from 'tailwindcss-animate';
 
 /**
  * Restrained palette for daily work: near-neutral surfaces, one accent, and
@@ -46,6 +47,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [animate],
 };
 export default config;

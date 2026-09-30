@@ -52,6 +52,13 @@ export interface ProposalItemRecord {
   applied_at: string | null;
   applied_row_id: string | null;
   apply_error: string | null;
+  /**
+   * md5(row::text) of the target row when this proposal was built. The apply
+   * step puts it in the UPDATE's WHERE clause, so the staleness check and the
+   * write are one atomic statement.
+   */
+  baseline_fingerprint: string | null;
+  origin_item_id: string | null;
 }
 
 export interface ProposalRecord {
@@ -140,7 +147,7 @@ function entityTypeOf(value: unknown): ResolvableType {
 export interface BuildProposalInput {
   workspaceId: string;
   runId: string | null;
-  sourceKind: 'brief' | 'research' | 'upload' | 'manual';
+  sourceKind: 'brief' | 'research' | 'upload' | 'manual' | 'capture';
   briefDocumentId?: string | null;
   uploadId?: string | null;
   proposal: CaptureProposal;
@@ -148,6 +155,23 @@ export interface BuildProposalInput {
   isMock: boolean;
   /** Free-form provenance attached to every item, e.g. the brief it came from. */
   provenance?: Record<string, unknown>;
+  /**
+   * Add the changes to this existing proposal instead of creating a new one.
+   * Items continue its numbering, labels of its not-yet-saved records become
+   * dependencies, and the proposal gets a new version and content hash, which
+   * revokes any earlier approval: an approval always covers exactly what the
+   * approver saw.
+   */
+  appendTo?: { proposalId: string; reason: string };
+  /** A fresh reading of the same source: the proposal it replaces. */
+  supersedesProposalId?: string | null;
+  /**
+   * The capture proposal that asked for this research. Set only on a research
+   * result, so a reviewer can be told which capture it came from. The database
+   * refuses a parent in another workspace (0023), so this cannot leak across
+   * tenants even if a caller passes the wrong id.
+   */
+  parentProposalId?: string | null;
 }
 
 interface PreparedItem {
@@ -155,6 +179,8 @@ interface PreparedItem {
   op: string;
   targetTable: string;
   targetId: string | null;
+  baselineFingerprint?: string | null;
+  originItemId?: string | null;
   matchStatus: 'new' | 'existing' | 'ambiguous';
   candidates: unknown[];
   label: string;
@@ -186,15 +212,27 @@ export async function buildProposal(
 
   // Label -> seq of the proposed record that will create it.
   const labelToSeq = new Map<string, number>();
+  let seqOffset = 0;
+  if (input.appendTo) {
+    const existing = await db.rows<{ seq: number; label: string; op: string; applied_at: string | null }>(
+      `select seq, label, op, applied_at from public.proposal_items where workspace_id = $1 and proposal_id = $2 order by seq`,
+      [workspaceId, input.appendTo.proposalId],
+    );
+    seqOffset = existing.reduce((max, item) => Math.max(max, item.seq), 0);
+    for (const item of existing) {
+      // A saved record is found in the database itself; an unsaved one is a dependency.
+      if (!item.applied_at && (item.op === 'create' || item.op === 'update')) labelToSeq.set(item.label.toLowerCase(), item.seq);
+    }
+  }
   changes.forEach((change, index) => {
-    if (change.op === 'create') labelToSeq.set(change.label.toLowerCase(), index + 1);
+    if (change.op === 'create') labelToSeq.set(change.label.toLowerCase(), seqOffset + index + 1);
   });
 
   const prepared: PreparedItem[] = [];
 
   for (let index = 0; index < changes.length; index += 1) {
     const change = changes[index] as ProposedChange;
-    const seq = index + 1;
+    const seq = seqOffset + index + 1;
     const spec = tableSpec(change.target_table);
     const fields = fieldsToRecord(change.fields);
 
@@ -281,6 +319,7 @@ export async function buildProposal(
 
     // 4. For a created entity, check the workspace for an existing record first.
     let oldValues: Record<string, unknown> | null = null;
+    let baselineFingerprint: string | null = null;
     if (change.op === 'create' && change.target_table === 'entities') {
       const resolution = await resolveEntity(db, workspaceId, {
         name: String(newValues.display_name ?? change.label),
@@ -292,7 +331,9 @@ export async function buildProposal(
       if (resolution.status === 'existing' && resolution.best) {
         // Already stored: propose an update against the real row, not a duplicate.
         targetId = resolution.best.id;
-        oldValues = await loadRow(db, workspaceId, 'entities', resolution.best.id);
+        const snapshot = await loadRowWithFingerprint(db, workspaceId, 'entities', resolution.best.id);
+        oldValues = snapshot?.row ?? null;
+        baselineFingerprint = snapshot?.fingerprint ?? null;
       }
     }
 
@@ -305,13 +346,33 @@ export async function buildProposal(
       matchStatus = resolution.status;
       if (resolution.best && resolution.status === 'existing') {
         targetId = resolution.best.id;
-        oldValues = await loadRow(db, workspaceId, 'entities', resolution.best.id);
+        const snapshot = await loadRowWithFingerprint(db, workspaceId, 'entities', resolution.best.id);
+        oldValues = snapshot?.row ?? null;
+        baselineFingerprint = snapshot?.fingerprint ?? null;
       } else {
         itemCandidates.push({ field: 'label', ...resolution });
       }
     }
 
-    // 5. Missing required column, or an unresolved reference, makes the item
+    // 5. For any other table, a create or link whose natural key already exists
+    //    is proposed against that concrete record: a create becomes an update, a
+    //    link keeps its operation but gains the target. Either way the approver
+    //    sees the real old values and the item carries a baseline, so the apply
+    //    step writes exactly what was approved -- or refuses -- and never has to
+    //    reinterpret an operation. (Without this, a link to a join row that
+    //    already exists could never be applied: apply treats it as a collision.)
+    const writesNewRow = change.op === 'create' || change.op === 'link' || change.op === 'attach';
+    if (writesNewRow && !targetId && change.target_table !== 'entities') {
+      const existing = await findExistingByNaturalKey(db, workspaceId, change.target_table, newValues);
+      if (existing) {
+        targetId = existing.row.id as string;
+        oldValues = existing.row;
+        baselineFingerprint = existing.fingerprint;
+        matchStatus = 'existing';
+      }
+    }
+
+    // 6. Missing required column, or an unresolved reference, makes the item
     //    ambiguous: visible, editable, and not applicable as-is.
     const missingRequired = spec.required.filter(
       (column) => newValues[column] === undefined || newValues[column] === null,
@@ -338,6 +399,7 @@ export async function buildProposal(
           : change.reason,
       newValues,
       oldValues,
+      baselineFingerprint,
       provenance: {
         ...(input.provenance ?? {}),
         source_urls: change.source_urls,
@@ -360,33 +422,65 @@ export async function buildProposal(
     })),
   );
 
-  const proposal = await db.oneOrFail<{ id: string }>(
-    `insert into public.proposals
-       (workspace_id, run_id, source_kind, brief_document_id, upload_id, title, summary,
-        status, version, content_hash, is_mock, created_by)
-     values ($1,$2,$3,$4,$5,$6,$7,'pending_review',1,$8,$9,$10)
-     returning id`,
-    [
-      workspaceId,
-      input.runId,
-      input.sourceKind,
-      input.briefDocumentId ?? null,
-      input.uploadId ?? null,
-      input.proposal.title,
-      input.proposal.summary,
-      contentHash,
-      input.isMock,
-      input.createdBy,
-    ],
-  );
+  let proposal: { id: string };
+  if (input.appendTo) {
+    proposal = { id: input.appendTo.proposalId };
+  } else if (input.parentProposalId) {
+    // `parent_proposal_id` arrived in migration 0023. Keep ordinary captures
+    // and pre-existing research flows runnable until that additive migration is
+    // deployed; only capture-originated research requires the parent link.
+    proposal = await db.oneOrFail<{ id: string }>(
+      `insert into public.proposals
+         (workspace_id, run_id, source_kind, brief_document_id, upload_id, title, summary,
+          status, version, content_hash, is_mock, created_by, supersedes_proposal_id,
+          parent_proposal_id)
+       values ($1,$2,$3,$4,$5,$6,$7,'pending_review',1,$8,$9,$10,$11,$12)
+       returning id`,
+      [
+        workspaceId,
+        input.runId,
+        input.sourceKind,
+        input.briefDocumentId ?? null,
+        input.uploadId ?? null,
+        input.proposal.title,
+        input.proposal.summary,
+        contentHash,
+        input.isMock,
+        input.createdBy,
+        input.supersedesProposalId ?? null,
+        input.parentProposalId,
+      ],
+    );
+  } else {
+    proposal = await db.oneOrFail<{ id: string }>(
+      `insert into public.proposals
+         (workspace_id, run_id, source_kind, brief_document_id, upload_id, title, summary,
+          status, version, content_hash, is_mock, created_by, supersedes_proposal_id)
+       values ($1,$2,$3,$4,$5,$6,$7,'pending_review',1,$8,$9,$10,$11)
+       returning id`,
+      [
+        workspaceId,
+        input.runId,
+        input.sourceKind,
+        input.briefDocumentId ?? null,
+        input.uploadId ?? null,
+        input.proposal.title,
+        input.proposal.summary,
+        contentHash,
+        input.isMock,
+        input.createdBy,
+        input.supersedesProposalId ?? null,
+      ],
+    );
+  }
 
   for (const item of prepared) {
     await db.query(
       `insert into public.proposal_items
          (workspace_id, proposal_id, seq, op, target_table, target_id, match_status, candidates,
           label, claim_type, confidence, reason, new_values, old_values, provenance,
-          apply_group, depends_on_seq)
-       values ($1,$2,$3,$4,$5,$6,$7,$8::jsonb,$9,$10,$11,$12,$13::jsonb,$14::jsonb,$15::jsonb,$16,$17)`,
+          apply_group, depends_on_seq, baseline_fingerprint, origin_item_id)
+       values ($1,$2,$3,$4,$5,$6,$7,$8::jsonb,$9,$10,$11,$12,$13::jsonb,$14::jsonb,$15::jsonb,$16,$17,$18,$19)`,
       [
         workspaceId,
         proposal.id,
@@ -405,8 +499,14 @@ export async function buildProposal(
         JSON.stringify(item.provenance),
         item.applyGroup,
         item.dependsOnSeq,
+        item.baselineFingerprint ?? null,
+        item.originItemId ?? null,
       ],
     );
+  }
+
+  if (input.appendTo && prepared.length > 0) {
+    await revision(db, workspaceId, proposal.id, input.appendTo.reason);
   }
 
   return { proposalId: proposal.id, items: prepared, resolutions };
@@ -424,6 +524,71 @@ export async function loadRow(
     [workspaceId, rowId],
   );
   return row ?? null;
+}
+
+/**
+ * The row plus the fingerprint of its current contents.
+ *
+ * The fingerprint is computed by the database over the whole row, so it covers
+ * every column without needing an `updated_at` that some of these tables do not
+ * have.
+ */
+function isPendingReference(value: unknown): boolean {
+  return typeof value === 'object' && value !== null && '$ref' in value;
+}
+
+/**
+ * Finds an existing row matching a table's natural key.
+ *
+ * Used when building a proposal so that a record which already exists is
+ * proposed as an update of that concrete record, with its real old values. The
+ * apply step then never has to substitute one operation for another -- it either
+ * does exactly what was approved, or refuses.
+ */
+export async function findExistingByNaturalKey(
+  db: Queryable,
+  workspaceId: string,
+  table: string,
+  values: Record<string, unknown>,
+): Promise<{ row: Record<string, unknown>; fingerprint: string } | null> {
+  const spec = tableSpec(table);
+  // A key column still holding a { $ref } placeholder points at a record this
+  // same proposal has yet to create. A row keyed on something that does not
+  // exist yet cannot already be stored, so there is nothing to look up -- and
+  // passing the placeholder to SQL as a uuid would fail.
+  if (spec.naturalKey.some((column) => isPendingReference(values[column]))) return null;
+  const usable = spec.naturalKey.filter(
+    (column) => values[column] !== undefined && values[column] !== null,
+  );
+  if (usable.length === 0) return null;
+  const conditions = usable.map((column, i) => `t."${column}" = $${i + 2}`);
+  const found = await db.one<Record<string, unknown> & { __fingerprint: string }>(
+    `select t.*, md5(t::text) as __fingerprint
+       from public.${table} t
+      where t.workspace_id = $1 and ${conditions.join(' and ')}
+      limit 1`,
+    [workspaceId, ...usable.map((column) => values[column])],
+  );
+  if (!found) return null;
+  const { __fingerprint: fingerprint, ...row } = found;
+  return { row, fingerprint };
+}
+
+export async function loadRowWithFingerprint(
+  db: Queryable,
+  workspaceId: string,
+  table: string,
+  rowId: string,
+): Promise<{ row: Record<string, unknown>; fingerprint: string } | null> {
+  tableSpec(table);
+  const found = await db.one<Record<string, unknown> & { __fingerprint: string }>(
+    `select t.*, md5(t::text) as __fingerprint
+       from public.${table} t where t.workspace_id = $1 and t.id = $2`,
+    [workspaceId, rowId],
+  );
+  if (!found) return null;
+  const { __fingerprint: fingerprint, ...row } = found;
+  return { row, fingerprint };
 }
 
 // ---------------------------------------------------------------------------
@@ -709,4 +874,283 @@ export async function rejectProposal(
       data: { reason },
     });
   });
+}
+
+// ---------------------------------------------------------------------------
+// Superseding a proposal that can no longer be applied as approved
+// ---------------------------------------------------------------------------
+
+/**
+ * Why an approved item could not be applied exactly as approved.
+ *
+ * Each of these is a case where the old code quietly changed the operation --
+ * turning an approved `create` into an `update`, or an approved `update` into a
+ * `create`. That silently writes something the approver never agreed to, so it
+ * is now refused and turned into a new proposal instead.
+ */
+export type ApplyConflictKind =
+  | 'create_collides_with_existing'
+  | 'update_target_missing'
+  | 'target_changed'
+  /** Update or link against an existing row, but no baseline was ever captured. */
+  | 'baseline_missing';
+
+export interface ApplyConflict {
+  itemId: string;
+  seq: number;
+  label: string;
+  table: string;
+  approvedOp: string;
+  kind: ApplyConflictKind;
+  message: string;
+  /** The concrete row the replacement item should target, when there is one. */
+  existingRowId: string | null;
+  /** The row as it looks now, which becomes the replacement's old values. */
+  currentValues: Record<string, unknown> | null;
+  currentFingerprint: string | null;
+  /** The values the approver approved, carried into the replacement unchanged. */
+  approvedValues: Record<string, unknown>;
+  replacementOp: 'create' | 'update';
+}
+
+export interface SupersedeResult {
+  proposalId: string;
+  itemCount: number;
+  conflictCount: number;
+}
+
+/**
+ * Builds a replacement for a proposal whose approved operations no longer match
+ * reality, and marks the original superseded.
+ *
+ * The replacement carries every item that was still outstanding. Conflicting
+ * items are rewritten to the operation that is now correct, pointed at the
+ * concrete row, and given that row's current values as their old values -- so
+ * the approver sees exactly what would change, against what is actually stored,
+ * and approves that.
+ *
+ * Runs in its own transaction, after the failed apply has rolled back.
+ */
+export async function supersedeProposal(
+  db: Queryable,
+  input: {
+    workspaceId: string;
+    proposalId: string;
+    conflicts: ApplyConflict[];
+    actorId: string;
+  },
+): Promise<SupersedeResult> {
+  const workspaceId = assertScope(input.workspaceId, 'supersedeProposal');
+
+  const original = await db.one<ProposalRecord>(
+    `select * from public.proposals where workspace_id = $1 and id = $2 for update`,
+    [workspaceId, input.proposalId],
+  );
+  if (!original) throw notFound('Proposal not found');
+
+  // If a replacement already exists for this proposal, reuse it rather than
+  // stacking a new one on every retry.
+  const existing = await db.one<{ id: string }>(
+    `select id from public.proposals
+      where workspace_id = $1 and supersedes_proposal_id = $2 and status = 'pending_review'
+      order by created_at desc limit 1`,
+    [workspaceId, input.proposalId],
+  );
+  if (existing) {
+    const count = await db.oneOrFail<{ n: number }>(
+      `select count(*)::int as n from public.proposal_items where proposal_id = $1`,
+      [existing.id],
+    );
+    return { proposalId: existing.id, itemCount: count.n, conflictCount: input.conflicts.length };
+  }
+
+  // All items, including applied and rejected ones: applied items are needed to
+  // resolve references to rows that already exist.
+  const allItems = await db.rows<ProposalItemRecord>(
+    `select * from public.proposal_items
+      where workspace_id = $1 and proposal_id = $2
+      order by seq`,
+    [workspaceId, input.proposalId],
+  );
+  const items = allItems.filter((i) => i.applied_at === null && i.decision !== 'rejected');
+  const appliedRowBySeq = new Map(
+    allItems.filter((i) => i.applied_row_id).map((i) => [i.seq, i.applied_row_id as string]),
+  );
+
+  /**
+   * Carries values and dependencies into the replacement.
+   *
+   * Seq numbers are preserved, so every { $ref: { seq } } and depends_on_seq
+   * entry still points at the item it meant. A reference to an item that was
+   * already applied is resolved to that row's real id, because that item is not
+   * carried over and its row genuinely exists. Nothing else is resolved: ids
+   * substituted during a failed apply belonged to rows the rollback removed.
+   */
+  const carry = (values: Record<string, unknown>, dependsOn: number[]) => {
+    const out: Record<string, unknown> = {};
+    for (const [column, value] of Object.entries(values)) {
+      const ref = (value as { $ref?: { seq?: number } } | null)?.$ref;
+      if (ref && typeof ref.seq === 'number' && appliedRowBySeq.has(ref.seq)) {
+        out[column] = appliedRowBySeq.get(ref.seq);
+      } else {
+        out[column] = value;
+      }
+    }
+    return { values: out, dependsOn: dependsOn.filter((seq) => !appliedRowBySeq.has(seq)) };
+  };
+
+  const conflictByItem = new Map(input.conflicts.map((c) => [c.itemId, c]));
+
+  const replacement = await db.oneOrFail<{ id: string }>(
+    `insert into public.proposals
+       (workspace_id, run_id, source_kind, brief_document_id, upload_id, title, summary,
+        status, version, content_hash, is_mock, created_by, supersedes_proposal_id)
+     values ($1,$2,$3,$4,$5,$6,$7,'pending_review',1,'pending',$8,$9,$10)
+     returning id`,
+    [
+      workspaceId,
+      original.run_id,
+      original.source_kind,
+      original.brief_document_id,
+      original.upload_id,
+      `${original.title} (revised after conflict)`,
+      `Replaces an approved proposal that could no longer be applied as approved: ${input.conflicts
+        .map((c) => `"${c.label}" ${c.kind.replace(/_/g, ' ')}`)
+        .join('; ')}. Review the current values and approve again.`,
+      original.is_mock,
+      input.actorId,
+      original.id,
+    ],
+  );
+
+  const insertItem = `insert into public.proposal_items
+       (workspace_id, proposal_id, seq, op, target_table, target_id, match_status, candidates,
+        label, claim_type, confidence, reason, new_values, old_values, provenance,
+        apply_group, depends_on_seq, baseline_fingerprint, origin_item_id)
+     values ($1,$2,$3,$4,$5,$6,$7,$8::jsonb,$9,$10,$11,$12,$13::jsonb,$14::jsonb,$15::jsonb,$16,$17,$18,$19)`;
+
+  for (const item of items) {
+    const clash = conflictByItem.get(item.id);
+
+    if (!clash) {
+      // Carried over. If it targets a row, both the old values AND the baseline
+      // are taken from the row as it is now, so what the next approver sees and
+      // what the guard checks are the same state. (Refreshing only the
+      // fingerprint would show stale old values against a fresh baseline.)
+      const carried = carry(effectiveValues(item), item.depends_on_seq);
+      let oldValues = item.old_values;
+      let fingerprint = item.baseline_fingerprint;
+      if (item.target_id) {
+        const snapshot = await loadRowWithFingerprint(db, workspaceId, item.target_table, item.target_id);
+        oldValues = snapshot?.row ?? null;
+        fingerprint = snapshot?.fingerprint ?? null;
+      }
+      await db.query(insertItem, [
+        workspaceId, replacement.id, item.seq, item.op, item.target_table, item.target_id,
+        item.match_status, JSON.stringify(item.candidates), item.label, item.claim_type,
+        item.confidence, item.reason,
+        JSON.stringify(carried.values),
+        oldValues ? JSON.stringify(oldValues) : null,
+        JSON.stringify(item.provenance), item.apply_group, carried.dependsOn,
+        fingerprint, item.id,
+      ]);
+      continue;
+    }
+
+    const reason =
+      clash.kind === 'create_collides_with_existing'
+        ? clash.replacementOp === 'update'
+          ? `Approved as a new record, but a matching record already exists. Rewritten as an update of that record so the change is against what is actually stored. ${clash.message}`
+          : `Approved as a new record, but it collided with another record while saving. ${clash.message}`
+        : clash.kind === 'update_target_missing'
+          ? `Approved as an update, but the target record no longer exists. Rewritten as a create. ${clash.message}`
+          : clash.kind === 'baseline_missing'
+            ? `Approved without a snapshot of the record, so it could not be applied safely. The old values below are the values stored now; approve them explicitly. ${clash.message}`
+            : `The target record changed after this was approved. The old values below are the current stored values. ${clash.message}`;
+
+    const carried = carry(clash.approvedValues, item.depends_on_seq);
+    await db.query(insertItem, [
+      workspaceId,
+      replacement.id,
+      item.seq,
+      clash.replacementOp,
+      clash.table,
+      clash.existingRowId,
+      clash.existingRowId ? 'existing' : 'new',
+      JSON.stringify(item.candidates),
+      item.label,
+      item.claim_type,
+      item.confidence,
+      reason,
+      JSON.stringify(carried.values),
+      clash.currentValues ? JSON.stringify(clash.currentValues) : null,
+      JSON.stringify({
+        ...item.provenance,
+        superseded_from_item: item.id,
+        conflict_kind: clash.kind,
+        conflict_message: clash.message,
+      }),
+      item.apply_group,
+      carried.dependsOn,
+      // The fingerprint of the row as it is NOW. It belongs to this new,
+      // unapproved proposal; the original approval was revoked and is not
+      // transferred.
+      clash.currentFingerprint,
+      item.id,
+    ]);
+  }
+
+  // Hash the replacement over what it actually holds.
+  const newItems = await db.rows<ProposalItemRecord>(
+    `select * from public.proposal_items where workspace_id = $1 and proposal_id = $2 order by seq`,
+    [workspaceId, replacement.id],
+  );
+  await db.query(
+    `update public.proposals set content_hash = $3, updated_at = now()
+      where workspace_id = $1 and id = $2`,
+    [workspaceId, replacement.id, computeContentHash(newItems)],
+  );
+
+  // Close the original, and revoke approvals that can never be applied now.
+  await db.query(
+    `update public.proposals
+        set status = 'superseded',
+            superseded_by_proposal_id = $3,
+            superseded_reason = $4,
+            updated_at = now()
+      where workspace_id = $1 and id = $2`,
+    [
+      workspaceId,
+      input.proposalId,
+      replacement.id,
+      `${input.conflicts.length} approved item(s) no longer matched the stored data.`,
+    ],
+  );
+  await db.query(
+    `update public.proposal_approvals set revoked_at = now(), revoked_reason = $3
+      where workspace_id = $1 and proposal_id = $2 and revoked_at is null`,
+    [workspaceId, input.proposalId, 'Superseded: the approved changes no longer matched the stored data.'],
+  );
+
+  await logActivity(db, {
+    workspaceId,
+    actorId: input.actorId,
+    action: 'proposal.superseded',
+    subjectTable: 'proposals',
+    subjectId: input.proposalId,
+    summary: `Refused to apply ${input.conflicts.length} approved item(s) that no longer matched the stored data; created a replacement proposal for re-approval.`,
+    data: {
+      replacementProposalId: replacement.id,
+      conflicts: input.conflicts.map((c) => ({
+        label: c.label,
+        table: c.table,
+        approvedOp: c.approvedOp,
+        kind: c.kind,
+        replacementOp: c.replacementOp,
+        existingRowId: c.existingRowId,
+      })),
+    },
+  });
+
+  return { proposalId: replacement.id, itemCount: newItems.length, conflictCount: input.conflicts.length };
 }

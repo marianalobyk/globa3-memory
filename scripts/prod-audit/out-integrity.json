@@ -1,0 +1,1188 @@
+{
+  "entities_by_type": [
+    {
+      "entity_type": "organization",
+      "n": 111,
+      "with_evidence": 57,
+      "from_contact": 0,
+      "from_company": 54,
+      "from_bu": 0
+    },
+    {
+      "entity_type": "person",
+      "n": 89,
+      "with_evidence": 37,
+      "from_contact": 52,
+      "from_company": 0,
+      "from_bu": 0
+    },
+    {
+      "entity_type": "event",
+      "n": 17,
+      "with_evidence": 17,
+      "from_contact": 0,
+      "from_company": 0,
+      "from_bu": 0
+    },
+    {
+      "entity_type": "project",
+      "n": 11,
+      "with_evidence": 11,
+      "from_contact": 0,
+      "from_company": 0,
+      "from_bu": 0
+    },
+    {
+      "entity_type": "business_unit",
+      "n": 10,
+      "with_evidence": 0,
+      "from_contact": 0,
+      "from_company": 0,
+      "from_bu": 10
+    },
+    {
+      "entity_type": "institution",
+      "n": 8,
+      "with_evidence": 8,
+      "from_contact": 0,
+      "from_company": 0,
+      "from_bu": 0
+    },
+    {
+      "entity_type": "artifact",
+      "n": 2,
+      "with_evidence": 2,
+      "from_contact": 0,
+      "from_company": 0,
+      "from_bu": 0
+    },
+    {
+      "entity_type": "other",
+      "n": 2,
+      "with_evidence": 2,
+      "from_contact": 0,
+      "from_company": 0,
+      "from_bu": 0
+    }
+  ],
+  "entities_by_relationship_status": [
+    {
+      "relationship_status": "none",
+      "research_status": "research_only",
+      "n": 230
+    },
+    {
+      "relationship_status": "unknown",
+      "research_status": "existing",
+      "n": 10
+    },
+    {
+      "relationship_status": "internal",
+      "research_status": "internal",
+      "n": 10
+    }
+  ],
+  "duplicate_canonical_entities": [],
+  "legacy_contact_link_coverage": [
+    {
+      "total": 52,
+      "linked": 52
+    }
+  ],
+  "legacy_company_link_coverage": [
+    {
+      "total": 54,
+      "linked": 54
+    }
+  ],
+  "entities_without_provenance": [
+    {
+      "n": 116
+    }
+  ],
+  "entities_no_provenance_no_legacy": [
+    {
+      "n": 0
+    }
+  ],
+  "orphan_evidence_unreferenced": [
+    {
+      "n": 10
+    }
+  ],
+  "evidence_by_source_type": [
+    {
+      "source_type": "url",
+      "n": 77
+    },
+    {
+      "source_type": "database_row",
+      "n": 61
+    },
+    {
+      "source_type": "pdf",
+      "n": 16
+    },
+    {
+      "source_type": "meeting_note",
+      "n": 7
+    },
+    {
+      "source_type": "brief",
+      "n": 1
+    }
+  ],
+  "findings_provenance": [
+    {
+      "total": 178,
+      "no_provenance": 0,
+      "no_entity": 84,
+      "no_subject_at_all": 0
+    }
+  ],
+  "findings_by_type": [
+    {
+      "finding_type": "inference",
+      "status": "active",
+      "n": 90
+    },
+    {
+      "finding_type": "fact",
+      "status": "active",
+      "n": 36
+    },
+    {
+      "finding_type": "gap",
+      "status": "active",
+      "n": 24
+    },
+    {
+      "finding_type": "recommendation",
+      "status": "active",
+      "n": 17
+    },
+    {
+      "finding_type": "risk",
+      "status": "active",
+      "n": 11
+    }
+  ],
+  "signals_links": [
+    {
+      "signals": 27,
+      "signals_without_entity_link": 0,
+      "signals_without_evidence": 0,
+      "links": 143,
+      "dangling_links": 0
+    }
+  ],
+  "signals_by_status": [
+    {
+      "status": "watch",
+      "signal_strength": "high",
+      "confidence": "high",
+      "n": 10
+    },
+    {
+      "status": "watch",
+      "signal_strength": "medium-high",
+      "confidence": "medium-high",
+      "n": 7
+    },
+    {
+      "status": "watch",
+      "signal_strength": "high",
+      "confidence": "medium-high",
+      "n": 3
+    },
+    {
+      "status": "watch",
+      "signal_strength": "medium-high",
+      "confidence": "high",
+      "n": 3
+    },
+    {
+      "status": "watch",
+      "signal_strength": "medium",
+      "confidence": "medium",
+      "n": 2
+    },
+    {
+      "status": "watch",
+      "signal_strength": "high",
+      "confidence": "medium",
+      "n": 1
+    },
+    {
+      "status": "watch",
+      "signal_strength": "medium-high",
+      "confidence": "medium",
+      "n": 1
+    }
+  ],
+  "actions_detail": [
+    {
+      "id": "1bc43f6a-4efe-44a6-954b-1c4bcfb180f4",
+      "action_type": "follow_up",
+      "status": "proposed",
+      "priority": "medium",
+      "title": "Next step: Introductory Zoom with EIH / Anton Konkov",
+      "ent": true,
+      "inter": true,
+      "bu": true,
+      "owner": false,
+      "ev": true,
+      "due_at": null,
+      "created_at": "2026-09-02T21:00:00.000Z"
+    },
+    {
+      "id": "c2804ea1-bbed-48f3-bff6-34068cb7d16e",
+      "action_type": "follow_up",
+      "status": "proposed",
+      "priority": "medium",
+      "title": "Next step: Initial Paris meeting with Victor Schoucair",
+      "ent": true,
+      "inter": true,
+      "bu": true,
+      "owner": true,
+      "ev": true,
+      "due_at": null,
+      "created_at": "2026-09-02T21:00:00.000Z"
+    },
+    {
+      "id": "cf75745b-e11a-4fff-8cb6-2fcdce1bcd56",
+      "action_type": "follow_up",
+      "status": "proposed",
+      "priority": "medium",
+      "title": "Next step: Deauville accreditation and hospitality coordinat",
+      "ent": true,
+      "inter": true,
+      "bu": true,
+      "owner": true,
+      "ev": true,
+      "due_at": null,
+      "created_at": "2026-09-02T21:00:00.000Z"
+    },
+    {
+      "id": "37de89d5-a7e1-4888-9df7-3479266f2836",
+      "action_type": "follow_up",
+      "status": "proposed",
+      "priority": "medium",
+      "title": "Next step: Deauville Industry Days hosted invitation",
+      "ent": true,
+      "inter": true,
+      "bu": true,
+      "owner": true,
+      "ev": true,
+      "due_at": null,
+      "created_at": "2026-09-02T21:00:00.000Z"
+    },
+    {
+      "id": "84ec8bcb-f588-46d2-908a-59663fdfe3c9",
+      "action_type": "follow_up",
+      "status": "proposed",
+      "priority": "medium",
+      "title": "Next step: Follow-up and working session scheduled with Vict",
+      "ent": true,
+      "inter": true,
+      "bu": true,
+      "owner": true,
+      "ev": true,
+      "due_at": null,
+      "created_at": "2026-09-02T21:00:00.000Z"
+    },
+    {
+      "id": "3be8fdbc-e499-46e5-8ae9-b7945e289053",
+      "action_type": "follow_up",
+      "status": "proposed",
+      "priority": "medium",
+      "title": "Next step: Deauville outreach — Patrice Caillet",
+      "ent": true,
+      "inter": true,
+      "bu": true,
+      "owner": false,
+      "ev": true,
+      "due_at": null,
+      "created_at": "2026-09-02T21:00:00.000Z"
+    },
+    {
+      "id": "626829e3-cb60-458e-9120-ee8c8b9aee60",
+      "action_type": "research_follow_up",
+      "status": "proposed",
+      "priority": "high",
+      "title": "Track What a Day SVAFF schedule and talent details",
+      "ent": true,
+      "inter": false,
+      "bu": true,
+      "owner": false,
+      "ev": true,
+      "due_at": null,
+      "created_at": "2026-09-03T21:00:00.000Z"
+    },
+    {
+      "id": "782620e1-0aa9-4ca5-83be-b97c9a138c6e",
+      "action_type": "research_follow_up",
+      "status": "proposed",
+      "priority": "high",
+      "title": "Prepare AMV teardown of Unrivaled hub-and-road model",
+      "ent": true,
+      "inter": false,
+      "bu": true,
+      "owner": false,
+      "ev": true,
+      "due_at": null,
+      "created_at": "2026-09-03T21:00:00.000Z"
+    },
+    {
+      "id": "1d0e2ffa-827a-42c9-b21c-b9868541c3ee",
+      "action_type": "compliance_follow_up",
+      "status": "proposed",
+      "priority": "high",
+      "title": "Draft AMV sponsor/equity compliance checklist",
+      "ent": true,
+      "inter": false,
+      "bu": true,
+      "owner": false,
+      "ev": true,
+      "due_at": null,
+      "created_at": "2026-09-03T21:00:00.000Z"
+    },
+    {
+      "id": "38af312c-f48b-43cb-ac37-f2ba3a95240e",
+      "action_type": "research_follow_up",
+      "status": "proposed",
+      "priority": "high",
+      "title": "Check NBO September programme announcements",
+      "ent": true,
+      "inter": false,
+      "bu": true,
+      "owner": false,
+      "ev": true,
+      "due_at": null,
+      "created_at": "2026-09-03T21:00:00.000Z"
+    },
+    {
+      "id": "073f8e94-316b-4e60-a532-087f272f8ae4",
+      "action_type": "research_follow_up",
+      "status": "proposed",
+      "priority": "medium",
+      "title": "Track Pushing 30 premiere and platform details",
+      "ent": true,
+      "inter": false,
+      "bu": true,
+      "owner": false,
+      "ev": true,
+      "due_at": null,
+      "created_at": "2026-09-03T21:00:00.000Z"
+    },
+    {
+      "id": "81e4161d-3c2e-4b6d-b78e-1a34f5e66be3",
+      "action_type": "research_follow_up",
+      "status": "proposed",
+      "priority": "high",
+      "title": "Verify Adanne festival line-ups and distribution path",
+      "ent": true,
+      "inter": false,
+      "bu": true,
+      "owner": false,
+      "ev": true,
+      "due_at": null,
+      "created_at": "2026-09-03T21:00:00.000Z"
+    },
+    {
+      "id": "78c6b055-6f29-4ec5-b061-29a354831748",
+      "action_type": "governance_follow_up",
+      "status": "proposed",
+      "priority": "high",
+      "title": "Add content-risk controls to AMV platform build checklist",
+      "ent": true,
+      "inter": false,
+      "bu": true,
+      "owner": false,
+      "ev": true,
+      "due_at": null,
+      "created_at": "2026-09-03T21:00:00.000Z"
+    },
+    {
+      "id": "f5ae0649-0c15-4011-abfe-91278016bf6d",
+      "action_type": "research_follow_up",
+      "status": "proposed",
+      "priority": "medium-high",
+      "title": "Build SportsBiz Africa post-event actor map",
+      "ent": true,
+      "inter": false,
+      "bu": true,
+      "owner": false,
+      "ev": true,
+      "due_at": null,
+      "created_at": "2026-09-14T21:00:00.000Z"
+    },
+    {
+      "id": "af51b97d-e8ce-4e8b-904b-4740a0c26b0f",
+      "action_type": "research_follow_up",
+      "status": "proposed",
+      "priority": "medium",
+      "title": "Check EU Short Film Competition finalists after submission c",
+      "ent": true,
+      "inter": false,
+      "bu": true,
+      "owner": false,
+      "ev": true,
+      "due_at": null,
+      "created_at": "2026-09-14T21:00:00.000Z"
+    },
+    {
+      "id": "d15366e3-c300-4828-ae0f-049b13d66889",
+      "action_type": "research_follow_up",
+      "status": "proposed",
+      "priority": "medium",
+      "title": "Refresh Africa Films for Impact Festival finalist and winner",
+      "ent": true,
+      "inter": false,
+      "bu": true,
+      "owner": false,
+      "ev": true,
+      "due_at": null,
+      "created_at": "2026-09-14T21:00:00.000Z"
+    },
+    {
+      "id": "1fbfb972-c70f-47f8-b962-7cd2b0a3e022",
+      "action_type": "research_follow_up",
+      "status": "proposed",
+      "priority": "low-medium",
+      "title": "Refresh TINFF CBDF 2026 market outcomes",
+      "ent": true,
+      "inter": false,
+      "bu": true,
+      "owner": false,
+      "ev": true,
+      "due_at": null,
+      "created_at": "2026-09-14T21:00:00.000Z"
+    },
+    {
+      "id": "698cd984-da02-4cef-9d98-55814a66b3b2",
+      "action_type": "research_follow_up",
+      "status": "proposed",
+      "priority": "high",
+      "title": "Build Al-Ittihad / Telfaz11 club-to-IP model brief",
+      "ent": true,
+      "inter": false,
+      "bu": true,
+      "owner": false,
+      "ev": true,
+      "due_at": null,
+      "created_at": "2026-09-14T21:00:00.000Z"
+    },
+    {
+      "id": "13366639-ad5e-4c23-8fdb-f6f62a680f5c",
+      "action_type": "research_follow_up",
+      "status": "proposed",
+      "priority": "high",
+      "title": "Map Lady Nigerian-diaspora packaging and release path",
+      "ent": true,
+      "inter": false,
+      "bu": true,
+      "owner": false,
+      "ev": true,
+      "due_at": null,
+      "created_at": "2026-09-14T21:00:00.000Z"
+    },
+    {
+      "id": "60011dd2-8bba-40f3-b03c-411ade62cfc7",
+      "action_type": "research_follow_up",
+      "status": "proposed",
+      "priority": "high",
+      "title": "Map Irkalla Gulf co-production architecture",
+      "ent": true,
+      "inter": false,
+      "bu": true,
+      "owner": false,
+      "ev": true,
+      "due_at": null,
+      "created_at": "2026-09-14T21:00:00.000Z"
+    },
+    {
+      "id": "22b0ce59-a460-4063-aa8d-8a24b7616b3e",
+      "action_type": "research_follow_up",
+      "status": "proposed",
+      "priority": "medium-high",
+      "title": "Map Inji Efflatoun rights and archive access path",
+      "ent": true,
+      "inter": false,
+      "bu": true,
+      "owner": false,
+      "ev": true,
+      "due_at": null,
+      "created_at": "2026-09-14T21:00:00.000Z"
+    },
+    {
+      "id": "d61ebd21-7fdc-4b84-887e-2ee3dcada1ab",
+      "action_type": "research_follow_up",
+      "status": "proposed",
+      "priority": "medium-high",
+      "title": "Watch HollyShorts MENA regular deadline on 2026-10-02",
+      "ent": true,
+      "inter": false,
+      "bu": true,
+      "owner": false,
+      "ev": true,
+      "due_at": "2026-10-01T21:00:00.000Z",
+      "created_at": "2026-09-14T21:00:00.000Z"
+    },
+    {
+      "id": "d0c8680d-5174-431d-b89b-d86dc8b14ffd",
+      "action_type": "research_follow_up",
+      "status": "proposed",
+      "priority": "high",
+      "title": "Refresh Arab Media Summit outputs after 2026-09-17",
+      "ent": true,
+      "inter": false,
+      "bu": true,
+      "owner": false,
+      "ev": true,
+      "due_at": "2026-09-17T21:00:00.000Z",
+      "created_at": "2026-09-14T21:00:00.000Z"
+    },
+    {
+      "id": "07147497-e4cf-4e66-8b9d-3263523989a3",
+      "action_type": "research_follow_up",
+      "status": "proposed",
+      "priority": "medium-high",
+      "title": "Watch Chris Paul / Genius Sports Q4 2026 slate launch",
+      "ent": true,
+      "inter": false,
+      "bu": true,
+      "owner": false,
+      "ev": true,
+      "due_at": "2026-12-30T22:00:00.000Z",
+      "created_at": "2026-09-14T21:00:00.000Z"
+    }
+  ],
+  "actions_targetless": [
+    {
+      "n": 0
+    }
+  ],
+  "mentions_detail": [
+    {
+      "id": "3db4b4f9-d8a7-4b33-8b9b-acded6a80274",
+      "mention": "Denis Iriniga / Deny Iriniga / Iriniga D",
+      "resolution_status": "pending",
+      "confidence": "medium",
+      "has_candidate": false,
+      "has_rationale": true,
+      "has_evidence": true,
+      "created_from": "research_findings_2026-09-04_target1_what-a-day.md",
+      "created_at": "2026-09-03T21:00:00.000Z"
+    },
+    {
+      "id": "8c8398ba-a50e-4545-a475-cce6e91d40f6",
+      "mention": "Alain Gomis",
+      "resolution_status": "pending",
+      "confidence": "medium",
+      "has_candidate": false,
+      "has_rationale": true,
+      "has_evidence": true,
+      "created_from": "research_findings_2026-09-04_targets3-7_remaining_queue.md",
+      "created_at": "2026-09-03T21:00:00.000Z"
+    },
+    {
+      "id": "19f80b01-d815-40e8-b985-5fbabde463ba",
+      "mention": "Andrew Yaffe",
+      "resolution_status": "pending",
+      "confidence": "medium",
+      "has_candidate": false,
+      "has_rationale": true,
+      "has_evidence": true,
+      "created_from": "research_findings_2026-09-04_targets3-7_remaining_queue.md",
+      "created_at": "2026-09-03T21:00:00.000Z"
+    },
+    {
+      "id": "501a4098-2389-4d67-9fc2-b833166aa4b0",
+      "mention": "Dude Perfect",
+      "resolution_status": "pending",
+      "confidence": "medium",
+      "has_candidate": false,
+      "has_rationale": true,
+      "has_evidence": true,
+      "created_from": "research_findings_2026-09-04_targets3-7_remaining_queue.md",
+      "created_at": "2026-09-03T21:00:00.000Z"
+    },
+    {
+      "id": "df301c0d-6faa-4ba5-90aa-45865d6fe242",
+      "mention": "KAVA",
+      "resolution_status": "pending",
+      "confidence": "low-medium",
+      "has_candidate": false,
+      "has_rationale": true,
+      "has_evidence": true,
+      "created_from": "research_findings_2026-09-08_approved_queue.md",
+      "created_at": "2026-09-14T21:00:00.000Z"
+    },
+    {
+      "id": "598b1405-6bd3-4d2d-a39c-1974b6a908fc",
+      "mention": "Zulumoke Oyibo",
+      "resolution_status": "pending",
+      "confidence": "low-medium",
+      "has_candidate": false,
+      "has_rationale": true,
+      "has_evidence": true,
+      "created_from": "research_findings_2026-09-08_approved_queue.md",
+      "created_at": "2026-09-14T21:00:00.000Z"
+    },
+    {
+      "id": "67dac5b5-b745-4a0e-a2c3-539d8bd35731",
+      "mention": "Daniel Sol",
+      "resolution_status": "pending",
+      "confidence": "medium",
+      "has_candidate": false,
+      "has_rationale": true,
+      "has_evidence": true,
+      "created_from": "research_findings_2026-09-09_approved_queue.md",
+      "created_at": "2026-09-14T21:00:00.000Z"
+    },
+    {
+      "id": "c85027d9-2f99-43bd-9899-5aef40b153d2",
+      "mention": "Theo Dumont",
+      "resolution_status": "pending",
+      "confidence": "medium",
+      "has_candidate": false,
+      "has_rationale": true,
+      "has_evidence": true,
+      "created_from": "research_findings_2026-09-09_approved_queue.md",
+      "created_at": "2026-09-14T21:00:00.000Z"
+    },
+    {
+      "id": "80a14ba0-3820-4115-b02b-56f89619c79d",
+      "mention": "Jeff Pryor",
+      "resolution_status": "pending",
+      "confidence": "medium",
+      "has_candidate": false,
+      "has_rationale": true,
+      "has_evidence": true,
+      "created_from": "research_findings_2026-09-09_approved_queue.md",
+      "created_at": "2026-09-14T21:00:00.000Z"
+    },
+    {
+      "id": "e8ea1f1f-be05-4bbd-91f1-a1e8abc0db91",
+      "mention": "Steven Adams",
+      "resolution_status": "pending",
+      "confidence": "medium",
+      "has_candidate": false,
+      "has_rationale": true,
+      "has_evidence": true,
+      "created_from": "research_findings_2026-09-09_approved_queue.md",
+      "created_at": "2026-09-14T21:00:00.000Z"
+    }
+  ],
+  "affiliations_integrity": [
+    {
+      "total": 84,
+      "person_not_person": 0,
+      "org_not_org": 16,
+      "without_evidence": 52
+    }
+  ],
+  "aliases_integrity": [
+    {
+      "total": 3,
+      "distinct_entities": 2
+    }
+  ],
+  "interactions_detail": [
+    {
+      "id": "8eaf967a-11e3-44cf-9845-54e99adcdc62",
+      "interaction_type": "meeting_note",
+      "status": "completed",
+      "subject": "Call#1 - Globa3 Memory System",
+      "ent": false,
+      "bu": false,
+      "owner": false,
+      "ev": true,
+      "occurred_at": "2026-04-13T21:00:00.000Z"
+    },
+    {
+      "id": "7b387acf-0944-4c91-9ad5-af40aa644418",
+      "interaction_type": "zoom_meeting",
+      "status": "completed",
+      "subject": "Introductory Zoom with EIH / Anton Konkov",
+      "ent": true,
+      "bu": true,
+      "owner": false,
+      "ev": true,
+      "occurred_at": "2026-05-10T21:00:00.000Z"
+    },
+    {
+      "id": "ea3eed82-20e8-4925-995d-cd547a955f45",
+      "interaction_type": "in_person_meeting",
+      "status": "completed",
+      "subject": "Initial Paris meeting with Victor Schoucair",
+      "ent": true,
+      "bu": true,
+      "owner": true,
+      "ev": true,
+      "occurred_at": "2026-08-13T21:00:00.000Z"
+    },
+    {
+      "id": "6a03a507-00c3-4c91-b99e-bb8663a4f865",
+      "interaction_type": "email_invitation",
+      "status": "completed",
+      "subject": "Deauville Industry Days hosted invitation",
+      "ent": true,
+      "bu": true,
+      "owner": true,
+      "ev": true,
+      "occurred_at": "2026-08-30T21:00:00.000Z"
+    },
+    {
+      "id": "1d4c6fcb-8164-4d32-9fc7-64677a9c3fdb",
+      "interaction_type": "event_logistics_coordination",
+      "status": "completed",
+      "subject": "Deauville accreditation and hospitality coordinati",
+      "ent": true,
+      "bu": true,
+      "owner": true,
+      "ev": true,
+      "occurred_at": "2026-08-30T21:00:00.000Z"
+    },
+    {
+      "id": "d35c453d-d2db-4eaf-88f4-41e7ca9e0cb3",
+      "interaction_type": "whatsapp_follow_up",
+      "status": "completed",
+      "subject": "Follow-up and working session scheduled with Victo",
+      "ent": true,
+      "bu": true,
+      "owner": true,
+      "ev": true,
+      "occurred_at": "2026-08-30T21:00:00.000Z"
+    },
+    {
+      "id": "10cf1884-f9a8-4718-be56-24064f93c199",
+      "interaction_type": "email_and_call_outreach",
+      "status": "completed",
+      "subject": "Deauville outreach — Patrice Caillet",
+      "ent": true,
+      "bu": true,
+      "owner": false,
+      "ev": true,
+      "occurred_at": "2026-09-01T21:00:00.000Z"
+    }
+  ],
+  "legacy_relationship_interactions": [
+    {
+      "id": "4c1268da-b1e7-4226-99e8-932786f0fa0f",
+      "interaction_type": "zoom_meeting",
+      "review_status": "needs_review",
+      "s": "Introductory Zoom with EIH / Anton Konkov",
+      "occurred_at": "2026-05-10T21:00:00.000Z",
+      "has_contact": true,
+      "has_bu": true,
+      "has_owner": false
+    },
+    {
+      "id": "e83cefcf-e769-4daf-95cf-2a17e1723f3e",
+      "interaction_type": "in_person_meeting",
+      "review_status": "needs_review",
+      "s": "Initial Paris meeting with Victor Schoucair",
+      "occurred_at": "2026-08-13T21:00:00.000Z",
+      "has_contact": true,
+      "has_bu": true,
+      "has_owner": true
+    },
+    {
+      "id": "79d5ef79-3834-463a-98a8-df569e5b2a25",
+      "interaction_type": "email_invitation",
+      "review_status": "needs_review",
+      "s": "Deauville Industry Days hosted invitation",
+      "occurred_at": "2026-08-30T21:00:00.000Z",
+      "has_contact": true,
+      "has_bu": true,
+      "has_owner": true
+    },
+    {
+      "id": "2e195fd4-37ae-4b25-b787-feedde18b77d",
+      "interaction_type": "event_logistics_coordination",
+      "review_status": "needs_review",
+      "s": "Deauville accreditation and hospitality coordination — Loris",
+      "occurred_at": "2026-08-30T21:00:00.000Z",
+      "has_contact": true,
+      "has_bu": true,
+      "has_owner": true
+    },
+    {
+      "id": "71ae3358-da67-490f-afb6-dde4bb2597af",
+      "interaction_type": "whatsapp_follow_up",
+      "review_status": "needs_review",
+      "s": "Follow-up and working session scheduled with Victor Schoucai",
+      "occurred_at": "2026-08-30T21:00:00.000Z",
+      "has_contact": true,
+      "has_bu": true,
+      "has_owner": true
+    },
+    {
+      "id": "093ef119-fb4b-4295-9c0f-24057dcd06f8",
+      "interaction_type": "email_and_call_outreach",
+      "review_status": "needs_review",
+      "s": "Deauville outreach — Patrice Caillet",
+      "occurred_at": "2026-09-01T21:00:00.000Z",
+      "has_contact": true,
+      "has_bu": true,
+      "has_owner": false
+    }
+  ],
+  "knowledge_breakdown": [
+    {
+      "type": "context",
+      "status": "active",
+      "n": 24
+    },
+    {
+      "type": "system_logic",
+      "status": "active",
+      "n": 11
+    },
+    {
+      "type": "positioning",
+      "status": "active",
+      "n": 9
+    },
+    {
+      "type": "insight",
+      "status": "active",
+      "n": 9
+    },
+    {
+      "type": "scope",
+      "status": "active",
+      "n": 6
+    },
+    {
+      "type": "partner_context",
+      "status": "active",
+      "n": 3
+    },
+    {
+      "type": "direction",
+      "status": "active",
+      "n": 3
+    },
+    {
+      "type": "market_watch",
+      "status": "active",
+      "n": 3
+    },
+    {
+      "type": "decision",
+      "status": "active",
+      "n": 2
+    },
+    {
+      "type": "partner_assessment",
+      "status": "active",
+      "n": 2
+    },
+    {
+      "type": "format_rights_signal",
+      "status": "active",
+      "n": 1
+    },
+    {
+      "type": "market_signal",
+      "status": "active",
+      "n": 1
+    },
+    {
+      "type": "relationship_context",
+      "status": "active",
+      "n": 1
+    },
+    {
+      "type": "roadmap",
+      "status": "active",
+      "n": 1
+    },
+    {
+      "type": "model_watch",
+      "status": "active",
+      "n": 1
+    },
+    {
+      "type": "story_ip_watch",
+      "status": "active",
+      "n": 1
+    },
+    {
+      "type": "commercial_model",
+      "status": "active",
+      "n": 1
+    },
+    {
+      "type": "incentive_research",
+      "status": "active",
+      "n": 1
+    },
+    {
+      "type": "thesis",
+      "status": "active",
+      "n": 1
+    },
+    {
+      "type": "decision",
+      "status": "",
+      "n": 1
+    }
+  ],
+  "rules_breakdown": [
+    {
+      "type": "structure",
+      "status": "active",
+      "n": 20
+    },
+    {
+      "type": "writing",
+      "status": "active",
+      "n": 15
+    },
+    {
+      "type": "process",
+      "status": "active",
+      "n": 10
+    },
+    {
+      "type": "visual",
+      "status": "active",
+      "n": 6
+    },
+    {
+      "type": "relationship_language_rule",
+      "status": "active",
+      "n": 1
+    },
+    {
+      "type": "safety",
+      "status": "active",
+      "n": 1
+    },
+    {
+      "type": "structure",
+      "status": "",
+      "n": 1
+    },
+    {
+      "type": "compliance_rule",
+      "status": "active",
+      "n": 1
+    },
+    {
+      "type": "safeguard_rule",
+      "status": "active",
+      "n": 1
+    },
+    {
+      "type": "verification_rule",
+      "status": "active",
+      "n": 1
+    },
+    {
+      "type": "rights_access_rule",
+      "status": "active",
+      "n": 1
+    },
+    {
+      "type": "governance_rule",
+      "status": "active",
+      "n": 1
+    }
+  ],
+  "automatization_breakdown": [
+    {
+      "type": "    system_logic",
+      "status": "active",
+      "n": 9
+    },
+    {
+      "type": "    workflow",
+      "status": "active",
+      "n": 4
+    },
+    {
+      "type": "    direction",
+      "status": "active",
+      "n": 2
+    }
+  ],
+  "business_units": [
+    {
+      "id": "191f2344-8da2-4607-b5e5-07a4c3d28f9b",
+      "name": "GLOBA3",
+      "slug": "globa3",
+      "type": "parent_brand",
+      "status": "active",
+      "order_index": "1"
+    },
+    {
+      "id": "b4a83328-ecdd-4e1e-b5e6-d6cfce759c90",
+      "name": "Globa3 Studios",
+      "slug": "globa3-studios",
+      "type": "division",
+      "status": "active",
+      "order_index": "2"
+    },
+    {
+      "id": "751dece8-fc6b-4188-aa9d-cf8462af6fb9",
+      "name": "Globa3 Advisory",
+      "slug": "globa3-advisory",
+      "type": "division",
+      "status": "active",
+      "order_index": "3"
+    },
+    {
+      "id": "c96bfb0f-7056-461f-99bb-0fb977e3bf82",
+      "name": "Globa3 Ventures",
+      "slug": "globa3-ventures",
+      "type": "division",
+      "status": "active",
+      "order_index": "4"
+    },
+    {
+      "id": "c338ae7c-f889-4d0d-896f-c0dd12fd1690",
+      "name": "Globa 3 Properties",
+      "slug": "globa3-properties",
+      "type": "venture",
+      "status": "active",
+      "order_index": "5"
+    },
+    {
+      "id": "a8060da1-0bdd-4ecb-affd-dc439586a4f4",
+      "name": "Nigeria x Arcana",
+      "slug": "nigeria-arcana",
+      "type": "advisory",
+      "status": "active",
+      "order_index": null
+    },
+    {
+      "id": "cd6942c0-a1b9-4cf6-9649-866bdd49e695",
+      "name": "AFC",
+      "slug": "afc-venture",
+      "type": "venture",
+      "status": "active",
+      "order_index": null
+    },
+    {
+      "id": "915921c9-163b-4062-b2a9-90b297c680da",
+      "name": "Parenthood Nigeria",
+      "slug": "parenthood-nigeria",
+      "type": "sub-venture",
+      "status": "active",
+      "order_index": null
+    },
+    {
+      "id": "4426e114-ce9d-4e0d-bdfb-35ffb2fd1cee",
+      "name": "AMV",
+      "slug": "amv",
+      "type": "venture",
+      "status": "active",
+      "order_index": null
+    },
+    {
+      "id": "093dc350-e0f8-47e2-800a-92685ddcfe4a",
+      "name": "Unseen Arabia",
+      "slug": "unseen-arabia",
+      "type": "venture",
+      "status": "active",
+      "order_index": null
+    }
+  ],
+  "members": [
+    {
+      "id": "3ab5249f-f5cf-4954-949b-0d021e81b18e",
+      "full_name": "Diogo Bernardo",
+      "slug": "diogo-bernardo",
+      "role": "Social Media Lead",
+      "status": "active",
+      "has_email": false
+    },
+    {
+      "id": "6e181c88-15bb-4920-9837-acc38c9adea8",
+      "full_name": "Mariana Lobyk",
+      "slug": "mariana-lobyk",
+      "role": "Tech Lead",
+      "status": "active",
+      "has_email": false
+    },
+    {
+      "id": "241dcc06-0cd3-4305-809c-eb79afac7c9b",
+      "full_name": "Natan Bogin",
+      "slug": "natan-bogin",
+      "role": "Founder & CEO, Globa 3",
+      "status": "active",
+      "has_email": false
+    },
+    {
+      "id": "6df98cdc-eb4c-4855-977c-ad534d5cfbdc",
+      "full_name": "Stephen Strachan",
+      "slug": "stephen-strachan",
+      "role": "Co-Founder & COO, Globa 3",
+      "status": "active",
+      "has_email": false
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "c1d2250e-6299-4e75-9244-da7d6538720e",
+      "title": "Legacy meeting import: Call#1 - Globa3 Memory Syst",
+      "artifact_type": "meeting_note",
+      "status": "captured",
+      "ev": true,
+      "created_at": "2026-09-02T21:00:00.000Z"
+    },
+    {
+      "id": "7d089d2e-5ca8-4f01-99c8-21aea6f645ac",
+      "title": "What a Day Rwanda-to-diaspora festival validation ",
+      "artifact_type": "brief_research",
+      "status": "proposed_for_capture",
+      "ev": true,
+      "created_at": "2026-09-03T21:00:00.000Z"
+    },
+    {
+      "id": "2b8e2ef8-26a8-4c41-a6bf-69e27757d881",
+      "title": "Unrivaled hub-and-road model research for AMV",
+      "artifact_type": "brief_research",
+      "status": "proposed_for_capture",
+      "ev": true,
+      "created_at": "2026-09-03T21:00:00.000Z"
+    },
+    {
+      "id": "56e200e9-44c8-4eb0-97bd-d6e5911ff623",
+      "title": "Remaining brief research targets 3-7 - September 4",
+      "artifact_type": "brief_research",
+      "status": "proposed_for_capture",
+      "ev": true,
+      "created_at": "2026-09-03T21:00:00.000Z"
+    },
+    {
+      "id": "b4c9c8e2-6e08-4e43-93c4-c2f756996599",
+      "title": "2026-09-07 approved brief research queue",
+      "artifact_type": "brief_research_run",
+      "status": "approved_captured",
+      "ev": false,
+      "created_at": "2026-09-14T21:00:00.000Z"
+    },
+    {
+      "id": "d6e63c74-18c1-40e3-ba62-9fc4fda2e590",
+      "title": "2026-09-08 approved brief research queue",
+      "artifact_type": "brief_research_run",
+      "status": "approved_captured",
+      "ev": true,
+      "created_at": "2026-09-14T21:00:00.000Z"
+    },
+    {
+      "id": "aaeb5509-2ec7-4fc5-b69d-229ef036bf5d",
+      "title": "2026-09-09 approved brief research queue",
+      "artifact_type": "brief_research_run",
+      "status": "approved_captured",
+      "ev": true,
+      "created_at": "2026-09-14T21:00:00.000Z"
+    }
+  ]
+}

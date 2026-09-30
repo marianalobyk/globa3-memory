@@ -3,6 +3,7 @@
  * here is ever imported into client-side code.
  */
 import { z } from 'zod';
+import { loadRootEnv } from './load-env.js';
 
 const Env = z.object({
   NODE_ENV: z.string().default('development'),
@@ -19,9 +20,16 @@ const Env = z.object({
 
   /**
    * Dev auth: email + password against the local auth.users table, with a
-   * signed cookie. Only usable when Supabase Auth is not configured, and every
-   * session it issues is flagged isDevAuth so the UI can say so.
+   * signed cookie.
+   *
+   * Off unless explicitly enabled. It is a real authentication bypass relative
+   * to Supabase Auth -- it trusts a local password table and a locally signed
+   * cookie -- so it must never be reachable by default, and never in production.
    */
+  DEV_AUTH_ENABLED: z
+    .enum(['true', 'false'])
+    .default('false')
+    .transform((v) => v === 'true'),
   DEV_AUTH_SECRET: z.string().default('dev-only-change-me'),
 
   OPENAI_API_KEY: z.string().optional(),
@@ -57,8 +65,21 @@ export type AppEnv = z.infer<typeof Env>;
 let cached: AppEnv | null = null;
 
 export function env(): AppEnv {
-  if (!cached) cached = Env.parse(process.env);
+  if (!cached) {
+    loadRootEnv();
+    cached = Env.parse(process.env);
+  }
   return cached;
+}
+
+/**
+ * Clears the cached environment.
+ *
+ * Only for tests that need to exercise a different configuration -- for example
+ * asserting that the dev sign-in is refused when its flag is off.
+ */
+export function __resetEnvForTesting(): void {
+  cached = null;
 }
 
 /** True when a real OpenAI key is present. Everything else runs in mock mode. */
@@ -69,6 +90,26 @@ export function hasOpenAi(): boolean {
 export function hasSupabaseAuth(): boolean {
   const e = env();
   return Boolean(e.SUPABASE_URL && e.SUPABASE_ANON_KEY);
+}
+
+/**
+ * Whether the local development sign-in may be used at all.
+ *
+ * Requires an explicit opt-in, and is refused outright in production regardless
+ * of the flag: a local password table is not an acceptable production
+ * authenticator, and a misconfigured deploy should fail closed.
+ */
+export function devAuthEnabled(): boolean {
+  const e = env();
+  if (e.NODE_ENV === 'production') return false;
+  return e.DEV_AUTH_ENABLED;
+}
+
+/** The single place that decides which authenticator is in force. */
+export function authMode(): 'supabase' | 'dev' | 'none' {
+  if (hasSupabaseAuth()) return 'supabase';
+  if (devAuthEnabled()) return 'dev';
+  return 'none';
 }
 
 export function hasSupabaseStorage(): boolean {

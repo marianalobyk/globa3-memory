@@ -29,6 +29,8 @@ const STOPWORDS = new Set([
   'were', 'the', 'a', 'an', 'of', 'for', 'to', 'in', 'on', 'about', 'with', 'and', 'or', 'we',
   'our', 'know', 'have', 'has', 'any', 'tell', 'me', 'show', 'from', 'that', 'this', 'there',
   'their', 'it', 'its', 'be', 'been', 'can', 'could', 'should', 'would', 'you', 'your',
+  'latest', 'saved', 'record', 'records', 'capture', 'captured', 'date', 'next', 'watch',
+  'matter', 'matters',
 ]);
 
 export function questionTerms(question: string): string[] {
@@ -39,6 +41,40 @@ export function questionTerms(question: string): string[] {
         .filter((t) => t.length > 2 && !STOPWORDS.has(t)),
     ),
   ].slice(0, 12);
+}
+
+/**
+ * Named subjects are more useful than generic request words. For example,
+ * "AMANAR Development Lab" should not retrieve an unrelated signal merely
+ * because both records mention a watch date. We retain the usual term-overlap
+ * fallback when a question contains no meaningful multi-word phrase.
+ */
+function questionPhrases(question: string): string[] {
+  const runs: string[][] = [];
+  let current: string[] = [];
+  const flush = () => {
+    if (current.length >= 2) runs.push(current);
+    current = [];
+  };
+
+  for (const token of normalizeName(question).split(' ').filter(Boolean)) {
+    const meaningful = (token.length > 2 || /^\d+$/.test(token)) && !STOPWORDS.has(token);
+    if (meaningful) current.push(token);
+    else flush();
+  }
+  flush();
+
+  return [
+    ...new Set(
+      runs.flatMap((run) => {
+        const phrases: string[] = [];
+        for (let width = Math.min(4, run.length); width >= 2; width -= 1) {
+          for (let index = 0; index <= run.length - width; index += 1) phrases.push(run.slice(index, index + width).join(' '));
+        }
+        return phrases;
+      }),
+    ),
+  ];
 }
 
 /**
@@ -161,13 +197,15 @@ export async function retrieveRecords(
   const signals = await db.rows<{
     id: string;
     title: string;
+    description: string | null;
+    original_claim: string | null;
     why_it_matters: string | null;
     decision_question: string | null;
     status: string;
     signal_date: string | null;
     entity_name: string | null;
   }>(
-    `select s.id, s.title, s.why_it_matters, s.decision_question, s.status, s.signal_date,
+    `select s.id, s.title, s.description, s.original_claim, s.why_it_matters, s.decision_question, s.status, s.signal_date,
             e.display_name as entity_name
        from public.signals s
        left join public.entities e on e.id = s.related_entity_id
@@ -186,6 +224,8 @@ export async function retrieveRecords(
         `Status: ${s.status}`,
         s.signal_date ? `Signal date: ${s.signal_date}` : null,
         s.entity_name ? `About: ${s.entity_name}` : null,
+        s.description ? `What the document says: ${s.description}` : null,
+        s.original_claim ? `Source claim: ${s.original_claim}` : null,
         s.why_it_matters ? `Why it matters: ${s.why_it_matters}` : null,
         s.decision_question ? `Decision question: ${s.decision_question}` : null,
       ]
@@ -299,21 +339,86 @@ export async function retrieveRecords(
     });
   }
 
-  const knowledge = await db.rows<{ id: string; title: string; content: string | null; type: string | null }>(
-    `select id, title, content, type from public.knowledge
-      where workspace_id = $1 and (title ilike any($2) or coalesce(content,'') ilike any($2))
-      order by updated_at desc limit $3`,
+  // Captured documents are approved records too. Searching them lets a person
+  // ask about a named brief or radar even when they do not yet know a project
+  // or person from inside it. The answer still cites the stored source, never
+  // the original upload directly.
+  const evidence = await db.rows<{
+    id: string;
+    title: string;
+    source_type: string;
+    url: string | null;
+    source_date: string | null;
+    reliability: string | null;
+    excerpt: string | null;
+    notes: string | null;
+  }>(
+    `select id, title, source_type, url, source_date, reliability, excerpt, notes
+       from public.evidence
+      where workspace_id = $1
+        and (title ilike any($2) or coalesce(excerpt,'') ilike any($2) or coalesce(notes,'') ilike any($2))
+      order by created_at desc limit $3`,
     [workspaceId, patterns, limitPerTable],
   );
-  for (const k of knowledge) {
+  for (const source of evidence) {
     records.push({
-      table: 'knowledge',
-      rowId: k.id,
-      label: k.title,
-      body: [k.type ? `Type: ${k.type}` : null, k.content].filter(Boolean).join('\n'),
-      extra: {},
+      table: 'evidence',
+      rowId: source.id,
+      label: source.title,
+      body: [
+        `Source type: ${source.source_type}`,
+        `Reliability: ${source.reliability ?? 'unverified'}`,
+        source.source_date ? `Source date: ${source.source_date}` : null,
+        source.url ? `URL: ${source.url}` : null,
+        source.excerpt ? `Excerpt: ${source.excerpt}` : null,
+        source.notes ? `Notes: ${source.notes}` : null,
+      ]
+        .filter(Boolean)
+        .join('\n'),
+      extra: { sourceType: source.source_type, reliability: source.reliability },
     });
   }
+
+  const artifacts = await db.rows<{
+    id: string;
+    title: string;
+    artifact_type: string;
+    summary: string | null;
+    capture_source: string | null;
+    source_file: string | null;
+    status: string;
+  }>(
+    `select id, title, artifact_type, summary, capture_source, source_file, status
+       from public.research_artifacts
+      where workspace_id = $1
+        and (title ilike any($2) or coalesce(summary,'') ilike any($2)
+             or coalesce(capture_source,'') ilike any($2) or coalesce(source_file,'') ilike any($2))
+      order by created_at desc limit $3`,
+    [workspaceId, patterns, limitPerTable],
+  );
+  for (const artifact of artifacts) {
+    records.push({
+      table: 'research_artifacts',
+      rowId: artifact.id,
+      label: artifact.title,
+      body: [
+        `Document type: ${artifact.artifact_type}`,
+        `Status: ${artifact.status}`,
+        artifact.summary ? `Summary: ${artifact.summary}` : null,
+        artifact.capture_source ? `Captured from: ${artifact.capture_source}` : null,
+        artifact.source_file ? `Source file: ${artifact.source_file}` : null,
+      ]
+        .filter(Boolean)
+        .join('\n'),
+      extra: { artifactType: artifact.artifact_type, status: artifact.status },
+    });
+  }
+
+  // The legacy `knowledge` table used to be searched here as a tenth source.
+  // Migration 0020 moved every one of its rows into `evidence` plus a
+  // `research_findings` row, which this pipeline already searches above, so the
+  // same text is still found -- now with its provenance and its fact/inference
+  // distinction intact instead of an ad-hoc `type` string.
 
   const businessUnits = await db.rows<{ id: string; name: string; summary: string | null; type: string | null }>(
     `select id, name, summary, type from public.business_units
@@ -359,7 +464,13 @@ export async function retrieveRecords(
     .filter((entry) => entry.matched >= threshold)
     .sort((a, b) => b.matched - a.matched);
 
-  return scored.map((entry) => entry.record);
+  const phrases = questionPhrases(question);
+  const phraseMatches = scored.filter(({ record }) => {
+    const haystack = normalizeName(`${record.label} ${record.body}`);
+    return phrases.some((phrase) => haystack.includes(phrase));
+  });
+
+  return (phraseMatches.length > 0 ? phraseMatches : scored).map((entry) => entry.record);
 }
 
 export interface AskResult {
@@ -385,7 +496,7 @@ export async function askKnowledge(
   if (records.length === 0) {
     return {
       answerMd:
-        'Nothing in the saved records matches that question.\n\nThis answer is limited to what has been approved into this workspace, so an empty result means the knowledge base does not hold it yet -- not that the answer does not exist. Use **Research & Update** to look for new information and prepare changes for approval.',
+        'Nothing in the saved records matches that question.\n\nThis answer is limited to what has been approved into this workspace, so an empty result means the knowledge base does not hold it yet -- not that the answer does not exist. Capture what you know, or ask for research on a specific person, company or project.',
       citations: [],
       unanswered: [question],
       retrievedCount: 0,
@@ -413,6 +524,9 @@ export async function askKnowledge(
         '  the list. Never invent an id.',
         '- Preserve the distinction the records themselves make between fact, inference and',
         '  recommendation, and carry through confidence and dates where they are recorded.',
+        '- Lead with what the stored records say happened. Put gaps and unknowns after the known',
+        '  facts, never in place of them. For a signal, distinguish the source claim, why it matters,',
+        '  and any future recommendation.',
         '- Where a record notes an unresolved or ambiguous entity, say so rather than',
         '  presenting it as settled.',
       ].join('\n'),
@@ -437,7 +551,15 @@ export async function askKnowledge(
 
   // Keep only citations that point at rows actually retrieved.
   const valid = new Set(records.map((r) => `${r.table}:${r.rowId}`));
-  const citations = result.value.citations.filter((c) => valid.has(`${c.table_name}:${c.row_id}`));
+  // A model can cite the same stored row once for each sentence it uses. The
+  // answer may do that, but the source list should name each saved record once.
+  const cited = new Set<string>();
+  const citations = result.value.citations.filter((citation) => {
+    const key = `${citation.table_name}:${citation.row_id}`;
+    if (!valid.has(key) || cited.has(key)) return false;
+    cited.add(key);
+    return true;
+  });
 
   const cost = await withService((db) =>
     recordUsage(db, {
@@ -451,13 +573,13 @@ export async function askKnowledge(
 
   // With no model configured, still return the retrieved records rather than
   // nothing, so the feature is usable and honest about what it is doing.
+  // The records themselves are returned as citations, which every client lists;
+  // the answer text names how many, without table names or record ids.
   const answerMd = provider.isMock
     ? [
         result.value.answer_md,
         '',
-        `### Retrieved records (${records.length})`,
-        '',
-        ...numbered.map((r) => `- **${r.label}** — \`${r.table}\` \`${r.rowId}\``),
+        `${records.length} saved record${records.length === 1 ? '' : 's'} matched this question; they are listed as supporting records.`,
       ].join('\n')
     : result.value.answer_md;
 

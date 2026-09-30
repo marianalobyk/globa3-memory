@@ -8,10 +8,34 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "isolatedModules": true,
-    "plugins": [{ "name": "next" }],
-    "paths": { "@/*": ["./src/*"] },
-    "types": ["node"]
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "types": [
+      "node"
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".next-build-check/types/**/*.ts",
+    ".next-kb-preview/types/**/*.ts",
+    ".next-local/types/**/*.ts",
+    ".next-mobile-api-test/types/**/*.ts",
+    ".next-preview/types/**/*.ts",
+    ".next-prod/types/**/*.ts",
+    ".next-secret-scan/types/**/*.ts",
+    ".next/types/**/*.ts",
+    "next-env.d.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

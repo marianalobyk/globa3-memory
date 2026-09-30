@@ -24,9 +24,9 @@ export default async function RunPage({ params }: { params: Promise<{ id: string
   return (
     <div className="mx-auto max-w-3xl space-y-5">
       <Button asChild variant="ghost" size="sm" className="-ml-2">
-        <Link href="/activity">
+        <Link href="/">
           <ArrowLeft />
-          Activity
+          Today
         </Link>
       </Button>
       <RunProgress runId={id} />

@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { titleCase } from '@/lib/utils';
+import { CLAIM_MEANING, proposalStatusLabel } from '@/lib/labels';
 
 /**
  * One place where every status becomes a colour and a word.
@@ -73,25 +74,24 @@ export function QaStatusBadge({ status }: { status: string | null }) {
 }
 
 export function ProposalStatusBadge({ status }: { status: string }) {
-  const map: Record<string, { variant: Parameters<typeof Badge>[0]['variant']; label: string }> = {
-    draft: { variant: 'secondary', label: 'Draft' },
-    pending_review: { variant: 'warning', label: 'Needs review' },
-    partially_applied: { variant: 'default', label: 'Partly applied' },
-    applied: { variant: 'success', label: 'Applied' },
-    rejected: { variant: 'muted', label: 'Rejected' },
-    superseded: { variant: 'muted', label: 'Superseded' },
+  const variant: Record<string, Parameters<typeof Badge>[0]['variant']> = {
+    draft: 'secondary',
+    pending_review: 'warning',
+    partially_applied: 'default',
+    applied: 'success',
+    rejected: 'muted',
+    superseded: 'muted',
   };
-  const entry = map[status] ?? { variant: 'outline' as const, label: titleCase(status) };
-  return <Badge variant={entry.variant}>{entry.label}</Badge>;
+  return <Badge variant={variant[status] ?? 'outline'}>{proposalStatusLabel(status)}</Badge>;
 }
 
-/** Resolution outcome for a proposed record. */
+/** Whether a proposed record already exists in knowledge. */
 export function MatchStatusBadge({ status }: { status: string }) {
   if (status === 'existing') {
     return (
       <Badge variant="secondary">
         <Link2 />
-        Existing record
+        Already in knowledge
       </Badge>
     );
   }
@@ -99,24 +99,25 @@ export function MatchStatusBadge({ status }: { status: string }) {
     return (
       <Badge variant="warning">
         <HelpCircle />
-        Ambiguous — needs a decision
+        Possible duplicate — decide
       </Badge>
     );
   }
   return (
     <Badge variant="outline">
       <Plus />
-      New record
+      Not in knowledge yet
     </Badge>
   );
 }
 
+/** Item state: awaiting review, approved, saved (or rejected). */
 export function DecisionBadge({ decision, applied }: { decision: string; applied?: boolean }) {
   if (applied) {
     return (
       <Badge variant="success">
         <CheckCircle2 />
-        Applied
+        Saved
       </Badge>
     );
   }
@@ -139,7 +140,7 @@ export function DecisionBadge({ decision, applied }: { decision: string; applied
   return (
     <Badge variant="outline">
       <CircleDashed />
-      Pending
+      Awaiting review
     </Badge>
   );
 }
@@ -171,7 +172,12 @@ export function ClaimTypeBadge({ type }: { type: string | null }) {
     gap: 'warning',
     risk: 'destructive',
   };
-  return <Badge variant={map[type] ?? 'outline'}>{titleCase(type)}</Badge>;
+  const meaning = CLAIM_MEANING[type];
+  return (
+    <Badge variant={map[type] ?? 'outline'} title={meaning?.meaning}>
+      {meaning?.label ?? titleCase(type)}
+    </Badge>
+  );
 }
 
 export function UploadStatusBadge({ status }: { status: string }) {
@@ -188,7 +194,7 @@ export function UploadStatusBadge({ status }: { status: string }) {
   return (
     <Badge variant={entry.variant}>
       {entry.icon}
-      {titleCase(status)}
+      {status === 'parsed' ? 'Stored' : titleCase(status)}
     </Badge>
   );
 }

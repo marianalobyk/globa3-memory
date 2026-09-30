@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   CheckCircle2,
   CircleDashed,
@@ -18,6 +19,7 @@ import { ErrorState, LoadingRows, MockBanner } from '@/components/states';
 import { RunStatusBadge } from '@/components/status';
 import { api, RequestFailed } from '@/lib/client';
 import { cn, formatCost, formatDateTime, formatTokens, titleCase } from '@/lib/utils';
+import { runKindLabel, UPLOAD_REFERENCE_NOTE } from '@/lib/labels';
 
 interface Stage {
   seq: number;
@@ -106,6 +108,18 @@ export function RunProgress({ runId }: { runId: string }) {
 
   const active = data?.run.status === 'queued' || data?.run.status === 'running';
 
+  // When a run settles, refresh the server-rendered shell so the menu counts
+  // (targets ready, changes awaiting review) reflect what the run produced.
+  const router = useRouter();
+  const [wasActive, setWasActive] = useState(false);
+  useEffect(() => {
+    if (active) setWasActive(true);
+    else if (wasActive && data) {
+      setWasActive(false);
+      router.refresh();
+    }
+  }, [active, wasActive, data, router]);
+
   useEffect(() => {
     if (!active) return;
     const timer = setInterval(() => void load(), 2000);
@@ -118,6 +132,7 @@ export function RunProgress({ runId }: { runId: string }) {
   if (!data) return <LoadingRows rows={3} />;
 
   const { run, stages, events, briefDocumentId, proposalId, cost } = data;
+  const headline = runHeadline(run.kind, run.status, Boolean(proposalId));
 
   return (
     <div className="space-y-4">
@@ -126,13 +141,12 @@ export function RunProgress({ runId }: { runId: string }) {
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
               <CardTitle className="text-base">
-                {titleCase(run.kind)} run{run.run_date ? ` · ${run.run_date}` : ''}
+                {runKindLabel(run.kind)}
+                {run.run_date ? ` · ${run.run_date}` : ''}
               </CardTitle>
               <CardDescription>
                 Started {formatDateTime(run.created_at)}
                 {run.finished_at ? ` · finished ${formatDateTime(run.finished_at)}` : ''}
-                {' · attempt '}
-                {run.attempt} of {run.max_attempts}
               </CardDescription>
             </div>
             <RunStatusBadge status={run.status} isMock={run.is_mock} />
@@ -141,7 +155,7 @@ export function RunProgress({ runId }: { runId: string }) {
         <CardContent className="space-y-3">
           <div>
             <div className="flex items-center justify-between text-xs text-muted-foreground">
-              <span>{run.current_stage ? titleCase(run.current_stage) : titleCase(run.status)}</span>
+              <span>{headline}</span>
               <span className="tabular-nums">{run.progress}%</span>
             </div>
             <div className="mt-1 h-2 overflow-hidden rounded-full bg-muted">
@@ -157,10 +171,12 @@ export function RunProgress({ runId }: { runId: string }) {
 
           {active ? (
             <p className="text-xs text-muted-foreground">
-              Running in the background{run.lease_owner ? ` on worker ${run.lease_owner}` : ''}. You can
-              close this page; progress is stored, and if the worker stops the run is picked up again
-              and resumes from the last finished stage.
+              Running in the background. You can close this page — it also shows under Running now on
+              Today.
             </p>
+          ) : null}
+          {run.kind === 'ingest' && run.status === 'succeeded' ? (
+            <p className="text-sm text-muted-foreground">{UPLOAD_REFERENCE_NOTE}</p>
           ) : null}
 
           {run.error ? (
@@ -173,12 +189,6 @@ export function RunProgress({ runId }: { runId: string }) {
           ) : null}
 
           <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="outline">{formatCost(cost.totalUsd, cost.hasEstimates)}</Badge>
-            {briefDocumentId ? (
-              <Button asChild size="sm">
-                <Link href={`/briefs/${briefDocumentId}`}>Open brief</Link>
-              </Button>
-            ) : null}
             {proposalId ? (
               <Button asChild size="sm">
                 <Link href={`/review/${proposalId}`}>Review proposed changes</Link>
@@ -194,6 +204,16 @@ export function RunProgress({ runId }: { runId: string }) {
 
       {run.is_mock ? <MockBanner scope="this run" /> : null}
 
+      <details className="rounded-lg border px-4 py-3 [&[open]]:pb-4">
+        <summary className="cursor-pointer text-sm font-medium text-muted-foreground">
+          Technical details — stages, attempts, cost and log
+        </summary>
+        <div className="mt-3 space-y-4">
+          <p className="text-xs text-muted-foreground">
+            Attempt {run.attempt} of {run.max_attempts} · {formatCost(cost.totalUsd, cost.hasEstimates)}
+            {run.lease_owner ? ` · worker ${run.lease_owner}` : ''}. Each stage stores its result, so a
+            resumed run skips the stages already finished.
+          </p>
       <Card>
         <CardHeader>
           <CardTitle className="text-sm">Stages</CardTitle>
@@ -269,6 +289,19 @@ export function RunProgress({ runId }: { runId: string }) {
           </ol>
         </CardContent>
       </Card>
+        </div>
+      </details>
     </div>
   );
+}
+
+function runHeadline(kind: string, status: string, hasProposal: boolean): string {
+  if (status === 'queued') return 'Waiting for the worker';
+  if (status === 'running') return 'Working';
+  if (status === 'failed') return 'Stopped — see the error below';
+  if (status === 'canceled') return 'Canceled';
+  if (kind === 'brief') return 'Brief ready — next, choose what to research';
+  if (kind === 'research') return hasProposal ? 'Research finished — changes are awaiting your review' : 'Research finished';
+  if (kind === 'ingest') return 'Upload processed';
+  return 'Finished';
 }

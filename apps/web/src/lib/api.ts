@@ -1,6 +1,7 @@
 import 'server-only';
 import { NextResponse } from 'next/server';
-import { errorToPayload, isAppError } from '@g3/core';
+import { ZodError } from 'zod';
+import { badRequest, errorToPayload, isAppError } from '@g3/core';
 
 /**
  * Wraps a route handler so domain errors map onto HTTP status codes and nothing
@@ -16,9 +17,26 @@ export function handler<T extends unknown[]>(
     try {
       return await fn(...args);
     } catch (error) {
-      const payload = errorToPayload(error);
+      if (error instanceof ZodError) {
+        // A malformed request is the client's mistake, not a server failure.
+        return NextResponse.json(
+          {
+            error: 'The request was not in the expected shape.',
+            code: 'bad_request',
+            detail: error.issues.map((i) => ({ path: i.path.join('.'), message: i.message })),
+          },
+          { status: 400 },
+        );
+      }
       const status = isAppError(error) ? error.status : 500;
       if (status >= 500) console.error('[api]', error);
+      // Only deliberate application errors carry their message to the client.
+      // Anything unexpected (a database or library error) is logged on the
+      // server and answered with a plain sentence: no SQL, function names or
+      // stack details reach the browser or the phone.
+      const payload = isAppError(error)
+        ? errorToPayload(error)
+        : { error: 'Something went wrong on the server. Please try again.', code: 'internal' };
       return NextResponse.json(payload, { status });
     }
   };
@@ -32,6 +50,6 @@ export async function readJson<T>(request: Request): Promise<T> {
   try {
     return (await request.json()) as T;
   } catch {
-    throw Object.assign(new Error('Expected a JSON body'), { status: 400, code: 'bad_request' });
+    throw badRequest('Expected a JSON body');
   }
 }

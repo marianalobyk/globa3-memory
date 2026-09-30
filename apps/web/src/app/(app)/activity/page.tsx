@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import { Activity as ActivityIcon, Download } from 'lucide-react';
-import { budgetStates, listActivity, withService, withUser, workspaceCostSummary } from '@g3/core';
 import { requirePageSession } from '@/lib/session';
+import { CLAIM_MEANING, opVerb, recordKind } from '@/lib/labels';
+import { loadActivityData } from '@/lib/page-data';
+import { getLayoutData } from '@/lib/cached-data';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,105 +20,10 @@ export default async function ActivityPage() {
   const session = await requirePageSession();
   const workspaceId = session.activeWorkspace.workspaceId;
 
-  const { runs, changes, activity, reports, spend, budgets, usageByStage } = await withUser(
-    session.user.id,
-    async (db) => ({
-      runs: await db.rows<{
-        id: string;
-        kind: string;
-        status: string;
-        progress: number;
-        current_stage: string | null;
-        run_date: string | null;
-        attempt: number;
-        max_attempts: number;
-        is_mock: boolean;
-        error: string | null;
-        created_at: string;
-        finished_at: string | null;
-        format_name: string | null;
-        cost: string | null;
-        cost_is_estimate: boolean | null;
-      }>(
-        `select r.id, r.kind, r.status, r.progress, r.current_stage, r.run_date, r.attempt,
-                r.max_attempts, r.is_mock, r.error, r.created_at, r.finished_at,
-                f.name as format_name,
-                (select sum(u.cost_usd)::text from public.usage_events u where u.run_id = r.id) as cost,
-                (select bool_or(u.is_estimate) from public.usage_events u where u.run_id = r.id) as cost_is_estimate
-           from public.runs r
-           left join public.brief_formats f on f.id = r.format_id
-          where r.workspace_id = $1
-          order by r.created_at desc limit 50`,
-        [workspaceId],
-      ),
-      changes: await db.rows<{
-        id: string;
-        table_name: string;
-        row_id: string;
-        op: string;
-        applied_at: string;
-        readback_ok: boolean | null;
-        label: string;
-        claim_type: string | null;
-        applied_by: string | null;
-        approved_by: string | null;
-        proposal_id: string;
-        proposal_title: string;
-        is_mock: boolean;
-      }>(
-        `select c.id, c.table_name, c.row_id, c.op, c.applied_at, c.readback_ok,
-                i.label, i.claim_type, au.email as applied_by, apu.email as approved_by,
-                p.id as proposal_id, p.title as proposal_title, p.is_mock
-           from public.applied_changes c
-           join public.proposal_items i on i.id = c.proposal_item_id
-           join public.proposals p on p.id = c.proposal_id
-           left join public.app_users au on au.id = c.applied_by
-           left join public.proposal_approvals ap on ap.id = c.approval_id
-           left join public.app_users apu on apu.id = ap.approved_by
-          where c.workspace_id = $1
-          order by c.applied_at desc limit 80`,
-        [workspaceId],
-      ),
-      activity: await listActivity(db, workspaceId, 80),
-      reports: await db.rows<{
-        report_date: string;
-        change_count: number;
-        generated_at: string;
-        storage_path: string | null;
-      }>(
-        `select report_date, change_count, generated_at, storage_path
-           from public.daily_reports where workspace_id = $1
-          order by report_date desc limit 30`,
-        [workspaceId],
-      ),
-      usageByStage: await db.rows<{
-        stage: string | null;
-        model: string | null;
-        calls: number;
-        tokens_in: number;
-        tokens_out: number;
-        searches: number;
-        cost: string;
-        is_estimate: boolean;
-      }>(
-        `select stage, model, count(*)::int as calls,
-                sum(tokens_in)::int as tokens_in, sum(tokens_out)::int as tokens_out,
-                sum(web_searches)::int as searches, sum(cost_usd)::text as cost,
-                bool_or(is_estimate) as is_estimate
-           from public.usage_events
-          where workspace_id = $1 and created_at >= now() - interval '30 days'
-          group by stage, model order by sum(cost_usd) desc nulls last, stage`,
-        [workspaceId],
-      ),
-      spend: { totalUsd: 0, hasEstimates: false, byStage: [], byModel: [], periodDays: 30 },
-      budgets: [] as never[],
-    }),
-  );
-
-  const cost = await withService(async (db) => ({
-    spend: await workspaceCostSummary(db, workspaceId, 30),
-    budgets: await budgetStates(db, workspaceId),
-  }));
+  const [{ runs, changes, activity, reports, usageByStage }, cost] = await Promise.all([
+    loadActivityData(session),
+    getLayoutData(session),
+  ]);
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
@@ -141,7 +48,7 @@ export default async function ActivityPage() {
             <EmptyState
               icon={<ActivityIcon className="size-5" />}
               title="No records changed yet"
-              description="Changes appear here once you approve a proposal. Nothing reaches the knowledge base any other way."
+              description="Changes appear here once they are approved and saved. Nothing reaches knowledge any other way."
             />
           ) : (
             <Card>
@@ -149,11 +56,11 @@ export default async function ActivityPage() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Record</TableHead>
-                    <TableHead>Table</TableHead>
+                    <TableHead>Kind</TableHead>
                     <TableHead>Approved by</TableHead>
-                    <TableHead>Applied by</TableHead>
-                    <TableHead>Readback</TableHead>
-                    <TableHead>Origin</TableHead>
+                    <TableHead>Saved by</TableHead>
+                    <TableHead>Stored as approved</TableHead>
+                    <TableHead>From proposal</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -162,21 +69,19 @@ export default async function ActivityPage() {
                       <TableCell className="max-w-xs">
                         <p className="font-medium">{change.label}</p>
                         <p className="text-xs text-muted-foreground">
-                          {titleCase(change.op)}
-                          {change.claim_type ? ` · ${change.claim_type}` : ''} ·{' '}
+                          {opVerb(change.op)}
+                          {change.claim_type ? ` · ${CLAIM_MEANING[change.claim_type]?.label ?? change.claim_type}` : ''} ·{' '}
                           {formatRelative(change.applied_at)}
                         </p>
                       </TableCell>
-                      <TableCell className="font-mono text-xs">
-                        {change.table_name}
-                        <br />
-                        <span className="text-muted-foreground">{change.row_id.slice(0, 8)}</span>
+                      <TableCell className="text-xs">
+                        {recordKind(change.table_name, { entity_type: change.entity_type })}
                       </TableCell>
                       <TableCell className="text-xs">{change.approved_by ?? '—'}</TableCell>
                       <TableCell className="text-xs">{change.applied_by ?? '—'}</TableCell>
                       <TableCell>
                         <Badge variant={change.readback_ok ? 'success' : 'destructive'}>
-                          {change.readback_ok ? 'ok' : 'check'}
+                          {change.readback_ok ? 'Yes' : 'Check'}
                         </Badge>
                       </TableCell>
                       <TableCell className="max-w-[12rem]">
@@ -202,7 +107,7 @@ export default async function ActivityPage() {
 
         <TabsContent value="runs">
           {runs.length === 0 ? (
-            <EmptyState title="No runs yet" description="Start a brief from the Briefs section." />
+            <EmptyState title="Nothing analysed yet" description="Capture a note and its analysis appears here." />
           ) : (
             <Card>
               <Table>

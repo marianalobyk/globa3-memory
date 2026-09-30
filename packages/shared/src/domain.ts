@@ -1,6 +1,6 @@
 /** Row-level domain types shared by the web app and the worker. */
 
-export type RunKind = 'brief' | 'research' | 'ask' | 'ingest' | 'report';
+export type RunKind = 'brief' | 'research' | 'ask' | 'ingest' | 'report' | 'capture' | 'contact_identify' | 'contact_research';
 export type RunStatus = 'queued' | 'running' | 'succeeded' | 'failed' | 'canceled';
 export type StageStatus = 'pending' | 'running' | 'succeeded' | 'failed' | 'skipped';
 
@@ -101,8 +101,8 @@ export const PROPOSAL_TARGET_TABLES = [
   'signal_entities',
   'opportunities',
   'outcomes',
-  'knowledge',
-  'rules',
+  'research_topics',
+  'research_finding_evidence',
 ] as const;
 
 export type ProposalTargetTable = (typeof PROPOSAL_TARGET_TABLES)[number];

@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "Globa 3",
+    "slug": "globa3-workspace",
+    "scheme": "globa3",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "bundleIdentifier": "com.globa3.workspace",
+      "supportsTablet": false,
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store"
+    ],
+    "experiments": {
+      "typedRoutes": false
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "592d611d-3041-4b2b-b3ef-ec5ce3c39280"
+      }
+    },
+    "owner": "marianalobyk"
+  }
+}

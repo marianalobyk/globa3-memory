@@ -276,3 +276,59 @@ export async function resolveBusinessUnit(
   }
   return best ? { id: best.id, name: best.name } : null;
 }
+
+// ---------------------------------------------------------------------------
+// Internal members
+// ---------------------------------------------------------------------------
+
+export interface MemberMatch {
+  id: string;
+  name: string;
+  /** Their role inside Globa 3, when memory holds one. Never guessed. */
+  role: string | null;
+}
+
+export interface MemberResolution {
+  /** `existing` only for an exact name; a close name stays `ambiguous`. */
+  status: 'existing' | 'ambiguous' | 'none';
+  member: MemberMatch | null;
+  candidates: MemberMatch[];
+}
+
+/**
+ * Is this name a colleague rather than an outside contact?
+ *
+ * Internal members are the people of the workspace itself. A note that names
+ * one of them must never propose a new external contact, and public research on
+ * them is never offered. The identity rule is the same as for entities: only an
+ * exact name (or its slug) is a match; anything merely similar is reported as
+ * ambiguous for a person to settle.
+ */
+export async function resolveMember(db: Queryable, workspaceId: string, name: string): Promise<MemberResolution> {
+  assertScope(workspaceId, 'resolveMember');
+  const query = name.trim();
+  if (query.length === 0) return { status: 'none', member: null, candidates: [] };
+  const rows = await db.rows<{ id: string; full_name: string; slug: string | null; role_title: string | null; role: string | null; status: string | null }>(
+    `select id, full_name, slug, role_title, role, status from public.members
+      where workspace_id = $1 and coalesce(status, 'active') = 'active' limit 500`,
+    [workspaceId],
+  );
+  const asMatch = (row: (typeof rows)[number]): MemberMatch => ({
+    id: row.id,
+    name: row.full_name,
+    role: row.role_title?.trim() || row.role?.trim() || null,
+  });
+  const slug = slugify(query);
+  const exact = rows.find((row) => slugify(row.full_name) === slug || (row.slug ?? '') === slug);
+  if (exact) return { status: 'existing', member: asMatch(exact), candidates: [asMatch(exact)] };
+
+  const close = rows
+    .map((row) => ({ row, score: nameSimilarity(query, row.full_name) }))
+    .filter((scored) => scored.score >= RESOLUTION_THRESHOLDS.ambiguous)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3)
+    .map((scored) => asMatch(scored.row));
+  return close.length > 0
+    ? { status: 'ambiguous', member: null, candidates: close }
+    : { status: 'none', member: null, candidates: [] };
+}

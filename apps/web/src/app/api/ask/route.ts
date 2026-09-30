@@ -1,6 +1,7 @@
 import { z } from 'zod';
-import { askKnowledge, withUser } from '@g3/core';
+import { askKnowledge, subjectBriefing, withService, withUserRead } from '@g3/core';
 import { handler, ok, readJson } from '@/lib/api';
+import { recordKind } from '@/lib/labels';
 import { activeWorkspaceId, requireApiSession } from '@/lib/session';
 
 const Body = z.object({ question: z.string().min(3).max(2000), threadId: z.string().uuid().optional() });
@@ -18,8 +19,27 @@ export const POST = handler(async (request: Request) => {
 
   const answer = await askKnowledge(workspaceId, body.question, { userId: session.user.id });
 
-  // Persist the exchange so Knowledge keeps a history.
-  const threadId = await withUser(session.user.id, async (db) => {
+  // When the question is about one stored person, lead with a briefing built
+  // from their saved records, in the order a person reads: who they are, what
+  // happened, what is known, what is not, what to do next. Read under the
+  // asker's own access rules; never invented, never from the model.
+  // The subject of the question, as the person wrote it: "Why does Rumesh
+  // Tharanga matter to AMV?" is about Rumesh Tharanga.
+  const subject =
+    body.question
+      .replace(/^(?:what|who|why)\b[^?]*?\b(?:about|does|do|is|are|makes?)\s+/i, '')
+      .replace(/\s+(?:matter|matters|mattered)\b.*$/i, '')
+      .replace(/[?.]+$/, '')
+      .trim() || body.question;
+  const briefing = await withUserRead(session.user.id, (db) =>
+    subjectBriefing(db, workspaceId, subject, { timeZone: session.activeWorkspace.timezone || 'UTC' }),
+  ).catch(() => null);
+
+  // Persist the exchange so Knowledge keeps a history. Written by the server
+  // role, scoped to the session's verified workspace and user: client roles hold
+  // no write privilege (migration 0018). A thread id from the body is only
+  // reused when it belongs to this workspace.
+  const threadId = await withService(async (db) => {
     const thread = body.threadId
       ? await db.one<{ id: string }>(
           `select id from public.ask_threads where workspace_id = $1 and id = $2`,
@@ -57,5 +77,12 @@ export const POST = handler(async (request: Request) => {
     return id;
   });
 
-  return ok({ ...answer, threadId });
+  // Each supporting record also says what it is (a person, a finding, a source),
+  // so a client never has to show a storage name.
+  return ok({
+    ...answer,
+    briefing,
+    citations: answer.citations.map((c) => ({ ...c, kind: recordKind(c.table_name) })),
+    threadId,
+  });
 });

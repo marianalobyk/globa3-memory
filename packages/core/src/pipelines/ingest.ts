@@ -57,7 +57,7 @@ function isSafeArchivePath(path: string): { safe: boolean; reason?: string } {
   return { safe: true };
 }
 
-async function extractPdfText(bytes: Buffer): Promise<{ text: string; pages: number }> {
+export async function extractPdfText(bytes: Buffer): Promise<{ text: string; pages: number }> {
   // Imported lazily: pdf-parse reads a sample file at import time in some
   // versions, which is undesirable at module load.
   const mod = (await import('pdf-parse')) as unknown as {

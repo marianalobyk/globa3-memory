@@ -1,0 +1,3913 @@
+{
+  "schemas": [
+    {
+      "nspname": "auth"
+    },
+    {
+      "nspname": "extensions"
+    },
+    {
+      "nspname": "graphql"
+    },
+    {
+      "nspname": "graphql_public"
+    },
+    {
+      "nspname": "public"
+    },
+    {
+      "nspname": "realtime"
+    },
+    {
+      "nspname": "storage"
+    },
+    {
+      "nspname": "vault"
+    }
+  ],
+  "extensions": [
+    {
+      "extname": "pg_stat_statements",
+      "extversion": "1.11"
+    },
+    {
+      "extname": "pgcrypto",
+      "extversion": "1.3"
+    },
+    {
+      "extname": "plpgsql",
+      "extversion": "1.0"
+    },
+    {
+      "extname": "supabase_vault",
+      "extversion": "0.3.1"
+    },
+    {
+      "extname": "uuid-ossp",
+      "extversion": "1.1"
+    }
+  ],
+  "tables": [
+    {
+      "table": "Globa 3 Automatization & Memory",
+      "relkind": "r",
+      "rls": false,
+      "columns": "9",
+      "bytes": "65536"
+    },
+    {
+      "table": "actions",
+      "relkind": "r",
+      "rls": false,
+      "columns": "20",
+      "bytes": "163840"
+    },
+    {
+      "table": "business_units",
+      "relkind": "r",
+      "rls": false,
+      "columns": "10",
+      "bytes": "49152"
+    },
+    {
+      "table": "entities",
+      "relkind": "r",
+      "rls": false,
+      "columns": "23",
+      "bytes": "294912"
+    },
+    {
+      "table": "entity_affiliations",
+      "relkind": "r",
+      "rls": false,
+      "columns": "14",
+      "bytes": "163840"
+    },
+    {
+      "table": "entity_aliases",
+      "relkind": "r",
+      "rls": false,
+      "columns": "7",
+      "bytes": "81920"
+    },
+    {
+      "table": "entity_mentions",
+      "relkind": "r",
+      "rls": false,
+      "columns": "20",
+      "bytes": "131072"
+    },
+    {
+      "table": "evidence",
+      "relkind": "r",
+      "rls": false,
+      "columns": "16",
+      "bytes": "245760"
+    },
+    {
+      "table": "external_companies",
+      "relkind": "r",
+      "rls": false,
+      "columns": "12",
+      "bytes": "131072"
+    },
+    {
+      "table": "external_contacts",
+      "relkind": "r",
+      "rls": false,
+      "columns": "14",
+      "bytes": "131072"
+    },
+    {
+      "table": "interactions",
+      "relkind": "r",
+      "rls": false,
+      "columns": "20",
+      "bytes": "98304"
+    },
+    {
+      "table": "knowledge",
+      "relkind": "r",
+      "rls": false,
+      "columns": "10",
+      "bytes": "122880"
+    },
+    {
+      "table": "meetings",
+      "relkind": "r",
+      "rls": false,
+      "columns": "7",
+      "bytes": "229376"
+    },
+    {
+      "table": "member_business_units",
+      "relkind": "r",
+      "rls": false,
+      "columns": "4",
+      "bytes": "24576"
+    },
+    {
+      "table": "members",
+      "relkind": "r",
+      "rls": false,
+      "columns": "10",
+      "bytes": "49152"
+    },
+    {
+      "table": "opportunities",
+      "relkind": "r",
+      "rls": false,
+      "columns": "19",
+      "bytes": "57344"
+    },
+    {
+      "table": "outcomes",
+      "relkind": "r",
+      "rls": false,
+      "columns": "18",
+      "bytes": "65536"
+    },
+    {
+      "table": "relationship_interactions",
+      "relkind": "r",
+      "rls": false,
+      "columns": "17",
+      "bytes": "114688"
+    },
+    {
+      "table": "research_artifacts",
+      "relkind": "r",
+      "rls": false,
+      "columns": "16",
+      "bytes": "81920"
+    },
+    {
+      "table": "research_findings",
+      "relkind": "r",
+      "rls": false,
+      "columns": "16",
+      "bytes": "253952"
+    },
+    {
+      "table": "rules",
+      "relkind": "r",
+      "rls": false,
+      "columns": "9",
+      "bytes": "114688"
+    },
+    {
+      "table": "signal_entities",
+      "relkind": "r",
+      "rls": false,
+      "columns": "7",
+      "bytes": "155648"
+    },
+    {
+      "table": "signals",
+      "relkind": "r",
+      "rls": false,
+      "columns": "23",
+      "bytes": "131072"
+    }
+  ],
+  "views": [],
+  "enums": [],
+  "functions": [
+    {
+      "proname": "set_updated_at",
+      "args": "",
+      "security_definer": false
+    }
+  ],
+  "triggers": [
+    {
+      "table": "actions",
+      "tgname": "set_actions_updated_at",
+      "def": "CREATE TRIGGER set_actions_updated_at BEFORE UPDATE ON public.actions FOR EACH ROW EXECUTE FUNCTION set_updated_at()"
+    },
+    {
+      "table": "entities",
+      "tgname": "set_entities_updated_at",
+      "def": "CREATE TRIGGER set_entities_updated_at BEFORE UPDATE ON public.entities FOR EACH ROW EXECUTE FUNCTION set_updated_at()"
+    },
+    {
+      "table": "entity_affiliations",
+      "tgname": "set_entity_affiliations_updated_at",
+      "def": "CREATE TRIGGER set_entity_affiliations_updated_at BEFORE UPDATE ON public.entity_affiliations FOR EACH ROW EXECUTE FUNCTION set_updated_at()"
+    },
+    {
+      "table": "entity_mentions",
+      "tgname": "set_entity_mentions_updated_at",
+      "def": "CREATE TRIGGER set_entity_mentions_updated_at BEFORE UPDATE ON public.entity_mentions FOR EACH ROW EXECUTE FUNCTION set_updated_at()"
+    },
+    {
+      "table": "evidence",
+      "tgname": "set_evidence_updated_at",
+      "def": "CREATE TRIGGER set_evidence_updated_at BEFORE UPDATE ON public.evidence FOR EACH ROW EXECUTE FUNCTION set_updated_at()"
+    },
+    {
+      "table": "interactions",
+      "tgname": "set_interactions_updated_at",
+      "def": "CREATE TRIGGER set_interactions_updated_at BEFORE UPDATE ON public.interactions FOR EACH ROW EXECUTE FUNCTION set_updated_at()"
+    },
+    {
+      "table": "opportunities",
+      "tgname": "set_opportunities_updated_at",
+      "def": "CREATE TRIGGER set_opportunities_updated_at BEFORE UPDATE ON public.opportunities FOR EACH ROW EXECUTE FUNCTION set_updated_at()"
+    },
+    {
+      "table": "outcomes",
+      "tgname": "set_outcomes_updated_at",
+      "def": "CREATE TRIGGER set_outcomes_updated_at BEFORE UPDATE ON public.outcomes FOR EACH ROW EXECUTE FUNCTION set_updated_at()"
+    },
+    {
+      "table": "research_artifacts",
+      "tgname": "set_research_artifacts_updated_at",
+      "def": "CREATE TRIGGER set_research_artifacts_updated_at BEFORE UPDATE ON public.research_artifacts FOR EACH ROW EXECUTE FUNCTION set_updated_at()"
+    },
+    {
+      "table": "research_findings",
+      "tgname": "set_research_findings_updated_at",
+      "def": "CREATE TRIGGER set_research_findings_updated_at BEFORE UPDATE ON public.research_findings FOR EACH ROW EXECUTE FUNCTION set_updated_at()"
+    },
+    {
+      "table": "signals",
+      "tgname": "set_signals_updated_at",
+      "def": "CREATE TRIGGER set_signals_updated_at BEFORE UPDATE ON public.signals FOR EACH ROW EXECUTE FUNCTION set_updated_at()"
+    }
+  ],
+  "policies": [],
+  "foreignKeys": [
+    {
+      "conname": "actions_evidence_id_fkey",
+      "from_table": "actions",
+      "to_table": "evidence",
+      "def": "FOREIGN KEY (evidence_id) REFERENCES evidence(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "actions_internal_business_unit_id_fkey",
+      "from_table": "actions",
+      "to_table": "business_units",
+      "def": "FOREIGN KEY (internal_business_unit_id) REFERENCES business_units(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "actions_owner_member_id_fkey",
+      "from_table": "actions",
+      "to_table": "members",
+      "def": "FOREIGN KEY (owner_member_id) REFERENCES members(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "actions_related_entity_id_fkey",
+      "from_table": "actions",
+      "to_table": "entities",
+      "def": "FOREIGN KEY (related_entity_id) REFERENCES entities(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "actions_related_interaction_id_fkey",
+      "from_table": "actions",
+      "to_table": "interactions",
+      "def": "FOREIGN KEY (related_interaction_id) REFERENCES interactions(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "business_units_parent_id_fkey",
+      "from_table": "business_units",
+      "to_table": "business_units",
+      "def": "FOREIGN KEY (parent_id) REFERENCES business_units(id)"
+    },
+    {
+      "conname": "entities_source_evidence_id_fkey",
+      "from_table": "entities",
+      "to_table": "evidence",
+      "def": "FOREIGN KEY (source_evidence_id) REFERENCES evidence(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "entity_affiliations_evidence_id_fkey",
+      "from_table": "entity_affiliations",
+      "to_table": "evidence",
+      "def": "FOREIGN KEY (evidence_id) REFERENCES evidence(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "entity_affiliations_organization_entity_id_fkey",
+      "from_table": "entity_affiliations",
+      "to_table": "entities",
+      "def": "FOREIGN KEY (organization_entity_id) REFERENCES entities(id) ON DELETE CASCADE"
+    },
+    {
+      "conname": "entity_affiliations_person_entity_id_fkey",
+      "from_table": "entity_affiliations",
+      "to_table": "entities",
+      "def": "FOREIGN KEY (person_entity_id) REFERENCES entities(id) ON DELETE CASCADE"
+    },
+    {
+      "conname": "entity_aliases_entity_id_fkey",
+      "from_table": "entity_aliases",
+      "to_table": "entities",
+      "def": "FOREIGN KEY (entity_id) REFERENCES entities(id) ON DELETE CASCADE"
+    },
+    {
+      "conname": "entity_mentions_business_unit_id_fkey",
+      "from_table": "entity_mentions",
+      "to_table": "business_units",
+      "def": "FOREIGN KEY (business_unit_id) REFERENCES business_units(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "entity_mentions_candidate_entity_id_fkey",
+      "from_table": "entity_mentions",
+      "to_table": "entities",
+      "def": "FOREIGN KEY (candidate_entity_id) REFERENCES entities(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "entity_mentions_source_artifact_id_fkey",
+      "from_table": "entity_mentions",
+      "to_table": "research_artifacts",
+      "def": "FOREIGN KEY (source_artifact_id) REFERENCES research_artifacts(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "entity_mentions_source_evidence_id_fkey",
+      "from_table": "entity_mentions",
+      "to_table": "evidence",
+      "def": "FOREIGN KEY (source_evidence_id) REFERENCES evidence(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "external_companies_primary_owner_member_id_fkey",
+      "from_table": "external_companies",
+      "to_table": "members",
+      "def": "FOREIGN KEY (primary_owner_member_id) REFERENCES members(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "external_contacts_company_id_fkey",
+      "from_table": "external_contacts",
+      "to_table": "external_companies",
+      "def": "FOREIGN KEY (company_id) REFERENCES external_companies(id) ON DELETE CASCADE"
+    },
+    {
+      "conname": "external_contacts_primary_owner_member_id_fkey",
+      "from_table": "external_contacts",
+      "to_table": "members",
+      "def": "FOREIGN KEY (primary_owner_member_id) REFERENCES members(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "interactions_evidence_id_fkey",
+      "from_table": "interactions",
+      "to_table": "evidence",
+      "def": "FOREIGN KEY (evidence_id) REFERENCES evidence(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "interactions_external_entity_id_fkey",
+      "from_table": "interactions",
+      "to_table": "entities",
+      "def": "FOREIGN KEY (external_entity_id) REFERENCES entities(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "interactions_internal_business_unit_id_fkey",
+      "from_table": "interactions",
+      "to_table": "business_units",
+      "def": "FOREIGN KEY (internal_business_unit_id) REFERENCES business_units(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "interactions_internal_owner_member_id_fkey",
+      "from_table": "interactions",
+      "to_table": "members",
+      "def": "FOREIGN KEY (internal_owner_member_id) REFERENCES members(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "knowledge_business_unit_id_fkey",
+      "from_table": "knowledge",
+      "to_table": "business_units",
+      "def": "FOREIGN KEY (business_unit_id) REFERENCES business_units(id)"
+    },
+    {
+      "conname": "member_business_units_business_unit_id_fkey",
+      "from_table": "member_business_units",
+      "to_table": "business_units",
+      "def": "FOREIGN KEY (business_unit_id) REFERENCES business_units(id)"
+    },
+    {
+      "conname": "member_business_units_member_id_fkey",
+      "from_table": "member_business_units",
+      "to_table": "members",
+      "def": "FOREIGN KEY (member_id) REFERENCES members(id)"
+    },
+    {
+      "conname": "opportunities_business_unit_id_fkey",
+      "from_table": "opportunities",
+      "to_table": "business_units",
+      "def": "FOREIGN KEY (business_unit_id) REFERENCES business_units(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "opportunities_evidence_id_fkey",
+      "from_table": "opportunities",
+      "to_table": "evidence",
+      "def": "FOREIGN KEY (evidence_id) REFERENCES evidence(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "opportunities_owner_member_id_fkey",
+      "from_table": "opportunities",
+      "to_table": "members",
+      "def": "FOREIGN KEY (owner_member_id) REFERENCES members(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "opportunities_related_entity_id_fkey",
+      "from_table": "opportunities",
+      "to_table": "entities",
+      "def": "FOREIGN KEY (related_entity_id) REFERENCES entities(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "opportunities_source_signal_id_fkey",
+      "from_table": "opportunities",
+      "to_table": "signals",
+      "def": "FOREIGN KEY (source_signal_id) REFERENCES signals(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "outcomes_business_unit_id_fkey",
+      "from_table": "outcomes",
+      "to_table": "business_units",
+      "def": "FOREIGN KEY (business_unit_id) REFERENCES business_units(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "outcomes_evidence_id_fkey",
+      "from_table": "outcomes",
+      "to_table": "evidence",
+      "def": "FOREIGN KEY (evidence_id) REFERENCES evidence(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "outcomes_related_action_id_fkey",
+      "from_table": "outcomes",
+      "to_table": "actions",
+      "def": "FOREIGN KEY (related_action_id) REFERENCES actions(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "outcomes_related_entity_id_fkey",
+      "from_table": "outcomes",
+      "to_table": "entities",
+      "def": "FOREIGN KEY (related_entity_id) REFERENCES entities(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "outcomes_related_interaction_id_fkey",
+      "from_table": "outcomes",
+      "to_table": "interactions",
+      "def": "FOREIGN KEY (related_interaction_id) REFERENCES interactions(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "outcomes_related_opportunity_id_fkey",
+      "from_table": "outcomes",
+      "to_table": "opportunities",
+      "def": "FOREIGN KEY (related_opportunity_id) REFERENCES opportunities(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "relationship_interactions_external_company_id_fkey",
+      "from_table": "relationship_interactions",
+      "to_table": "external_companies",
+      "def": "FOREIGN KEY (external_company_id) REFERENCES external_companies(id) ON DELETE CASCADE"
+    },
+    {
+      "conname": "relationship_interactions_external_contact_id_fkey",
+      "from_table": "relationship_interactions",
+      "to_table": "external_contacts",
+      "def": "FOREIGN KEY (external_contact_id) REFERENCES external_contacts(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "relationship_interactions_internal_business_unit_id_fkey",
+      "from_table": "relationship_interactions",
+      "to_table": "business_units",
+      "def": "FOREIGN KEY (internal_business_unit_id) REFERENCES business_units(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "relationship_interactions_internal_owner_member_id_fkey",
+      "from_table": "relationship_interactions",
+      "to_table": "members",
+      "def": "FOREIGN KEY (internal_owner_member_id) REFERENCES members(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "research_artifacts_source_evidence_id_fkey",
+      "from_table": "research_artifacts",
+      "to_table": "evidence",
+      "def": "FOREIGN KEY (source_evidence_id) REFERENCES evidence(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "research_findings_artifact_id_fkey",
+      "from_table": "research_findings",
+      "to_table": "research_artifacts",
+      "def": "FOREIGN KEY (artifact_id) REFERENCES research_artifacts(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "research_findings_business_unit_id_fkey",
+      "from_table": "research_findings",
+      "to_table": "business_units",
+      "def": "FOREIGN KEY (business_unit_id) REFERENCES business_units(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "research_findings_evidence_id_fkey",
+      "from_table": "research_findings",
+      "to_table": "evidence",
+      "def": "FOREIGN KEY (evidence_id) REFERENCES evidence(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "research_findings_related_entity_id_fkey",
+      "from_table": "research_findings",
+      "to_table": "entities",
+      "def": "FOREIGN KEY (related_entity_id) REFERENCES entities(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "rules_business_unit_id_fkey",
+      "from_table": "rules",
+      "to_table": "business_units",
+      "def": "FOREIGN KEY (business_unit_id) REFERENCES business_units(id)"
+    },
+    {
+      "conname": "signal_entities_entity_id_fkey",
+      "from_table": "signal_entities",
+      "to_table": "entities",
+      "def": "FOREIGN KEY (entity_id) REFERENCES entities(id) ON DELETE CASCADE"
+    },
+    {
+      "conname": "signal_entities_signal_id_fkey",
+      "from_table": "signal_entities",
+      "to_table": "signals",
+      "def": "FOREIGN KEY (signal_id) REFERENCES signals(id) ON DELETE CASCADE"
+    },
+    {
+      "conname": "signals_business_unit_id_fkey",
+      "from_table": "signals",
+      "to_table": "business_units",
+      "def": "FOREIGN KEY (business_unit_id) REFERENCES business_units(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "signals_evidence_id_fkey",
+      "from_table": "signals",
+      "to_table": "evidence",
+      "def": "FOREIGN KEY (evidence_id) REFERENCES evidence(id) ON DELETE SET NULL"
+    },
+    {
+      "conname": "signals_related_entity_id_fkey",
+      "from_table": "signals",
+      "to_table": "entities",
+      "def": "FOREIGN KEY (related_entity_id) REFERENCES entities(id) ON DELETE SET NULL"
+    }
+  ],
+  "constraints": [
+    {
+      "table": "Globa 3 Automatization & Memory",
+      "conname": "Globa 3 Automatization & Memory_pkey",
+      "contype": "p",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "Globa 3 Automatization & Memory",
+      "conname": "Globa 3 Automatization & Memory_order_index_key",
+      "contype": "u",
+      "def": "UNIQUE (order_index)"
+    },
+    {
+      "table": "Globa 3 Automatization & Memory",
+      "conname": "Globa 3 Automatization & Memory_slug_key",
+      "contype": "u",
+      "def": "UNIQUE (slug)"
+    },
+    {
+      "table": "actions",
+      "conname": "actions_pkey",
+      "contype": "p",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "business_units",
+      "conname": "business_units_pkey",
+      "contype": "p",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "business_units",
+      "conname": "business_units_slug_key",
+      "contype": "u",
+      "def": "UNIQUE (slug)"
+    },
+    {
+      "table": "entities",
+      "conname": "entities_entity_type_check",
+      "contype": "c",
+      "def": "CHECK ((entity_type = ANY (ARRAY['person'::text, 'organization'::text, 'project'::text, 'institution'::text, 'event'::text, 'business_unit'::text, 'artifact'::text, 'source'::text, 'other'::text])))"
+    },
+    {
+      "table": "entities",
+      "conname": "entities_pkey",
+      "contype": "p",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "entities",
+      "conname": "entities_slug_key",
+      "contype": "u",
+      "def": "UNIQUE (slug)"
+    },
+    {
+      "table": "entity_affiliations",
+      "conname": "entity_affiliations_check",
+      "contype": "c",
+      "def": "CHECK ((person_entity_id <> organization_entity_id))"
+    },
+    {
+      "table": "entity_affiliations",
+      "conname": "entity_affiliations_pkey",
+      "contype": "p",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "entity_aliases",
+      "conname": "entity_aliases_pkey",
+      "contype": "p",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "entity_aliases",
+      "conname": "entity_aliases_entity_id_alias_slug_key",
+      "contype": "u",
+      "def": "UNIQUE (entity_id, alias_slug)"
+    },
+    {
+      "table": "entity_mentions",
+      "conname": "entity_mentions_proposed_entity_type_check",
+      "contype": "c",
+      "def": "CHECK ((proposed_entity_type = ANY (ARRAY['person'::text, 'organization'::text, 'project'::text, 'institution'::text, 'event'::text, 'business_unit'::text, 'artifact'::text, 'source'::text, 'other'::text])))"
+    },
+    {
+      "table": "entity_mentions",
+      "conname": "entity_mentions_pkey",
+      "contype": "p",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "evidence",
+      "conname": "evidence_source_type_check",
+      "contype": "c",
+      "def": "CHECK ((source_type = ANY (ARRAY['url'::text, 'pdf'::text, 'email'::text, 'meeting_note'::text, 'chatgpt_capture'::text, 'brief'::text, 'dossier'::text, 'database_row'::text, 'other'::text])))"
+    },
+    {
+      "table": "evidence",
+      "conname": "evidence_pkey",
+      "contype": "p",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "external_companies",
+      "conname": "external_companies_pkey",
+      "contype": "p",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "external_companies",
+      "conname": "external_companies_slug_key",
+      "contype": "u",
+      "def": "UNIQUE (slug)"
+    },
+    {
+      "table": "external_contacts",
+      "conname": "external_contacts_pkey",
+      "contype": "p",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "external_contacts",
+      "conname": "external_contacts_slug_key",
+      "contype": "u",
+      "def": "UNIQUE (slug)"
+    },
+    {
+      "table": "interactions",
+      "conname": "interactions_pkey",
+      "contype": "p",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "knowledge",
+      "conname": "knowledge_pkey",
+      "contype": "p",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "knowledge",
+      "conname": "knowledge_slug_key",
+      "contype": "u",
+      "def": "UNIQUE (slug)"
+    },
+    {
+      "table": "meetings",
+      "conname": "meetings_pkey",
+      "contype": "p",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "member_business_units",
+      "conname": "member_business_units_pkey",
+      "contype": "p",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "members",
+      "conname": "members_pkey",
+      "contype": "p",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "members",
+      "conname": "members_slug_key",
+      "contype": "u",
+      "def": "UNIQUE (slug)"
+    },
+    {
+      "table": "opportunities",
+      "conname": "opportunities_pkey",
+      "contype": "p",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "opportunities",
+      "conname": "opportunities_slug_key",
+      "contype": "u",
+      "def": "UNIQUE (slug)"
+    },
+    {
+      "table": "outcomes",
+      "conname": "outcomes_pkey",
+      "contype": "p",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "relationship_interactions",
+      "conname": "relationship_interactions_pkey",
+      "contype": "p",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "research_artifacts",
+      "conname": "research_artifacts_pkey",
+      "contype": "p",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "research_artifacts",
+      "conname": "research_artifacts_slug_key",
+      "contype": "u",
+      "def": "UNIQUE (slug)"
+    },
+    {
+      "table": "research_findings",
+      "conname": "research_findings_finding_type_check",
+      "contype": "c",
+      "def": "CHECK ((finding_type = ANY (ARRAY['fact'::text, 'inference'::text, 'recommendation'::text, 'gap'::text, 'risk'::text])))"
+    },
+    {
+      "table": "research_findings",
+      "conname": "research_findings_pkey",
+      "contype": "p",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "rules",
+      "conname": "rules_pkey",
+      "contype": "p",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "rules",
+      "conname": "rules_slug_key",
+      "contype": "u",
+      "def": "UNIQUE (slug)"
+    },
+    {
+      "table": "signal_entities",
+      "conname": "signal_entities_pkey",
+      "contype": "p",
+      "def": "PRIMARY KEY (id)"
+    },
+    {
+      "table": "signal_entities",
+      "conname": "signal_entities_signal_id_entity_id_role_key",
+      "contype": "u",
+      "def": "UNIQUE (signal_id, entity_id, role)"
+    },
+    {
+      "table": "signals",
+      "conname": "signals_pkey",
+      "contype": "p",
+      "def": "PRIMARY KEY (id)"
+    }
+  ],
+  "indexes": [
+    {
+      "tablename": "Globa 3 Automatization & Memory",
+      "indexname": "Globa 3 Automatization & Memory_order_index_key",
+      "indexdef": "CREATE UNIQUE INDEX \"Globa 3 Automatization & Memory_order_index_key\" ON public.\"Globa 3 Automatization & Memory\" USING btree (order_index)"
+    },
+    {
+      "tablename": "Globa 3 Automatization & Memory",
+      "indexname": "Globa 3 Automatization & Memory_pkey",
+      "indexdef": "CREATE UNIQUE INDEX \"Globa 3 Automatization & Memory_pkey\" ON public.\"Globa 3 Automatization & Memory\" USING btree (id)"
+    },
+    {
+      "tablename": "Globa 3 Automatization & Memory",
+      "indexname": "Globa 3 Automatization & Memory_slug_key",
+      "indexdef": "CREATE UNIQUE INDEX \"Globa 3 Automatization & Memory_slug_key\" ON public.\"Globa 3 Automatization & Memory\" USING btree (slug)"
+    },
+    {
+      "tablename": "actions",
+      "indexname": "actions_business_unit_idx",
+      "indexdef": "CREATE INDEX actions_business_unit_idx ON public.actions USING btree (internal_business_unit_id)"
+    },
+    {
+      "tablename": "actions",
+      "indexname": "actions_due_at_idx",
+      "indexdef": "CREATE INDEX actions_due_at_idx ON public.actions USING btree (due_at)"
+    },
+    {
+      "tablename": "actions",
+      "indexname": "actions_owner_idx",
+      "indexdef": "CREATE INDEX actions_owner_idx ON public.actions USING btree (owner_member_id)"
+    },
+    {
+      "tablename": "actions",
+      "indexname": "actions_pkey",
+      "indexdef": "CREATE UNIQUE INDEX actions_pkey ON public.actions USING btree (id)"
+    },
+    {
+      "tablename": "actions",
+      "indexname": "actions_related_entity_idx",
+      "indexdef": "CREATE INDEX actions_related_entity_idx ON public.actions USING btree (related_entity_id)"
+    },
+    {
+      "tablename": "actions",
+      "indexname": "actions_related_interaction_idx",
+      "indexdef": "CREATE INDEX actions_related_interaction_idx ON public.actions USING btree (related_interaction_id)"
+    },
+    {
+      "tablename": "actions",
+      "indexname": "actions_status_idx",
+      "indexdef": "CREATE INDEX actions_status_idx ON public.actions USING btree (status)"
+    },
+    {
+      "tablename": "business_units",
+      "indexname": "business_units_pkey",
+      "indexdef": "CREATE UNIQUE INDEX business_units_pkey ON public.business_units USING btree (id)"
+    },
+    {
+      "tablename": "business_units",
+      "indexname": "business_units_slug_key",
+      "indexdef": "CREATE UNIQUE INDEX business_units_slug_key ON public.business_units USING btree (slug)"
+    },
+    {
+      "tablename": "entities",
+      "indexname": "entities_entity_type_idx",
+      "indexdef": "CREATE INDEX entities_entity_type_idx ON public.entities USING btree (entity_type)"
+    },
+    {
+      "tablename": "entities",
+      "indexname": "entities_legacy_business_unit_id_idx",
+      "indexdef": "CREATE INDEX entities_legacy_business_unit_id_idx ON public.entities USING btree (legacy_business_unit_id)"
+    },
+    {
+      "tablename": "entities",
+      "indexname": "entities_legacy_external_company_id_idx",
+      "indexdef": "CREATE INDEX entities_legacy_external_company_id_idx ON public.entities USING btree (legacy_external_company_id)"
+    },
+    {
+      "tablename": "entities",
+      "indexname": "entities_legacy_external_contact_id_idx",
+      "indexdef": "CREATE INDEX entities_legacy_external_contact_id_idx ON public.entities USING btree (legacy_external_contact_id)"
+    },
+    {
+      "tablename": "entities",
+      "indexname": "entities_pkey",
+      "indexdef": "CREATE UNIQUE INDEX entities_pkey ON public.entities USING btree (id)"
+    },
+    {
+      "tablename": "entities",
+      "indexname": "entities_relationship_status_idx",
+      "indexdef": "CREATE INDEX entities_relationship_status_idx ON public.entities USING btree (relationship_status)"
+    },
+    {
+      "tablename": "entities",
+      "indexname": "entities_research_status_idx",
+      "indexdef": "CREATE INDEX entities_research_status_idx ON public.entities USING btree (research_status)"
+    },
+    {
+      "tablename": "entities",
+      "indexname": "entities_slug_key",
+      "indexdef": "CREATE UNIQUE INDEX entities_slug_key ON public.entities USING btree (slug)"
+    },
+    {
+      "tablename": "entity_affiliations",
+      "indexname": "entity_affiliations_evidence_idx",
+      "indexdef": "CREATE INDEX entity_affiliations_evidence_idx ON public.entity_affiliations USING btree (evidence_id)"
+    },
+    {
+      "tablename": "entity_affiliations",
+      "indexname": "entity_affiliations_organization_idx",
+      "indexdef": "CREATE INDEX entity_affiliations_organization_idx ON public.entity_affiliations USING btree (organization_entity_id)"
+    },
+    {
+      "tablename": "entity_affiliations",
+      "indexname": "entity_affiliations_person_idx",
+      "indexdef": "CREATE INDEX entity_affiliations_person_idx ON public.entity_affiliations USING btree (person_entity_id)"
+    },
+    {
+      "tablename": "entity_affiliations",
+      "indexname": "entity_affiliations_pkey",
+      "indexdef": "CREATE UNIQUE INDEX entity_affiliations_pkey ON public.entity_affiliations USING btree (id)"
+    },
+    {
+      "tablename": "entity_affiliations",
+      "indexname": "entity_affiliations_unique_current_context",
+      "indexdef": "CREATE UNIQUE INDEX entity_affiliations_unique_current_context ON public.entity_affiliations USING btree (person_entity_id, organization_entity_id, COALESCE(role_title, ''::text), COALESCE(context, ''::text)) WHERE (is_current = true)"
+    },
+    {
+      "tablename": "entity_aliases",
+      "indexname": "entity_aliases_alias_slug_idx",
+      "indexdef": "CREATE INDEX entity_aliases_alias_slug_idx ON public.entity_aliases USING btree (alias_slug)"
+    },
+    {
+      "tablename": "entity_aliases",
+      "indexname": "entity_aliases_entity_id_alias_slug_key",
+      "indexdef": "CREATE UNIQUE INDEX entity_aliases_entity_id_alias_slug_key ON public.entity_aliases USING btree (entity_id, alias_slug)"
+    },
+    {
+      "tablename": "entity_aliases",
+      "indexname": "entity_aliases_entity_id_idx",
+      "indexdef": "CREATE INDEX entity_aliases_entity_id_idx ON public.entity_aliases USING btree (entity_id)"
+    },
+    {
+      "tablename": "entity_aliases",
+      "indexname": "entity_aliases_pkey",
+      "indexdef": "CREATE UNIQUE INDEX entity_aliases_pkey ON public.entity_aliases USING btree (id)"
+    },
+    {
+      "tablename": "entity_mentions",
+      "indexname": "entity_mentions_business_unit_idx",
+      "indexdef": "CREATE INDEX entity_mentions_business_unit_idx ON public.entity_mentions USING btree (business_unit_id)"
+    },
+    {
+      "tablename": "entity_mentions",
+      "indexname": "entity_mentions_candidate_entity_idx",
+      "indexdef": "CREATE INDEX entity_mentions_candidate_entity_idx ON public.entity_mentions USING btree (candidate_entity_id)"
+    },
+    {
+      "tablename": "entity_mentions",
+      "indexname": "entity_mentions_mention_slug_idx",
+      "indexdef": "CREATE INDEX entity_mentions_mention_slug_idx ON public.entity_mentions USING btree (mention_slug)"
+    },
+    {
+      "tablename": "entity_mentions",
+      "indexname": "entity_mentions_pkey",
+      "indexdef": "CREATE UNIQUE INDEX entity_mentions_pkey ON public.entity_mentions USING btree (id)"
+    },
+    {
+      "tablename": "entity_mentions",
+      "indexname": "entity_mentions_resolution_status_idx",
+      "indexdef": "CREATE INDEX entity_mentions_resolution_status_idx ON public.entity_mentions USING btree (resolution_status)"
+    },
+    {
+      "tablename": "entity_mentions",
+      "indexname": "entity_mentions_source_artifact_idx",
+      "indexdef": "CREATE INDEX entity_mentions_source_artifact_idx ON public.entity_mentions USING btree (source_artifact_id)"
+    },
+    {
+      "tablename": "entity_mentions",
+      "indexname": "entity_mentions_source_evidence_idx",
+      "indexdef": "CREATE INDEX entity_mentions_source_evidence_idx ON public.entity_mentions USING btree (source_evidence_id)"
+    },
+    {
+      "tablename": "evidence",
+      "indexname": "evidence_pkey",
+      "indexdef": "CREATE UNIQUE INDEX evidence_pkey ON public.evidence USING btree (id)"
+    },
+    {
+      "tablename": "evidence",
+      "indexname": "evidence_source_date_idx",
+      "indexdef": "CREATE INDEX evidence_source_date_idx ON public.evidence USING btree (source_date)"
+    },
+    {
+      "tablename": "evidence",
+      "indexname": "evidence_source_type_idx",
+      "indexdef": "CREATE INDEX evidence_source_type_idx ON public.evidence USING btree (source_type)"
+    },
+    {
+      "tablename": "evidence",
+      "indexname": "evidence_url_idx",
+      "indexdef": "CREATE INDEX evidence_url_idx ON public.evidence USING btree (url)"
+    },
+    {
+      "tablename": "external_companies",
+      "indexname": "external_companies_pkey",
+      "indexdef": "CREATE UNIQUE INDEX external_companies_pkey ON public.external_companies USING btree (id)"
+    },
+    {
+      "tablename": "external_companies",
+      "indexname": "external_companies_slug_key",
+      "indexdef": "CREATE UNIQUE INDEX external_companies_slug_key ON public.external_companies USING btree (slug)"
+    },
+    {
+      "tablename": "external_companies",
+      "indexname": "idx_external_companies_primary_owner_member_id",
+      "indexdef": "CREATE INDEX idx_external_companies_primary_owner_member_id ON public.external_companies USING btree (primary_owner_member_id)"
+    },
+    {
+      "tablename": "external_companies",
+      "indexname": "idx_external_companies_status",
+      "indexdef": "CREATE INDEX idx_external_companies_status ON public.external_companies USING btree (status)"
+    },
+    {
+      "tablename": "external_companies",
+      "indexname": "idx_external_companies_type",
+      "indexdef": "CREATE INDEX idx_external_companies_type ON public.external_companies USING btree (type)"
+    },
+    {
+      "tablename": "external_contacts",
+      "indexname": "external_contacts_pkey",
+      "indexdef": "CREATE UNIQUE INDEX external_contacts_pkey ON public.external_contacts USING btree (id)"
+    },
+    {
+      "tablename": "external_contacts",
+      "indexname": "external_contacts_slug_key",
+      "indexdef": "CREATE UNIQUE INDEX external_contacts_slug_key ON public.external_contacts USING btree (slug)"
+    },
+    {
+      "tablename": "external_contacts",
+      "indexname": "idx_external_contacts_company_id",
+      "indexdef": "CREATE INDEX idx_external_contacts_company_id ON public.external_contacts USING btree (company_id)"
+    },
+    {
+      "tablename": "external_contacts",
+      "indexname": "idx_external_contacts_primary_owner_member_id",
+      "indexdef": "CREATE INDEX idx_external_contacts_primary_owner_member_id ON public.external_contacts USING btree (primary_owner_member_id)"
+    },
+    {
+      "tablename": "external_contacts",
+      "indexname": "idx_external_contacts_status",
+      "indexdef": "CREATE INDEX idx_external_contacts_status ON public.external_contacts USING btree (status)"
+    },
+    {
+      "tablename": "interactions",
+      "indexname": "interactions_business_unit_idx",
+      "indexdef": "CREATE INDEX interactions_business_unit_idx ON public.interactions USING btree (internal_business_unit_id)"
+    },
+    {
+      "tablename": "interactions",
+      "indexname": "interactions_external_entity_idx",
+      "indexdef": "CREATE INDEX interactions_external_entity_idx ON public.interactions USING btree (external_entity_id)"
+    },
+    {
+      "tablename": "interactions",
+      "indexname": "interactions_occurred_at_idx",
+      "indexdef": "CREATE INDEX interactions_occurred_at_idx ON public.interactions USING btree (occurred_at)"
+    },
+    {
+      "tablename": "interactions",
+      "indexname": "interactions_owner_idx",
+      "indexdef": "CREATE INDEX interactions_owner_idx ON public.interactions USING btree (internal_owner_member_id)"
+    },
+    {
+      "tablename": "interactions",
+      "indexname": "interactions_pkey",
+      "indexdef": "CREATE UNIQUE INDEX interactions_pkey ON public.interactions USING btree (id)"
+    },
+    {
+      "tablename": "knowledge",
+      "indexname": "knowledge_pkey",
+      "indexdef": "CREATE UNIQUE INDEX knowledge_pkey ON public.knowledge USING btree (id)"
+    },
+    {
+      "tablename": "knowledge",
+      "indexname": "knowledge_slug_key",
+      "indexdef": "CREATE UNIQUE INDEX knowledge_slug_key ON public.knowledge USING btree (slug)"
+    },
+    {
+      "tablename": "meetings",
+      "indexname": "meetings_pkey",
+      "indexdef": "CREATE UNIQUE INDEX meetings_pkey ON public.meetings USING btree (id)"
+    },
+    {
+      "tablename": "member_business_units",
+      "indexname": "member_business_units_pkey",
+      "indexdef": "CREATE UNIQUE INDEX member_business_units_pkey ON public.member_business_units USING btree (id)"
+    },
+    {
+      "tablename": "members",
+      "indexname": "members_pkey",
+      "indexdef": "CREATE UNIQUE INDEX members_pkey ON public.members USING btree (id)"
+    },
+    {
+      "tablename": "members",
+      "indexname": "members_slug_key",
+      "indexdef": "CREATE UNIQUE INDEX members_slug_key ON public.members USING btree (slug)"
+    },
+    {
+      "tablename": "opportunities",
+      "indexname": "opportunities_business_unit_idx",
+      "indexdef": "CREATE INDEX opportunities_business_unit_idx ON public.opportunities USING btree (business_unit_id)"
+    },
+    {
+      "tablename": "opportunities",
+      "indexname": "opportunities_pkey",
+      "indexdef": "CREATE UNIQUE INDEX opportunities_pkey ON public.opportunities USING btree (id)"
+    },
+    {
+      "tablename": "opportunities",
+      "indexname": "opportunities_related_entity_idx",
+      "indexdef": "CREATE INDEX opportunities_related_entity_idx ON public.opportunities USING btree (related_entity_id)"
+    },
+    {
+      "tablename": "opportunities",
+      "indexname": "opportunities_slug_key",
+      "indexdef": "CREATE UNIQUE INDEX opportunities_slug_key ON public.opportunities USING btree (slug)"
+    },
+    {
+      "tablename": "opportunities",
+      "indexname": "opportunities_source_signal_idx",
+      "indexdef": "CREATE INDEX opportunities_source_signal_idx ON public.opportunities USING btree (source_signal_id)"
+    },
+    {
+      "tablename": "opportunities",
+      "indexname": "opportunities_stage_idx",
+      "indexdef": "CREATE INDEX opportunities_stage_idx ON public.opportunities USING btree (stage)"
+    },
+    {
+      "tablename": "outcomes",
+      "indexname": "outcomes_action_idx",
+      "indexdef": "CREATE INDEX outcomes_action_idx ON public.outcomes USING btree (related_action_id)"
+    },
+    {
+      "tablename": "outcomes",
+      "indexname": "outcomes_business_unit_idx",
+      "indexdef": "CREATE INDEX outcomes_business_unit_idx ON public.outcomes USING btree (business_unit_id)"
+    },
+    {
+      "tablename": "outcomes",
+      "indexname": "outcomes_date_idx",
+      "indexdef": "CREATE INDEX outcomes_date_idx ON public.outcomes USING btree (outcome_date)"
+    },
+    {
+      "tablename": "outcomes",
+      "indexname": "outcomes_entity_idx",
+      "indexdef": "CREATE INDEX outcomes_entity_idx ON public.outcomes USING btree (related_entity_id)"
+    },
+    {
+      "tablename": "outcomes",
+      "indexname": "outcomes_interaction_idx",
+      "indexdef": "CREATE INDEX outcomes_interaction_idx ON public.outcomes USING btree (related_interaction_id)"
+    },
+    {
+      "tablename": "outcomes",
+      "indexname": "outcomes_opportunity_idx",
+      "indexdef": "CREATE INDEX outcomes_opportunity_idx ON public.outcomes USING btree (related_opportunity_id)"
+    },
+    {
+      "tablename": "outcomes",
+      "indexname": "outcomes_pkey",
+      "indexdef": "CREATE UNIQUE INDEX outcomes_pkey ON public.outcomes USING btree (id)"
+    },
+    {
+      "tablename": "relationship_interactions",
+      "indexname": "idx_relationship_interactions_external_company_id",
+      "indexdef": "CREATE INDEX idx_relationship_interactions_external_company_id ON public.relationship_interactions USING btree (external_company_id)"
+    },
+    {
+      "tablename": "relationship_interactions",
+      "indexname": "idx_relationship_interactions_external_contact_id",
+      "indexdef": "CREATE INDEX idx_relationship_interactions_external_contact_id ON public.relationship_interactions USING btree (external_contact_id)"
+    },
+    {
+      "tablename": "relationship_interactions",
+      "indexname": "idx_relationship_interactions_internal_business_unit_id",
+      "indexdef": "CREATE INDEX idx_relationship_interactions_internal_business_unit_id ON public.relationship_interactions USING btree (internal_business_unit_id)"
+    },
+    {
+      "tablename": "relationship_interactions",
+      "indexname": "idx_relationship_interactions_internal_owner_member_id",
+      "indexdef": "CREATE INDEX idx_relationship_interactions_internal_owner_member_id ON public.relationship_interactions USING btree (internal_owner_member_id)"
+    },
+    {
+      "tablename": "relationship_interactions",
+      "indexname": "idx_relationship_interactions_occurred_at",
+      "indexdef": "CREATE INDEX idx_relationship_interactions_occurred_at ON public.relationship_interactions USING btree (occurred_at DESC)"
+    },
+    {
+      "tablename": "relationship_interactions",
+      "indexname": "relationship_interactions_pkey",
+      "indexdef": "CREATE UNIQUE INDEX relationship_interactions_pkey ON public.relationship_interactions USING btree (id)"
+    },
+    {
+      "tablename": "research_artifacts",
+      "indexname": "research_artifacts_pkey",
+      "indexdef": "CREATE UNIQUE INDEX research_artifacts_pkey ON public.research_artifacts USING btree (id)"
+    },
+    {
+      "tablename": "research_artifacts",
+      "indexname": "research_artifacts_slug_key",
+      "indexdef": "CREATE UNIQUE INDEX research_artifacts_slug_key ON public.research_artifacts USING btree (slug)"
+    },
+    {
+      "tablename": "research_artifacts",
+      "indexname": "research_artifacts_source_evidence_idx",
+      "indexdef": "CREATE INDEX research_artifacts_source_evidence_idx ON public.research_artifacts USING btree (source_evidence_id)"
+    },
+    {
+      "tablename": "research_artifacts",
+      "indexname": "research_artifacts_status_idx",
+      "indexdef": "CREATE INDEX research_artifacts_status_idx ON public.research_artifacts USING btree (status)"
+    },
+    {
+      "tablename": "research_findings",
+      "indexname": "research_findings_artifact_idx",
+      "indexdef": "CREATE INDEX research_findings_artifact_idx ON public.research_findings USING btree (artifact_id)"
+    },
+    {
+      "tablename": "research_findings",
+      "indexname": "research_findings_business_unit_idx",
+      "indexdef": "CREATE INDEX research_findings_business_unit_idx ON public.research_findings USING btree (business_unit_id)"
+    },
+    {
+      "tablename": "research_findings",
+      "indexname": "research_findings_evidence_idx",
+      "indexdef": "CREATE INDEX research_findings_evidence_idx ON public.research_findings USING btree (evidence_id)"
+    },
+    {
+      "tablename": "research_findings",
+      "indexname": "research_findings_pkey",
+      "indexdef": "CREATE UNIQUE INDEX research_findings_pkey ON public.research_findings USING btree (id)"
+    },
+    {
+      "tablename": "research_findings",
+      "indexname": "research_findings_related_entity_idx",
+      "indexdef": "CREATE INDEX research_findings_related_entity_idx ON public.research_findings USING btree (related_entity_id)"
+    },
+    {
+      "tablename": "research_findings",
+      "indexname": "research_findings_type_idx",
+      "indexdef": "CREATE INDEX research_findings_type_idx ON public.research_findings USING btree (finding_type)"
+    },
+    {
+      "tablename": "rules",
+      "indexname": "rules_pkey",
+      "indexdef": "CREATE UNIQUE INDEX rules_pkey ON public.rules USING btree (id)"
+    },
+    {
+      "tablename": "rules",
+      "indexname": "rules_slug_key",
+      "indexdef": "CREATE UNIQUE INDEX rules_slug_key ON public.rules USING btree (slug)"
+    },
+    {
+      "tablename": "signal_entities",
+      "indexname": "signal_entities_entity_idx",
+      "indexdef": "CREATE INDEX signal_entities_entity_idx ON public.signal_entities USING btree (entity_id)"
+    },
+    {
+      "tablename": "signal_entities",
+      "indexname": "signal_entities_pkey",
+      "indexdef": "CREATE UNIQUE INDEX signal_entities_pkey ON public.signal_entities USING btree (id)"
+    },
+    {
+      "tablename": "signal_entities",
+      "indexname": "signal_entities_role_idx",
+      "indexdef": "CREATE INDEX signal_entities_role_idx ON public.signal_entities USING btree (role)"
+    },
+    {
+      "tablename": "signal_entities",
+      "indexname": "signal_entities_signal_id_entity_id_role_key",
+      "indexdef": "CREATE UNIQUE INDEX signal_entities_signal_id_entity_id_role_key ON public.signal_entities USING btree (signal_id, entity_id, role)"
+    },
+    {
+      "tablename": "signal_entities",
+      "indexname": "signal_entities_signal_idx",
+      "indexdef": "CREATE INDEX signal_entities_signal_idx ON public.signal_entities USING btree (signal_id)"
+    },
+    {
+      "tablename": "signals",
+      "indexname": "signals_business_unit_idx",
+      "indexdef": "CREATE INDEX signals_business_unit_idx ON public.signals USING btree (business_unit_id)"
+    },
+    {
+      "tablename": "signals",
+      "indexname": "signals_pkey",
+      "indexdef": "CREATE UNIQUE INDEX signals_pkey ON public.signals USING btree (id)"
+    },
+    {
+      "tablename": "signals",
+      "indexname": "signals_related_entity_idx",
+      "indexdef": "CREATE INDEX signals_related_entity_idx ON public.signals USING btree (related_entity_id)"
+    },
+    {
+      "tablename": "signals",
+      "indexname": "signals_status_idx",
+      "indexdef": "CREATE INDEX signals_status_idx ON public.signals USING btree (status)"
+    }
+  ],
+  "columns": [
+    {
+      "table_name": "Globa 3 Automatization & Memory",
+      "ordinal_position": 1,
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "table_name": "Globa 3 Automatization & Memory",
+      "ordinal_position": 2,
+      "column_name": "title",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "Globa 3 Automatization & Memory",
+      "ordinal_position": 3,
+      "column_name": "slug",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "Globa 3 Automatization & Memory",
+      "ordinal_position": 4,
+      "column_name": "type",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "Globa 3 Automatization & Memory",
+      "ordinal_position": 5,
+      "column_name": "content",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "Globa 3 Automatization & Memory",
+      "ordinal_position": 6,
+      "column_name": "source",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "Globa 3 Automatization & Memory",
+      "ordinal_position": 7,
+      "column_name": "status",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'active'::text"
+    },
+    {
+      "table_name": "Globa 3 Automatization & Memory",
+      "ordinal_position": 8,
+      "column_name": "created_at",
+      "data_type": "timestamp without time zone",
+      "is_nullable": "YES",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "Globa 3 Automatization & Memory",
+      "ordinal_position": 9,
+      "column_name": "order_index",
+      "data_type": "smallint",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "actions",
+      "ordinal_position": 1,
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "table_name": "actions",
+      "ordinal_position": 2,
+      "column_name": "action_type",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'follow_up'::text"
+    },
+    {
+      "table_name": "actions",
+      "ordinal_position": 3,
+      "column_name": "title",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "actions",
+      "ordinal_position": 4,
+      "column_name": "description",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "actions",
+      "ordinal_position": 5,
+      "column_name": "due_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "actions",
+      "ordinal_position": 6,
+      "column_name": "status",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'proposed'::text"
+    },
+    {
+      "table_name": "actions",
+      "ordinal_position": 7,
+      "column_name": "priority",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": "'medium'::text"
+    },
+    {
+      "table_name": "actions",
+      "ordinal_position": 8,
+      "column_name": "related_entity_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "actions",
+      "ordinal_position": 9,
+      "column_name": "related_interaction_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "actions",
+      "ordinal_position": 10,
+      "column_name": "internal_business_unit_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "actions",
+      "ordinal_position": 11,
+      "column_name": "owner_member_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "actions",
+      "ordinal_position": 12,
+      "column_name": "evidence_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "actions",
+      "ordinal_position": 13,
+      "column_name": "source_system",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "actions",
+      "ordinal_position": 14,
+      "column_name": "source_reference",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "actions",
+      "ordinal_position": 15,
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "actions",
+      "ordinal_position": 16,
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "actions",
+      "ordinal_position": 17,
+      "column_name": "visibility",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'internal'::text"
+    },
+    {
+      "table_name": "actions",
+      "ordinal_position": 18,
+      "column_name": "external_use_status",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'not_cleared'::text"
+    },
+    {
+      "table_name": "actions",
+      "ordinal_position": 19,
+      "column_name": "sensitivity",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'standard'::text"
+    },
+    {
+      "table_name": "actions",
+      "ordinal_position": 20,
+      "column_name": "provenance_note",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "business_units",
+      "ordinal_position": 1,
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "table_name": "business_units",
+      "ordinal_position": 2,
+      "column_name": "name",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "business_units",
+      "ordinal_position": 3,
+      "column_name": "slug",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "business_units",
+      "ordinal_position": 4,
+      "column_name": "type",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "business_units",
+      "ordinal_position": 5,
+      "column_name": "parent_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "business_units",
+      "ordinal_position": 6,
+      "column_name": "summary",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "business_units",
+      "ordinal_position": 7,
+      "column_name": "status",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": "'active'::text"
+    },
+    {
+      "table_name": "business_units",
+      "ordinal_position": 8,
+      "column_name": "created_at",
+      "data_type": "timestamp without time zone",
+      "is_nullable": "YES",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "business_units",
+      "ordinal_position": 9,
+      "column_name": "updated_at",
+      "data_type": "timestamp without time zone",
+      "is_nullable": "YES",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "business_units",
+      "ordinal_position": 10,
+      "column_name": "order_index",
+      "data_type": "bigint",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entities",
+      "ordinal_position": 1,
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "table_name": "entities",
+      "ordinal_position": 2,
+      "column_name": "entity_type",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "entities",
+      "ordinal_position": 3,
+      "column_name": "display_name",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "entities",
+      "ordinal_position": 4,
+      "column_name": "slug",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "entities",
+      "ordinal_position": 5,
+      "column_name": "description",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entities",
+      "ordinal_position": 6,
+      "column_name": "primary_url",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entities",
+      "ordinal_position": 7,
+      "column_name": "region",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entities",
+      "ordinal_position": 8,
+      "column_name": "country",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entities",
+      "ordinal_position": 9,
+      "column_name": "research_status",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": "'unverified'::text"
+    },
+    {
+      "table_name": "entities",
+      "ordinal_position": 10,
+      "column_name": "relationship_status",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": "'none'::text"
+    },
+    {
+      "table_name": "entities",
+      "ordinal_position": 11,
+      "column_name": "relationship_confidence",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entities",
+      "ordinal_position": 12,
+      "column_name": "status",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'active'::text"
+    },
+    {
+      "table_name": "entities",
+      "ordinal_position": 13,
+      "column_name": "legacy_external_company_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entities",
+      "ordinal_position": 14,
+      "column_name": "legacy_external_contact_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entities",
+      "ordinal_position": 15,
+      "column_name": "legacy_business_unit_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entities",
+      "ordinal_position": 16,
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "entities",
+      "ordinal_position": 17,
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "entities",
+      "ordinal_position": 18,
+      "column_name": "source_evidence_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entities",
+      "ordinal_position": 19,
+      "column_name": "visibility",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'internal'::text"
+    },
+    {
+      "table_name": "entities",
+      "ordinal_position": 20,
+      "column_name": "external_use_status",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'not_cleared'::text"
+    },
+    {
+      "table_name": "entities",
+      "ordinal_position": 21,
+      "column_name": "sensitivity",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'standard'::text"
+    },
+    {
+      "table_name": "entities",
+      "ordinal_position": 22,
+      "column_name": "provenance_note",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entities",
+      "ordinal_position": 23,
+      "column_name": "capture_source",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entity_affiliations",
+      "ordinal_position": 1,
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "table_name": "entity_affiliations",
+      "ordinal_position": 2,
+      "column_name": "person_entity_id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "entity_affiliations",
+      "ordinal_position": 3,
+      "column_name": "organization_entity_id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "entity_affiliations",
+      "ordinal_position": 4,
+      "column_name": "role_title",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entity_affiliations",
+      "ordinal_position": 5,
+      "column_name": "context",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entity_affiliations",
+      "ordinal_position": 6,
+      "column_name": "start_date",
+      "data_type": "date",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entity_affiliations",
+      "ordinal_position": 7,
+      "column_name": "end_date",
+      "data_type": "date",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entity_affiliations",
+      "ordinal_position": 8,
+      "column_name": "is_primary",
+      "data_type": "boolean",
+      "is_nullable": "NO",
+      "column_default": "false"
+    },
+    {
+      "table_name": "entity_affiliations",
+      "ordinal_position": 9,
+      "column_name": "is_current",
+      "data_type": "boolean",
+      "is_nullable": "NO",
+      "column_default": "true"
+    },
+    {
+      "table_name": "entity_affiliations",
+      "ordinal_position": 10,
+      "column_name": "evidence_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entity_affiliations",
+      "ordinal_position": 11,
+      "column_name": "confidence",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": "'medium'::text"
+    },
+    {
+      "table_name": "entity_affiliations",
+      "ordinal_position": 12,
+      "column_name": "notes",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entity_affiliations",
+      "ordinal_position": 13,
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "entity_affiliations",
+      "ordinal_position": 14,
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "entity_aliases",
+      "ordinal_position": 1,
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "table_name": "entity_aliases",
+      "ordinal_position": 2,
+      "column_name": "entity_id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "entity_aliases",
+      "ordinal_position": 3,
+      "column_name": "alias",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "entity_aliases",
+      "ordinal_position": 4,
+      "column_name": "alias_slug",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "entity_aliases",
+      "ordinal_position": 5,
+      "column_name": "alias_type",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'name'::text"
+    },
+    {
+      "table_name": "entity_aliases",
+      "ordinal_position": 6,
+      "column_name": "source_note",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entity_aliases",
+      "ordinal_position": 7,
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "entity_mentions",
+      "ordinal_position": 1,
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "table_name": "entity_mentions",
+      "ordinal_position": 2,
+      "column_name": "mention_text",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "entity_mentions",
+      "ordinal_position": 3,
+      "column_name": "mention_slug",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "entity_mentions",
+      "ordinal_position": 4,
+      "column_name": "proposed_entity_type",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entity_mentions",
+      "ordinal_position": 5,
+      "column_name": "proposed_display_name",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entity_mentions",
+      "ordinal_position": 6,
+      "column_name": "proposed_slug",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entity_mentions",
+      "ordinal_position": 7,
+      "column_name": "candidate_entity_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entity_mentions",
+      "ordinal_position": 8,
+      "column_name": "source_evidence_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entity_mentions",
+      "ordinal_position": 9,
+      "column_name": "source_artifact_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entity_mentions",
+      "ordinal_position": 10,
+      "column_name": "business_unit_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entity_mentions",
+      "ordinal_position": 11,
+      "column_name": "resolution_status",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'pending'::text"
+    },
+    {
+      "table_name": "entity_mentions",
+      "ordinal_position": 12,
+      "column_name": "confidence",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'medium'::text"
+    },
+    {
+      "table_name": "entity_mentions",
+      "ordinal_position": 13,
+      "column_name": "rationale",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entity_mentions",
+      "ordinal_position": 14,
+      "column_name": "created_from",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entity_mentions",
+      "ordinal_position": 15,
+      "column_name": "visibility",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'internal'::text"
+    },
+    {
+      "table_name": "entity_mentions",
+      "ordinal_position": 16,
+      "column_name": "external_use_status",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'not_cleared'::text"
+    },
+    {
+      "table_name": "entity_mentions",
+      "ordinal_position": 17,
+      "column_name": "sensitivity",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'standard'::text"
+    },
+    {
+      "table_name": "entity_mentions",
+      "ordinal_position": 18,
+      "column_name": "provenance_note",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "entity_mentions",
+      "ordinal_position": 19,
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "entity_mentions",
+      "ordinal_position": 20,
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "evidence",
+      "ordinal_position": 1,
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "table_name": "evidence",
+      "ordinal_position": 2,
+      "column_name": "source_type",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "evidence",
+      "ordinal_position": 3,
+      "column_name": "title",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "evidence",
+      "ordinal_position": 4,
+      "column_name": "url",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "evidence",
+      "ordinal_position": 5,
+      "column_name": "file_reference",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "evidence",
+      "ordinal_position": 6,
+      "column_name": "source_date",
+      "data_type": "date",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "evidence",
+      "ordinal_position": 7,
+      "column_name": "accessed_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "evidence",
+      "ordinal_position": 8,
+      "column_name": "reliability",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": "'unverified'::text"
+    },
+    {
+      "table_name": "evidence",
+      "ordinal_position": 9,
+      "column_name": "excerpt",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "evidence",
+      "ordinal_position": 10,
+      "column_name": "notes",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "evidence",
+      "ordinal_position": 11,
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "evidence",
+      "ordinal_position": 12,
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "evidence",
+      "ordinal_position": 13,
+      "column_name": "visibility",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'internal'::text"
+    },
+    {
+      "table_name": "evidence",
+      "ordinal_position": 14,
+      "column_name": "external_use_status",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'source_only'::text"
+    },
+    {
+      "table_name": "evidence",
+      "ordinal_position": 15,
+      "column_name": "sensitivity",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'standard'::text"
+    },
+    {
+      "table_name": "evidence",
+      "ordinal_position": 16,
+      "column_name": "provenance_note",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "external_companies",
+      "ordinal_position": 1,
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "table_name": "external_companies",
+      "ordinal_position": 2,
+      "column_name": "name",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "external_companies",
+      "ordinal_position": 3,
+      "column_name": "slug",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "external_companies",
+      "ordinal_position": 4,
+      "column_name": "type",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'unknown'::text"
+    },
+    {
+      "table_name": "external_companies",
+      "ordinal_position": 5,
+      "column_name": "region",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "external_companies",
+      "ordinal_position": 6,
+      "column_name": "country",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "external_companies",
+      "ordinal_position": 7,
+      "column_name": "website_url",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "external_companies",
+      "ordinal_position": 8,
+      "column_name": "primary_owner_member_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "external_companies",
+      "ordinal_position": 9,
+      "column_name": "notes",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "external_companies",
+      "ordinal_position": 10,
+      "column_name": "status",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'prospect'::text"
+    },
+    {
+      "table_name": "external_companies",
+      "ordinal_position": 11,
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "external_companies",
+      "ordinal_position": 12,
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "external_contacts",
+      "ordinal_position": 1,
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "table_name": "external_contacts",
+      "ordinal_position": 2,
+      "column_name": "full_name",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "external_contacts",
+      "ordinal_position": 3,
+      "column_name": "slug",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "external_contacts",
+      "ordinal_position": 4,
+      "column_name": "company_id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "external_contacts",
+      "ordinal_position": 5,
+      "column_name": "role_title",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "external_contacts",
+      "ordinal_position": 6,
+      "column_name": "email",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "external_contacts",
+      "ordinal_position": 7,
+      "column_name": "phone",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "external_contacts",
+      "ordinal_position": 8,
+      "column_name": "mobile_phone",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "external_contacts",
+      "ordinal_position": 9,
+      "column_name": "linkedin_url",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "external_contacts",
+      "ordinal_position": 10,
+      "column_name": "primary_owner_member_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "external_contacts",
+      "ordinal_position": 11,
+      "column_name": "notes",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "external_contacts",
+      "ordinal_position": 12,
+      "column_name": "status",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'warm'::text"
+    },
+    {
+      "table_name": "external_contacts",
+      "ordinal_position": 13,
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "external_contacts",
+      "ordinal_position": 14,
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "interactions",
+      "ordinal_position": 1,
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "table_name": "interactions",
+      "ordinal_position": 2,
+      "column_name": "interaction_type",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "interactions",
+      "ordinal_position": 3,
+      "column_name": "interaction_direction",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "interactions",
+      "ordinal_position": 4,
+      "column_name": "occurred_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "interactions",
+      "ordinal_position": 5,
+      "column_name": "subject",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "interactions",
+      "ordinal_position": 6,
+      "column_name": "summary",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "interactions",
+      "ordinal_position": 7,
+      "column_name": "external_entity_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "interactions",
+      "ordinal_position": 8,
+      "column_name": "internal_business_unit_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "interactions",
+      "ordinal_position": 9,
+      "column_name": "internal_owner_member_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "interactions",
+      "ordinal_position": 10,
+      "column_name": "evidence_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "interactions",
+      "ordinal_position": 11,
+      "column_name": "source_system",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "interactions",
+      "ordinal_position": 12,
+      "column_name": "source_reference",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "interactions",
+      "ordinal_position": 13,
+      "column_name": "status",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'completed'::text"
+    },
+    {
+      "table_name": "interactions",
+      "ordinal_position": 14,
+      "column_name": "tags",
+      "data_type": "ARRAY",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "interactions",
+      "ordinal_position": 15,
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "interactions",
+      "ordinal_position": 16,
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "interactions",
+      "ordinal_position": 17,
+      "column_name": "visibility",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'internal'::text"
+    },
+    {
+      "table_name": "interactions",
+      "ordinal_position": 18,
+      "column_name": "external_use_status",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'not_cleared'::text"
+    },
+    {
+      "table_name": "interactions",
+      "ordinal_position": 19,
+      "column_name": "sensitivity",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'standard'::text"
+    },
+    {
+      "table_name": "interactions",
+      "ordinal_position": 20,
+      "column_name": "provenance_note",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "knowledge",
+      "ordinal_position": 1,
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "table_name": "knowledge",
+      "ordinal_position": 2,
+      "column_name": "title",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "knowledge",
+      "ordinal_position": 3,
+      "column_name": "type",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "knowledge",
+      "ordinal_position": 4,
+      "column_name": "content",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "knowledge",
+      "ordinal_position": 5,
+      "column_name": "business_unit_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "table_name": "knowledge",
+      "ordinal_position": 6,
+      "column_name": "status",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'active'::text"
+    },
+    {
+      "table_name": "knowledge",
+      "ordinal_position": 7,
+      "column_name": "created_at",
+      "data_type": "timestamp without time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "knowledge",
+      "ordinal_position": 8,
+      "column_name": "updated_at",
+      "data_type": "timestamp without time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "knowledge",
+      "ordinal_position": 9,
+      "column_name": "slug",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "knowledge",
+      "ordinal_position": 10,
+      "column_name": "source",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "meetings",
+      "ordinal_position": 1,
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "table_name": "meetings",
+      "ordinal_position": 2,
+      "column_name": "title",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "meetings",
+      "ordinal_position": 3,
+      "column_name": "date",
+      "data_type": "date",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "meetings",
+      "ordinal_position": 4,
+      "column_name": "transcript",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "meetings",
+      "ordinal_position": 5,
+      "column_name": "summary",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "meetings",
+      "ordinal_position": 6,
+      "column_name": "source",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "meetings",
+      "ordinal_position": 7,
+      "column_name": "created_at",
+      "data_type": "timestamp without time zone",
+      "is_nullable": "YES",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "member_business_units",
+      "ordinal_position": 1,
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "table_name": "member_business_units",
+      "ordinal_position": 2,
+      "column_name": "member_id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "member_business_units",
+      "ordinal_position": 3,
+      "column_name": "business_unit_id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "member_business_units",
+      "ordinal_position": 4,
+      "column_name": "created_at",
+      "data_type": "timestamp without time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "members",
+      "ordinal_position": 1,
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "table_name": "members",
+      "ordinal_position": 2,
+      "column_name": "full_name",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "members",
+      "ordinal_position": 3,
+      "column_name": "slug",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "members",
+      "ordinal_position": 4,
+      "column_name": "status",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'active'::text"
+    },
+    {
+      "table_name": "members",
+      "ordinal_position": 5,
+      "column_name": "created_at",
+      "data_type": "timestamp without time zone",
+      "is_nullable": "YES",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "members",
+      "ordinal_position": 6,
+      "column_name": "updated_at",
+      "data_type": "timestamp without time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "members",
+      "ordinal_position": 7,
+      "column_name": "role",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "members",
+      "ordinal_position": 8,
+      "column_name": "bio",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "members",
+      "ordinal_position": 9,
+      "column_name": "email",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "members",
+      "ordinal_position": 10,
+      "column_name": "linkedin_url",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "opportunities",
+      "ordinal_position": 1,
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "table_name": "opportunities",
+      "ordinal_position": 2,
+      "column_name": "title",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "opportunities",
+      "ordinal_position": 3,
+      "column_name": "slug",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "opportunities",
+      "ordinal_position": 4,
+      "column_name": "description",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "opportunities",
+      "ordinal_position": 5,
+      "column_name": "opportunity_type",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "opportunities",
+      "ordinal_position": 6,
+      "column_name": "stage",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'idea'::text"
+    },
+    {
+      "table_name": "opportunities",
+      "ordinal_position": 7,
+      "column_name": "priority",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'medium'::text"
+    },
+    {
+      "table_name": "opportunities",
+      "ordinal_position": 8,
+      "column_name": "related_entity_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "opportunities",
+      "ordinal_position": 9,
+      "column_name": "business_unit_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "opportunities",
+      "ordinal_position": 10,
+      "column_name": "source_signal_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "opportunities",
+      "ordinal_position": 11,
+      "column_name": "evidence_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "opportunities",
+      "ordinal_position": 12,
+      "column_name": "owner_member_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "opportunities",
+      "ordinal_position": 13,
+      "column_name": "visibility",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'internal'::text"
+    },
+    {
+      "table_name": "opportunities",
+      "ordinal_position": 14,
+      "column_name": "external_use_status",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'not_cleared'::text"
+    },
+    {
+      "table_name": "opportunities",
+      "ordinal_position": 15,
+      "column_name": "sensitivity",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'standard'::text"
+    },
+    {
+      "table_name": "opportunities",
+      "ordinal_position": 16,
+      "column_name": "provenance_note",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "opportunities",
+      "ordinal_position": 17,
+      "column_name": "status",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'active'::text"
+    },
+    {
+      "table_name": "opportunities",
+      "ordinal_position": 18,
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "opportunities",
+      "ordinal_position": 19,
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "outcomes",
+      "ordinal_position": 1,
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "table_name": "outcomes",
+      "ordinal_position": 2,
+      "column_name": "title",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "outcomes",
+      "ordinal_position": 3,
+      "column_name": "description",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "outcomes",
+      "ordinal_position": 4,
+      "column_name": "outcome_type",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "outcomes",
+      "ordinal_position": 5,
+      "column_name": "outcome_date",
+      "data_type": "date",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "outcomes",
+      "ordinal_position": 6,
+      "column_name": "related_opportunity_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "outcomes",
+      "ordinal_position": 7,
+      "column_name": "related_action_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "outcomes",
+      "ordinal_position": 8,
+      "column_name": "related_interaction_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "outcomes",
+      "ordinal_position": 9,
+      "column_name": "related_entity_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "outcomes",
+      "ordinal_position": 10,
+      "column_name": "business_unit_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "outcomes",
+      "ordinal_position": 11,
+      "column_name": "evidence_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "outcomes",
+      "ordinal_position": 12,
+      "column_name": "visibility",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'internal'::text"
+    },
+    {
+      "table_name": "outcomes",
+      "ordinal_position": 13,
+      "column_name": "external_use_status",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'not_cleared'::text"
+    },
+    {
+      "table_name": "outcomes",
+      "ordinal_position": 14,
+      "column_name": "sensitivity",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'standard'::text"
+    },
+    {
+      "table_name": "outcomes",
+      "ordinal_position": 15,
+      "column_name": "provenance_note",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "outcomes",
+      "ordinal_position": 16,
+      "column_name": "status",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'recorded'::text"
+    },
+    {
+      "table_name": "outcomes",
+      "ordinal_position": 17,
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "outcomes",
+      "ordinal_position": 18,
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "relationship_interactions",
+      "ordinal_position": 1,
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "table_name": "relationship_interactions",
+      "ordinal_position": 2,
+      "column_name": "external_company_id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "relationship_interactions",
+      "ordinal_position": 3,
+      "column_name": "external_contact_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "relationship_interactions",
+      "ordinal_position": 4,
+      "column_name": "internal_business_unit_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "relationship_interactions",
+      "ordinal_position": 5,
+      "column_name": "internal_owner_member_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "relationship_interactions",
+      "ordinal_position": 6,
+      "column_name": "interaction_type",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "relationship_interactions",
+      "ordinal_position": 7,
+      "column_name": "interaction_direction",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "relationship_interactions",
+      "ordinal_position": 8,
+      "column_name": "occurred_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "relationship_interactions",
+      "ordinal_position": 9,
+      "column_name": "subject",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "relationship_interactions",
+      "ordinal_position": 10,
+      "column_name": "summary",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "relationship_interactions",
+      "ordinal_position": 11,
+      "column_name": "next_steps",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "relationship_interactions",
+      "ordinal_position": 12,
+      "column_name": "source_system",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "relationship_interactions",
+      "ordinal_position": 13,
+      "column_name": "source_reference",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "relationship_interactions",
+      "ordinal_position": 14,
+      "column_name": "tags",
+      "data_type": "ARRAY",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "relationship_interactions",
+      "ordinal_position": 15,
+      "column_name": "review_status",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'needs_review'::text"
+    },
+    {
+      "table_name": "relationship_interactions",
+      "ordinal_position": 16,
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "relationship_interactions",
+      "ordinal_position": 17,
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "research_artifacts",
+      "ordinal_position": 1,
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "table_name": "research_artifacts",
+      "ordinal_position": 2,
+      "column_name": "title",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "research_artifacts",
+      "ordinal_position": 3,
+      "column_name": "slug",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "research_artifacts",
+      "ordinal_position": 4,
+      "column_name": "artifact_type",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'research_dossier'::text"
+    },
+    {
+      "table_name": "research_artifacts",
+      "ordinal_position": 5,
+      "column_name": "summary",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "research_artifacts",
+      "ordinal_position": 6,
+      "column_name": "source_evidence_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "research_artifacts",
+      "ordinal_position": 7,
+      "column_name": "capture_source",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "research_artifacts",
+      "ordinal_position": 8,
+      "column_name": "source_file",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "research_artifacts",
+      "ordinal_position": 9,
+      "column_name": "status",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'draft'::text"
+    },
+    {
+      "table_name": "research_artifacts",
+      "ordinal_position": 10,
+      "column_name": "created_by",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "research_artifacts",
+      "ordinal_position": 11,
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "research_artifacts",
+      "ordinal_position": 12,
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "research_artifacts",
+      "ordinal_position": 13,
+      "column_name": "visibility",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'internal'::text"
+    },
+    {
+      "table_name": "research_artifacts",
+      "ordinal_position": 14,
+      "column_name": "external_use_status",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'not_cleared'::text"
+    },
+    {
+      "table_name": "research_artifacts",
+      "ordinal_position": 15,
+      "column_name": "sensitivity",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'standard'::text"
+    },
+    {
+      "table_name": "research_artifacts",
+      "ordinal_position": 16,
+      "column_name": "provenance_note",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "research_findings",
+      "ordinal_position": 1,
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "table_name": "research_findings",
+      "ordinal_position": 2,
+      "column_name": "artifact_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "research_findings",
+      "ordinal_position": 3,
+      "column_name": "evidence_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "research_findings",
+      "ordinal_position": 4,
+      "column_name": "related_entity_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "research_findings",
+      "ordinal_position": 5,
+      "column_name": "business_unit_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "research_findings",
+      "ordinal_position": 6,
+      "column_name": "finding_type",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "research_findings",
+      "ordinal_position": 7,
+      "column_name": "title",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "research_findings",
+      "ordinal_position": 8,
+      "column_name": "content",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "research_findings",
+      "ordinal_position": 9,
+      "column_name": "confidence",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": "'medium'::text"
+    },
+    {
+      "table_name": "research_findings",
+      "ordinal_position": 10,
+      "column_name": "status",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'active'::text"
+    },
+    {
+      "table_name": "research_findings",
+      "ordinal_position": 11,
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "research_findings",
+      "ordinal_position": 12,
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "research_findings",
+      "ordinal_position": 13,
+      "column_name": "visibility",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'internal'::text"
+    },
+    {
+      "table_name": "research_findings",
+      "ordinal_position": 14,
+      "column_name": "external_use_status",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'not_cleared'::text"
+    },
+    {
+      "table_name": "research_findings",
+      "ordinal_position": 15,
+      "column_name": "sensitivity",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'standard'::text"
+    },
+    {
+      "table_name": "research_findings",
+      "ordinal_position": 16,
+      "column_name": "provenance_note",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "rules",
+      "ordinal_position": 1,
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "table_name": "rules",
+      "ordinal_position": 2,
+      "column_name": "title",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "rules",
+      "ordinal_position": 3,
+      "column_name": "type",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "rules",
+      "ordinal_position": 4,
+      "column_name": "content",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "rules",
+      "ordinal_position": 5,
+      "column_name": "business_unit_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "table_name": "rules",
+      "ordinal_position": 6,
+      "column_name": "status",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": "'active'::text"
+    },
+    {
+      "table_name": "rules",
+      "ordinal_position": 7,
+      "column_name": "created_at",
+      "data_type": "timestamp without time zone",
+      "is_nullable": "YES",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "rules",
+      "ordinal_position": 8,
+      "column_name": "updated_at",
+      "data_type": "timestamp without time zone",
+      "is_nullable": "YES",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "rules",
+      "ordinal_position": 9,
+      "column_name": "slug",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "signal_entities",
+      "ordinal_position": 1,
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "table_name": "signal_entities",
+      "ordinal_position": 2,
+      "column_name": "signal_id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "signal_entities",
+      "ordinal_position": 3,
+      "column_name": "entity_id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "signal_entities",
+      "ordinal_position": 4,
+      "column_name": "role",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'mentioned'::text"
+    },
+    {
+      "table_name": "signal_entities",
+      "ordinal_position": 5,
+      "column_name": "confidence",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'medium'::text"
+    },
+    {
+      "table_name": "signal_entities",
+      "ordinal_position": 6,
+      "column_name": "notes",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "signal_entities",
+      "ordinal_position": 7,
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "signals",
+      "ordinal_position": 1,
+      "column_name": "id",
+      "data_type": "uuid",
+      "is_nullable": "NO",
+      "column_default": "gen_random_uuid()"
+    },
+    {
+      "table_name": "signals",
+      "ordinal_position": 2,
+      "column_name": "signal_type",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "signals",
+      "ordinal_position": 3,
+      "column_name": "title",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": null
+    },
+    {
+      "table_name": "signals",
+      "ordinal_position": 4,
+      "column_name": "description",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "signals",
+      "ordinal_position": 5,
+      "column_name": "priority",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": "'medium'::text"
+    },
+    {
+      "table_name": "signals",
+      "ordinal_position": 6,
+      "column_name": "promotion_trigger",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "signals",
+      "ordinal_position": 7,
+      "column_name": "related_entity_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "signals",
+      "ordinal_position": 8,
+      "column_name": "business_unit_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "signals",
+      "ordinal_position": 9,
+      "column_name": "evidence_id",
+      "data_type": "uuid",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "signals",
+      "ordinal_position": 10,
+      "column_name": "status",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'watch'::text"
+    },
+    {
+      "table_name": "signals",
+      "ordinal_position": 11,
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "signals",
+      "ordinal_position": 12,
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "is_nullable": "NO",
+      "column_default": "now()"
+    },
+    {
+      "table_name": "signals",
+      "ordinal_position": 13,
+      "column_name": "signal_date",
+      "data_type": "date",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "signals",
+      "ordinal_position": 14,
+      "column_name": "signal_strength",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'medium'::text"
+    },
+    {
+      "table_name": "signals",
+      "ordinal_position": 15,
+      "column_name": "confidence",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'medium'::text"
+    },
+    {
+      "table_name": "signals",
+      "ordinal_position": 16,
+      "column_name": "original_claim",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "signals",
+      "ordinal_position": 17,
+      "column_name": "why_it_matters",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "signals",
+      "ordinal_position": 18,
+      "column_name": "decision_question",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "signals",
+      "ordinal_position": 19,
+      "column_name": "recommended_next_step",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    {
+      "table_name": "signals",
+      "ordinal_position": 20,
+      "column_name": "visibility",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'internal'::text"
+    },
+    {
+      "table_name": "signals",
+      "ordinal_position": 21,
+      "column_name": "external_use_status",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'not_cleared'::text"
+    },
+    {
+      "table_name": "signals",
+      "ordinal_position": 22,
+      "column_name": "sensitivity",
+      "data_type": "text",
+      "is_nullable": "NO",
+      "column_default": "'standard'::text"
+    },
+    {
+      "table_name": "signals",
+      "ordinal_position": 23,
+      "column_name": "provenance_note",
+      "data_type": "text",
+      "is_nullable": "YES",
+      "column_default": null
+    }
+  ]
+}

@@ -29,7 +29,7 @@ import { closePool, withOwner, withService, withUser } from '../db.js';
 import { isAppError } from '../errors.js';
 import { getFormatByKey } from '../formats-repo.js';
 import { buildDailyReport, todayInZone } from '../pipelines/report.js';
-import { askKnowledge } from '../pipelines/ask.js';
+import { askKnowledge, retrieveRecords } from '../pipelines/ask.js';
 import { runBriefPipeline } from '../pipelines/brief.js';
 import { runResearchPipeline } from '../pipelines/research.js';
 import type { PipelineContext } from '../pipelines/context.js';
@@ -51,6 +51,9 @@ import {
 } from '../runs.js';
 import { seedAdditionalWorkspace, seedWorkspace } from '../seed.js';
 import { getStorage } from '../storage.js';
+import { guardTarget } from './guard.js';
+
+await guardTarget('verify');
 
 // ---------------------------------------------------------------------------
 // Tiny test harness
@@ -155,14 +158,14 @@ console.log(`AI provider: ${provider.kind}${MOCK ? '  <-- MOCK: all generated co
 section('Setup');
 
 const seeded = await seedWorkspace({
-  adminEmail: process.env.SEED_ADMIN_EMAIL ?? 'mariana@erizos.tv',
-  adminPassword: process.env.SEED_ADMIN_PASSWORD ?? 'local-dev-admin',
-  clientEmail: process.env.SEED_CLIENT_EMAIL ?? 'client@example.com',
-  clientPassword: process.env.SEED_CLIENT_PASSWORD ?? 'local-dev-client',
+  adminEmail: process.env.SEED_ADMIN_EMAIL ?? 'admin@example.invalid',
+  adminPassword: process.env.SEED_ADMIN_PASSWORD ?? 'ChangeMeBeforeUse',
+  clientEmail: process.env.SEED_CLIENT_EMAIL ?? 'client@example.invalid',
+  clientPassword: process.env.SEED_CLIENT_PASSWORD ?? 'ChangeMeBeforeUse',
 });
 const workspaceId = seeded.workspaceId;
-const admin = await buildSession(process.env.SEED_ADMIN_EMAIL ?? 'mariana@erizos.tv', workspaceId);
-const client = await buildSession(process.env.SEED_CLIENT_EMAIL ?? 'client@example.com', workspaceId);
+const admin = await buildSession(process.env.SEED_ADMIN_EMAIL ?? 'admin@example.invalid', workspaceId);
+const client = await buildSession(process.env.SEED_CLIENT_EMAIL ?? 'client@example.invalid', workspaceId);
 record('seeded workspace with two approvers', admin.activeWorkspace.canApprove && client.activeWorkspace.canApprove,
   `admin=${admin.activeWorkspace.role}/approve=${admin.activeWorkspace.canApprove}, client=${client.activeWorkspace.role}/approve=${client.activeWorkspace.canApprove}`);
 
@@ -777,19 +780,25 @@ await expectRejection(
 // Every job this workspace enqueued, whether still queued or already archived.
 // Only app-produced jobs are in scope: a job carries a uuid runId, so hand-made
 // probe messages are excluded.
-const jobScoped = await withService((db) =>
-  db.oneOrFail<{ n: number; mismatched: number }>(
-    `with jobs as (
-       select message from pgmq.messages
-       union all
-       select message from pgmq.messages_archive
-     )
+const jobScoped = await withService(async (db) => {
+  // Real Supabase Queues (the pgmq extension) keeps each queue in its own pair
+  // of tables, q_<queue> and a_<queue>. The local SQL implementation keeps all
+  // queues in pgmq.messages / pgmq.messages_archive. Read whichever exists.
+  const extension = await db.one<{ present: boolean }>(
+    `select exists (select 1 from pg_extension where extname = 'pgmq') as present`,
+  );
+  const sources = extension?.present
+    ? ['pgmq.q_g3_runs', 'pgmq.a_g3_runs', 'pgmq.q_g3_ingest', 'pgmq.a_g3_ingest']
+    : ['pgmq.messages', 'pgmq.messages_archive'];
+  const union = sources.map((table) => `select message from ${table}`).join(' union all ');
+  return db.oneOrFail<{ n: number; mismatched: number }>(
+    `with jobs as (${union})
      select count(*)::int as n,
             count(*) filter (where (message->>'workspaceId') is null)::int as mismatched
        from jobs
       where (message->>'runId') ~ '^[0-9a-fA-F-]{36}$'`,
-  ),
-);
+  );
+});
 expect(
   'every queued job carries its workspace id',
   jobScoped.n > 0 && jobScoped.mismatched === 0,
@@ -804,6 +813,36 @@ expect(
   'Ask Knowledge answers from stored records with citations',
   ask.retrievedCount > 0 && ask.citations.length > 0,
   `retrieved ${ask.retrievedCount} record(s), ${ask.citations.length} citation(s)${ask.isMock ? ' [MOCK answer text]' : ''}: ${ask.citations.slice(0, 3).map((c) => `${c.table_name}/${c.label}`).join('; ')}`,
+);
+
+const captureTitle = `Verification Creative Radar ${randomUUID().slice(0, 8)}`;
+await withService(async (db) => {
+  const source = await db.oneOrFail<{ id: string }>(
+    `insert into public.evidence (workspace_id, source_type, title, reliability, notes)
+     values ($1, 'brief', $2, 'unverified', 'A stored capture used to verify source retrieval.')
+     returning id`,
+    [workspaceId, captureTitle],
+  );
+  await db.query(
+    `insert into public.research_artifacts
+       (workspace_id, title, slug, artifact_type, summary, source_evidence_id, capture_source, status)
+     values ($1, $2, $3, 'research_document', 'A Creative Radar capture saved for retrieval verification.', $4, 'capture', 'ready')`,
+    [workspaceId, captureTitle, `verification-creative-radar-${randomUUID().slice(0, 8)}`, source.id],
+  );
+  await db.query(
+    `insert into public.evidence (workspace_id, source_type, title, reliability, notes)
+     values ($1, 'brief', 'Unrelated verification note', 'unverified', 'Creative planning with no connection to the Radar capture.')`,
+    [workspaceId],
+  );
+});
+const captureRecords = await withService((db) =>
+  retrieveRecords(db, workspaceId, `What was saved from ${captureTitle}?`),
+);
+expect(
+  'Ask Knowledge retrieves an approved capture by its document title',
+  ['evidence', 'research_artifacts'].every((table) => captureRecords.some((record) => record.table === table))
+    && captureRecords.every((record) => record.label.includes(captureTitle)),
+  captureRecords.map((record) => `${record.table}/${record.label}`).join('; '),
 );
 
 const askEmpty = await askKnowledge(workspaceId, 'What is the quarterly revenue of Antarctic Airlines Holdings?');

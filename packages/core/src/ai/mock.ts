@@ -359,6 +359,38 @@ function buildFixture(schemaName: string, options: GenerateOptions): unknown {
       };
     }
 
+    case 'research_proposal_output': {
+      const topic = readVariable(options.input, 'TOPIC') ?? 'Unnamed topic';
+      return {
+        title: `${MOCK_PREFIX} Research: ${topic}`,
+        summary: `${MOCK_PREFIX} Synthetic research findings awaiting review.`,
+        sources: [source(0, 'tier1_primary'), source(1, 'tier2_independent')].map((s) => ({
+          url: s.url,
+          title: s.title,
+          publisher: s.publisher,
+          published_date: s.published_date,
+        })),
+        facts: [{
+          statement: `${MOCK_PREFIX} ${topic} is described in the source material as an active initiative.`,
+          source_urls: [MOCK_SOURCES[0]!.url],
+          origin_url: MOCK_SOURCES[0]!.url,
+          confidence: 'medium' as const,
+        }],
+        interpretations: [{
+          statement: `${MOCK_PREFIX} A relationship path may exist through the named director.`,
+          based_on: 'The affiliation stated in the brief.',
+          confidence: 'low' as const,
+          source_urls: [],
+        }],
+        recommendations: [{
+          statement: `${MOCK_PREFIX} Verify controller and status before any outreach.`,
+          rationale: 'Ownership is unresolved.',
+        }],
+        risks: [{ statement: `${MOCK_PREFIX} Status may be stale.`, severity: 'medium' as const }],
+        gaps: [{ question: `${MOCK_PREFIX} Who funds ${topic}?`, why_it_matters: 'Determines the decision-maker.' }],
+      };
+    }
+
     case 'capture_proposal':
       return {
         title: `${MOCK_PREFIX} Proposed changes from mock research`,
@@ -378,7 +410,6 @@ function buildFixture(schemaName: string, options: GenerateOptions): unknown {
               { name: 'reliability', value: 'unverified' },
               { name: 'provenance_note', value: `${MOCK_PREFIX} synthetic source.` },
             ],
-            depends_on_labels: [],
             source_urls: [MOCK_SOURCES[0]!.url],
           },
           {
@@ -395,7 +426,6 @@ function buildFixture(schemaName: string, options: GenerateOptions): unknown {
               { name: 'relationship_status', value: 'none' },
               { name: 'visibility', value: 'internal' },
             ],
-            depends_on_labels: [`${MOCK_PREFIX} Primary announcement`],
             source_urls: [MOCK_SOURCES[1]!.url],
           },
           {
@@ -411,7 +441,6 @@ function buildFixture(schemaName: string, options: GenerateOptions): unknown {
               { name: 'research_status', value: 'research_only' },
               { name: 'relationship_status', value: 'none' },
             ],
-            depends_on_labels: [],
             source_urls: [MOCK_SOURCES[1]!.url],
           },
           {
@@ -428,7 +457,6 @@ function buildFixture(schemaName: string, options: GenerateOptions): unknown {
               { name: 'context', value: `${MOCK_PREFIX} stated in synthetic research` },
               { name: 'is_current', value: 'true' },
             ],
-            depends_on_labels: [MOCK_CAST.newPerson, MOCK_CAST.newOrg],
             source_urls: [MOCK_SOURCES[1]!.url],
           },
           {
@@ -445,7 +473,6 @@ function buildFixture(schemaName: string, options: GenerateOptions): unknown {
               { name: 'confidence', value: 'medium' },
               { name: 'related_entity_label', value: MOCK_CAST.existingOrg },
             ],
-            depends_on_labels: [`${MOCK_PREFIX} Primary announcement`],
             source_urls: [MOCK_SOURCES[0]!.url],
           },
           {
@@ -463,7 +490,6 @@ function buildFixture(schemaName: string, options: GenerateOptions): unknown {
               { name: 'status', value: 'watch' },
               { name: 'related_entity_label', value: MOCK_CAST.newOrg },
             ],
-            depends_on_labels: [MOCK_CAST.newOrg],
             source_urls: [MOCK_SOURCES[1]!.url],
           },
           {
@@ -480,7 +506,6 @@ function buildFixture(schemaName: string, options: GenerateOptions): unknown {
               { name: 'resolution_status', value: 'pending' },
               { name: 'rationale', value: `Possible match with ${MOCK_CAST.existingOrg}; needs human confirmation.` },
             ],
-            depends_on_labels: [],
             source_urls: [],
           },
         ],
@@ -505,6 +530,100 @@ function buildFixture(schemaName: string, options: GenerateOptions): unknown {
 
     case 'upload_parse':
       return { documents: [] };
+
+    case 'capture_classification': {
+      // Without a model nothing is classified. Saying "relationship_note" here
+      // would be a guess, so the mock keeps the existing, honest path and says
+      // plainly that no classification happened.
+      return {
+        material: 'relationship_note',
+        document_kind: null,
+        confidence: 'low',
+        description: '[MOCK] No model is configured, so this material was not classified.',
+        reason: 'No model is configured on this server.',
+      } as never;
+    }
+    case 'document_extraction': {
+      // Nothing can be read from a document without a model: the source is kept
+      // and nothing is claimed about it.
+      return {
+        artifact: {
+          title: '[MOCK] Captured document',
+          artifact_type: 'other',
+          summary: '[MOCK] No model is configured, so nothing was read from this document. The file is stored unchanged.',
+          document_date: null,
+          coverage: null,
+          external_use: null,
+          source_urls: [],
+        },
+        signals: [],
+        watch_items: [],
+        hypotheses: [],
+        unknowns: [],
+        research_recommendations: [],
+        source_only: [],
+      } as never;
+    }
+    case 'document_subject_audit': {
+      // The mock cannot read the source. It must not pretend to find people or
+      // companies the source did not explicitly establish.
+      return { signal_subjects: [] } as never;
+    }
+    case 'capture_context': {
+      // Without a model nothing is compared: nothing is marked as already stored.
+      return { already_stored_fact_numbers: [], contradictions: [], match_explanations: [], follow_up_suggestions: [] } as never;
+    }
+    case 'contact_identity': {
+      // Without a model there is no web search, so nobody can be identified.
+      return {
+        candidates: [],
+        reliable_match_found: false,
+        note: `${MOCK_PREFIX} No model is configured, so no public search was made and nobody was identified.`,
+      } as never;
+    }
+    case 'contact_profile': {
+      return {
+        facts: [],
+        inferences: [],
+        recommendations: [],
+        gaps: [{ question: `${MOCK_PREFIX} No model is configured, so nothing was researched.`, why_it_matters: 'Research needs a live model with web search.' }],
+        affiliations: [],
+        public_profiles: [],
+      } as never;
+    }
+    case 'capture_extraction': {
+      // Without a model nothing can honestly be extracted. The mock keeps the
+      // whole source as one unlinked statement and says so, instead of
+      // pretending to have found people, facts or follow-ups.
+      const sourceMatch = options.input.match(/<source>\n([\s\S]*?)\n<\/source>/);
+      const text = (sourceMatch?.[1] ?? '').trim();
+      const firstLine = text.split('\n')[0]?.slice(0, 60) ?? 'Captured note';
+      return {
+        title: `${MOCK_PREFIX} ${firstLine || 'Captured note'}`,
+        summary: `${MOCK_PREFIX} No model is configured, so this capture was not analysed.`,
+        mentions: [],
+        contacts: [],
+        facts: [
+          {
+            statement: `${MOCK_PREFIX} ${text.slice(0, 280) || 'Captured source.'}`,
+            about: [],
+            confidence: 'low' as const,
+          },
+        ],
+        inferences: [],
+        recommendations: [],
+        interactions: [],
+        actions: [],
+        relationships: [],
+        opportunities: [],
+        gaps: [
+          {
+            question: `${MOCK_PREFIX} People, organisations, follow-ups and dates were not extracted.`,
+            why_it_matters: 'Set OPENAI_API_KEY to analyse captures; until then only the source itself is proposed.',
+          },
+        ],
+      };
+    }
 
     default:
       throw new AppError(
